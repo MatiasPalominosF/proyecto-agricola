@@ -8,7 +8,7 @@ import { AlertService } from '../_services/alert.service';
 @Component({
     templateUrl: 'login.component.html',
     styleUrls: ['./login.component.css']
- })
+})
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     loading = false;
@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
                 localStorage.removeItem('currentLayoutStyle');
                 let returnUrl = '/dashboard/sales';
                 if (this.returnUrl) {
-                  returnUrl = this.returnUrl;
+                    returnUrl = this.returnUrl;
                 }
                 this.router.navigate([returnUrl]);
             }, err => {

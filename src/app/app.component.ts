@@ -95,19 +95,19 @@ export class AppComponent implements OnInit {
           }
         }
         if (this.title && this.router.url !== '/') {
-          this.titleService.setTitle(this.title + '- Modern Admin - Angular 11+ Bootstrap 4 Admin Dashboard Template');
+          this.titleService.setTitle(this.title + ' - Proyecto agrícola - Angular 12');
         } else {
           if (this.router.url === '/') {
             this.title = 'Login with Background Image';
-            this.titleService.setTitle(this.title + '- Modern Admin - Angular 11+ Bootstrap 4 Admin Dashboard Template');
+            this.titleService.setTitle(this.title + ' - Proyecto agrícola - Angular 12');
             this.title = '';
           } else if (this.router.url === '/login') {
             this.title = 'Login with Background Image';
-            this.titleService.setTitle(this.title + '- Modern Admin - Angular 11+ Bootstrap 4 Admin Dashboard Template');
+            this.titleService.setTitle(this.title + ' - Proyecto agrícola - Angular 12');
             this.title = '';
           } else if (this.router.url === '/register') {
             this.title = 'Register with Background Image';
-            this.titleService.setTitle(this.title + '- Modern Admin - Angular 11+ Bootstrap 4 Admin Dashboard Template');
+            this.titleService.setTitle(this.title + ' - Proyecto agrícola - Angular 12');
             this.title = '';
           }
         }
