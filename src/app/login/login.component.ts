@@ -55,6 +55,7 @@ export class LoginComponent implements OnInit {
                 if (this.returnUrl) {
                     returnUrl = this.returnUrl;
                 }
+                console.log("returnUrl", returnUrl);
                 this.router.navigate([returnUrl]);
             }, err => {
                 this.submitted = false;
