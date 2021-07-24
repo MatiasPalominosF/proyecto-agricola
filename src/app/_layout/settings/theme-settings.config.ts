@@ -11,16 +11,16 @@ export const ThemeSettingsConfig = {
   menu: 'expand', // collapse, expand
   header: 'fix', // fix, static
   footer: 'static', // fix, static
-  customizer: 'on', // on ,off
+  customizer: 'off', // on ,off
   headerIcons: {
     maximize: 'on', // on, off
-    search: 'on', // on, off
-    internationalization: 'on', // on, off
-    notification: 'on', // on, off
-    email: 'on' // on, off
+    search: 'off', // on, off
+    internationalization: 'off', // on, off
+    notification: 'off', // on, off
+    email: 'off' // on, off
   },
   brand: {
-    brand_name: 'Modern Admin',
+    brand_name: 'Gestión',
     logo: {
       type: 'internal', // internal, url
       value: 'assets/custom/images/logo.png' // recommended location for custom images
@@ -28,5 +28,5 @@ export const ThemeSettingsConfig = {
       // value:'http://evolvision.com/wp-content/uploads/2018/01/envelope4-green.png'
     },
   },
-  defaultTitleSuffix: 'Modern Admin - Angular 11+ Bootstrap 4 Admin Dashboard Template'
+  defaultTitleSuffix: 'Proyecto agrícola - Angular 12'
 };
