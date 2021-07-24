@@ -10,11 +10,11 @@
                 <div class="card-title text-center">
                     <img src="assets/images/logo/logo-dark.png" alt="branding logo">
                 </div>
-                <h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2"><span>Easily Using</span></h6>
+                <!--h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2"><span>Easily Using</span></h6-->
             </div>
             <div class="card-content">
-                <app-social-signin></app-social-signin>
-                <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1"><span>OR Using Account Details</span></p>
+                <!--app-social-signin></app-social-signin>
+                <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1"><span>OR Using Account Details</span></p-->
                 <div class="card-body">
                     <form class="form-horizontal" [formGroup]="loginForm" (ngSubmit)="tryLogin()">
                         <fieldset class="form-group position-relative has-icon-left">
@@ -24,7 +24,7 @@
                                 <i class="feather ft-user"></i>
                             </div>
                             <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                                <div *ngIf="f.email.errors.required">Username is required</div>
+                                <div *ngIf="f.email.errors.required">El nombre de usuario es requerido</div>
                             </div>
                         </fieldset>
                         <fieldset class="form-group position-relative has-icon-left">
@@ -33,28 +33,28 @@
                                 <i class="la la-key"></i>
                             </div>
                             <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                                <div *ngIf="f.password.errors.required">Password is required</div>
+                                <div *ngIf="f.password.errors.required">La contraseña es requerida</div>
                             </div>
 
                         </fieldset>
                         <div class="form-group row">
-                            <div class="col-md-6 col-12 text-center text-sm-left">
+                            <div class="col-md-4 col-12 text-center text-sm-left">
                                 <div class="custom-control custom-checkbox mb-1">
                                   <input type="checkbox" class="custom-control-input" name="remember-me" id="remember-me">
-                                  <label class="custom-control-label" for="remember-me">Remember Me</label>
+                                  <label class="custom-control-label" for="remember-me">Recuérdame</label>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-12 float-sm-left text-center text-sm-right"><a href="recover-password.html" class="card-link">Forgot Password?</a></div>
+                            <div class="col-md-8 col-12 float-sm-left text-center text-sm-right"><a href="recover-password.html" class="card-link">¿Olvidaste tu contraseña?</a></div>
                         </div>
                         <button type="submit" class="btn btn-outline-info btn-block">
                           <i class="fa fa-refresh fa-spin" *ngIf="submitted"></i>
-                          <i class="feather ft-unlock" *ngIf="!submitted"></i> Login
+                          <i class="feather ft-unlock" *ngIf="!submitted"></i> Iniciar
                         </button>
                     </form>
                 </div>
-                <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1"><span>New to Modern ?</span></p>
+                <p class="card-subtitle line-on-side text-muted text-center font-small-3 mx-2 my-1"><span>¿Nuevo en la página?</span></p>
                 <div class="card-body">
-                    <a [routerLink]="['/register']" class="btn btn-outline-danger btn-block"><i class="feather ft-user"></i> Register</a>
+                    <a [routerLink]="['/register']" class="btn btn-outline-danger btn-block"><i class="feather ft-user"></i> Regístrate</a>
                 </div>
             </div>
         </div>
