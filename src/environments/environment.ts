@@ -7,10 +7,15 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'AIzaSyAvHtu5rrqKSZQg75R2MYqlNgGdMKy2YR4',
-    projectId: 'modern-admin-8453e',
-    authDomain: 'modern-admin-8453e.firebaseapp.com',
-    appId: '1:300550201463:web:96a271cc309ac5aea86672'
+    apiKey: "AIzaSyDYPvQX7QCWPnXp-F-RXApE3Z29MmcatwA",
+    authDomain: "costafrut-app.firebaseapp.com",
+    databaseURL: "https://costafrut-app.firebaseio.com",
+    projectId: "costafrut-app",
+    storageBucket: "costafrut-app.appspot.com",
+    messagingSenderId: "283307742272",
+    appId: "1:283307742272:web:04093b099195d23f323ba5",
+    measurementId: "G-EJLZKRWHEK"
+
   },
   googleApiKey: 'AIzaSyAIIYOxA7qeetFz6TuR1Qewc0Rrjhzx7ZU'
 };

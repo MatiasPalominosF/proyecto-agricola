@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AuthService } from '../_services/auth.service';
 import { AlertService } from '../_services/alert.service';
+import firebase from 'firebase';
 
 @Component({
     templateUrl: 'register.component.html',
@@ -15,6 +16,8 @@ export class RegisterComponent implements OnInit {
     submitted = false;
     errorMessage = '';
     successMessage = '';
+    user = {};
+    users = [];
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
@@ -28,10 +31,25 @@ export class RegisterComponent implements OnInit {
             email: ['', Validators.required],
             password: ['', [Validators.required, Validators.minLength(6)]]
         });
+
+        /*this.userService.getUsers().subscribe(users => {
+            this.users = users.map(item => {
+              return {
+                ...item.payload.doc.data() as {},
+                id: item.payload.doc.id
+              };
+            });
+          });*/
     }
 
     // convenience getter for easy access to form fields
-    get f() { return this.registerForm.controls; }
+    get f() {
+        return this.registerForm.controls;
+    }
+
+    get fValue() {
+        return this.registerForm.value;
+    }
 
 
     tryRegister() {
@@ -44,9 +62,29 @@ export class RegisterComponent implements OnInit {
         this.authService.doRegister(this.registerForm.value)
             .then(res => {
                 this.loading = false;
+                this.user = {
+                    firstName: this.fValue.firstName,
+                    run: this.fValue.run,
+                    email: this.fValue.email,
+                    password: this.fValue.password,
+                    uid: res.user.uid
+                };
                 console.log(res);
                 this.errorMessage = '';
+                const currentUser = firebase.auth().currentUser;
+                currentUser.updateProfile({
+                    displayName: this.fValue.firstName
+                }).then(user => {
+                    console.log(user, 'user succesfull update');
+                }, err => {
+                    console.log(err);
+                });
                 this.alertService.success('Registration successful', true);
+                /*if (this.users.length === 0) {
+                    this.userService.createUser(this.user).then(user => {
+                        console.log(user);
+                    });
+                }*/
                 this.router.navigate(['/login']);
             }, err => {
                 console.log(err);
