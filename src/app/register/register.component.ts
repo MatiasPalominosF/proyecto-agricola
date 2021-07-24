@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AuthService } from '../_services/auth.service';
 import { AlertService } from '../_services/alert.service';
-import firebase from 'firebase';
+import { UserService } from '../_services/user/user.service';
+import * as firebase from 'firebase/app';
 
 @Component({
     templateUrl: 'register.component.html',
@@ -22,7 +23,8 @@ export class RegisterComponent implements OnInit {
         private formBuilder: FormBuilder,
         private router: Router,
         private alertService: AlertService,
-        private authService: AuthService) { }
+        private authService: AuthService,
+        private userService: UserService) { }
 
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
@@ -32,14 +34,14 @@ export class RegisterComponent implements OnInit {
             password: ['', [Validators.required, Validators.minLength(6)]]
         });
 
-        /*this.userService.getUsers().subscribe(users => {
+        this.userService.getUsers().subscribe(users => {
             this.users = users.map(item => {
-              return {
-                ...item.payload.doc.data() as {},
-                id: item.payload.doc.id
-              };
+                return {
+                    ...item.payload.doc.data() as {},
+                    id: item.payload.doc.id
+                };
             });
-          });*/
+        });
     }
 
     // convenience getter for easy access to form fields
@@ -69,7 +71,7 @@ export class RegisterComponent implements OnInit {
                     password: this.fValue.password,
                     uid: res.user.uid
                 };
-                console.log(res);
+                //console.log(res);
                 this.errorMessage = '';
                 const currentUser = firebase.auth().currentUser;
                 currentUser.updateProfile({
@@ -80,11 +82,24 @@ export class RegisterComponent implements OnInit {
                     console.log(err);
                 });
                 this.alertService.success('Registration successful', true);
-                /*if (this.users.length === 0) {
+                if (this.users.length === 0) {
                     this.userService.createUser(this.user).then(user => {
                         console.log(user);
                     });
-                }*/
+                } else if (this.users.length !== 0) {
+                    for (let i = 0; i < this.users.length; i++) {
+                        if (this.users[i].uid !== res.user.uid) {
+                            this.userService.createUser(this.user).then(user => {
+                                console.log(user);
+                            });
+                            break;
+                        } else {
+                            console.log('error');
+                        }
+                    }
+                } else {
+                    console.log('error');
+                }
                 this.router.navigate(['/login']);
             }, err => {
                 console.log(err);
