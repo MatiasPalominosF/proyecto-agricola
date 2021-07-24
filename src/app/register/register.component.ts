@@ -77,11 +77,11 @@ export class RegisterComponent implements OnInit {
                 currentUser.updateProfile({
                     displayName: this.fValue.firstName
                 }).then(user => {
-                    console.log(user, 'user succesfull update');
+                    //console.log(user, 'user succesfull update');
                 }, err => {
                     console.log(err);
                 });
-                this.alertService.success('Registration successful', true);
+                this.alertService.success('Registro correcto', true);
                 if (this.users.length === 0) {
                     this.userService.createUser(this.user).then(user => {
                         console.log(user);
@@ -90,7 +90,7 @@ export class RegisterComponent implements OnInit {
                     for (let i = 0; i < this.users.length; i++) {
                         if (this.users[i].uid !== res.user.uid) {
                             this.userService.createUser(this.user).then(user => {
-                                console.log(user);
+                                //console.log(user);
                             });
                             break;
                         } else {
@@ -101,6 +101,7 @@ export class RegisterComponent implements OnInit {
                     console.log('error');
                 }
                 this.router.navigate(['/login']);
+                this.alertService.success('Registro correcto', false);
             }, err => {
                 console.log(err);
                 this.loading = false;
