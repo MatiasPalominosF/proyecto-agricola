@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-show-data',
-  templateUrl: './show-data.component.html',
-  styleUrls: ['./show-data.component.css']
+  selector: 'app-harvests-view',
+  templateUrl: './harvests-view.component.html',
+  styleUrls: ['./harvests-view.component.css']
 })
-export class ShowDataComponent implements OnInit {
+export class HarvestsViewComponent implements OnInit {
 
   public breadcrumb: any;
 
@@ -13,7 +13,7 @@ export class ShowDataComponent implements OnInit {
 
   ngOnInit(): void {
     this.breadcrumb = {
-      'mainlabel': 'Visualización de datos',
+      'mainlabel': 'Datos de la cosecha',
       'links': [
         {
           'name': 'Home',
@@ -21,7 +21,7 @@ export class ShowDataComponent implements OnInit {
           'link': '/dashboard/show-data'
         },
         {
-          'name': 'Dashboard',
+          'name': 'Cosecha',
           'isLink': false,
           'link': '#'
         },

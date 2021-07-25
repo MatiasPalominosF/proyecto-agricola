@@ -94,8 +94,7 @@ export const MenuSettingsConfig: MenuConfig = {
       {
         title: 'Cosechas',
         icon: 'la-support',
-        page: 'https://pixinvent.ticksy.com/',
-        isExternalLink: true
+        page: '/harvest/harvests-view'
       },
       {
         title: 'Usuarios',

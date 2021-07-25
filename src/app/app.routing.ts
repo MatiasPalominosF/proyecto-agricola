@@ -24,6 +24,7 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', loadChildren: () => import('../app/content/dashboard/dashboard.module').then(m => m.DashboardModule) },
+      { path: 'harvest', loadChildren: () => import('../app/content/harvest/harvest.module').then(m => m.HarvestModule) },
       { path: 'logout', component: LoginComponent },
       { path: 'changelog', component: ChangelogComponent },
     ],
