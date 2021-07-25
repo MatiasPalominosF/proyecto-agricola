@@ -82,6 +82,7 @@
                             class="custom-control-input"
                             name="remember-me"
                             id="remember-me"
+                            formControlName="rememberMe"
                           />
                           <label class="custom-control-label" for="remember-me"
                             >Recuérdame</label
@@ -104,8 +105,8 @@
                       type="submit"
                       class="btn btn-outline-info btn-block"
                     >
-                      <i class="fa fa-refresh fa-spin" *ngIf="submitted"></i>
-                      <i class="feather ft-unlock" *ngIf="!submitted"></i>
+                      <i class="fa fa-refresh fa-spin" *ngIf="loading"></i>
+                      <i class="feather ft-unlock" *ngIf="!loading"></i>
                       Iniciar
                     </button>
                   </form>
