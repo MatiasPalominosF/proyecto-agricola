@@ -90,8 +90,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PerfectScrollbarModule,
     ToastrModule.forRoot(
       {
-        timeOut: 1000,
-        positionClass: 'toast-top-right'
+        timeOut: 3000,
       }
     ),
     NgxSpinnerModule,

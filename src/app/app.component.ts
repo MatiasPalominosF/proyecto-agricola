@@ -95,19 +95,19 @@ export class AppComponent implements OnInit {
           }
         }
         if (this.title && this.router.url !== '/') {
-          this.titleService.setTitle(this.title + ' - Proyecto agrícola - Angular 12');
+          this.titleService.setTitle(this.title + ' - Proyecto agrícola');
         } else {
           if (this.router.url === '/') {
-            this.title = 'Login with Background Image';
-            this.titleService.setTitle(this.title + ' - Proyecto agrícola - Angular 12');
+            this.title = 'Inicio';
+            this.titleService.setTitle(this.title + ' - Proyecto agrícola');
             this.title = '';
           } else if (this.router.url === '/login') {
-            this.title = 'Login with Background Image';
-            this.titleService.setTitle(this.title + ' - Proyecto agrícola - Angular 12');
+            this.title = 'Inicio';
+            this.titleService.setTitle(this.title + ' - Proyecto agrícola');
             this.title = '';
           } else if (this.router.url === '/register') {
-            this.title = 'Register with Background Image';
-            this.titleService.setTitle(this.title + ' - Proyecto agrícola - Angular 12');
+            this.title = 'Registro';
+            this.titleService.setTitle(this.title + ' - Proyecto agrícola');
             this.title = '';
           }
         }
