@@ -49,6 +49,7 @@
     "html2canvas": "^1.0.0-rc.7",
     "icheck": "^1.0.2",
     "lodash-es": "^4.17.21",
+    "ng2-charts": "^2.4.3",
     "ng2-countdown-timer": "^1.2.2",
     "ngx-custom-validators": "^8.0.0",
     "ngx-datatable-footer": "^3.1.3",

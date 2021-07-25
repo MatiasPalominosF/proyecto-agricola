@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import * as chartsData from './data';
 
 @Component({
   selector: 'app-show-data',
@@ -7,7 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ShowDataComponent implements OnInit {
 
+  @BlockUI('barCharts') blockUIProductsInfo: NgBlockUI;
   public breadcrumb: any;
+
+  //Options for bar charts.
+  options = {
+    close: false,
+    expand: true,
+    minimize: true,
+    reload: true
+  };
+
+  //Data for bar charts.
+  public barChartOptions = chartsData.barChartOptions;
+  public barChartLabels = chartsData.barChartLabels;
+  public barChartType = chartsData.barChartType;
+  public barChartLegend = chartsData.barChartLegend;
+  public barChartData = chartsData.barChartData;
+  public barChartColors = chartsData.barChartColors;
 
   constructor() { }
 
@@ -27,6 +46,10 @@ export class ShowDataComponent implements OnInit {
         },
       ]
     };
+  }
+
+  reloadBarCharts(): void {
+
   }
 
 }
