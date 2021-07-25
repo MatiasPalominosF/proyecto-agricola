@@ -19,16 +19,16 @@ export const barChartLabels: string[] = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT
 export const barChartType = 'bar';
 export const barChartLegend = true;
 export const barChartData: any[] = [
-    { data: [70, 75, 90, 60, 80, 75, 65], label: 'Fulfilled' },
-    { data: [60, 65, 80, 63, 90, 80, 70], label: 'Booked' },
-    { data: [42, 45, 65, 40, 42, 63, 35], label: 'Arrived' },
-    { data: [50, 55, 70, 40, 47, 65, 38], label: 'No show' },
-    { data: [40, 40, 45, 45, 45, 40, 45], label: 'reschedule' },
+    { data: [70, 75, 90, 60, 80, 75, 65], label: 'Matías' },
+    { data: [60, 65, 80, 63, 90, 80, 70], label: 'Evelyn' },
+    { data: [42, 45, 65, 40, 42, 63, 35], label: 'Juan' },
+    { data: [50, 55, 70, 40, 47, 65, 38], label: 'Cristian' },
+    { data: [40, 40, 45, 45, 45, 40, 45], label: 'Mauricio' },
     {
 
         type: 'line',  // override the default type
-        data: [40, 60, 80, 60, 75, 60, 70],
-        label: 'Appointment',
+        data: [52.4, 60, 80, 60, 75, 60, 70],
+        label: 'Promedio',
         backgroundColor: 'rgba(0,255,255,0)',
         borderColor: '#1e9ff2',
         fill: false,
