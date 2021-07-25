@@ -21,9 +21,11 @@ const appRoutes: Routes = [
   {
     path: '',
     component: PrivateLayoutComponent,
+    canActivate: [AuthGuard],
     children: [
-      { path: 'logout', component: LoginComponent, canActivate: [AuthGuard] },
-      { path: 'changelog', component: ChangelogComponent, canActivate: [AuthGuard] },
+      { path: 'dashboard', loadChildren: () => import('../app/content/dashboard/dashboard.module').then(m => m.DashboardModule) },
+      { path: 'logout', component: LoginComponent },
+      { path: 'changelog', component: ChangelogComponent },
     ],
   },
   // otherwise redirect to home

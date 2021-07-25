@@ -97,7 +97,7 @@ export class AuthService {
         resolve(null);
       } else {
         localStorage.removeItem('currentUser');
-        reject();
+        //reject();
       }
     });
   }
