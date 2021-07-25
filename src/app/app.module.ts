@@ -63,76 +63,85 @@ import { BlockTemplateComponent } from './_layout/blockui/block-template.compone
 import { BlockUIModule } from 'ng-block-ui';
 import { MatchHeightModule } from './content/partials/general/match-height/match-height.module';
 import { FullLayoutComponent } from './_layout/full-layout/full-layout.component';
+import { NotificationService } from './_services/notification/notification.service';
+import { ToastrModule } from 'ngx-toastr';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-    suppressScrollX: true
+  suppressScrollX: true
 };
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        PartialsModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        MatchHeightModule,
-        BreadcrumbModule,
-        NgbModule,
-        FormsModule,
-        AngularFireModule.initializeApp(environment.firebase),
-        AngularFirestoreModule, // imports firebase/firestore, only needed for database features
-        AngularFireAuthModule, // imports firebase/auth, only needed for auth features
-         routing,
-        // Settings modules
-        SettingsModule.forRoot(ThemeSettingsConfig, MenuSettingsConfig),
-        PerfectScrollbarModule,
-        NgxSpinnerModule,
-        DeviceDetectorModule.forRoot(),
-        LoadingBarRouterModule,
-        BlockUIModule.forRoot({
-          template: BlockTemplateComponent
-        })
-    ],
-    declarations: [
-        AppComponent,
-        PublicLayoutComponent,
-        PrivateLayoutComponent,
-        HeaderComponent,
-        FullLayoutNavbarComponent,
-        HeaderHorizontalComponent,
-        HeaderVerticalComponent,
-        FooterComponent,
-        AppNavigationComponent,
-        AlertComponent,
-        RegisterComponent,
-        SocialSigninComponent,
-        LoginComponent,
-        ChangelogComponent,
-        VerticalnavComponent ,
-        HorizontalnavComponent ,
-        CustomizerComponent,
-        HorizontalCustomizerComponent,
-        BlockTemplateComponent,
-        FullLayoutComponent,
-      ],
-    providers: [
-        AuthGuard,
-        AlertService,
-        NavbarService,
-        DataApiService,
-        AuthService,
-        {
-            provide: HAMMER_GESTURE_CONFIG,
-            useClass: HammerGestureConfig
-        },
-        NgbCarouselConfig,
-        NgbModalConfig,
-    ],
-    entryComponents: [
-      BlockTemplateComponent
-    ],
-    bootstrap: [AppComponent],
-    exports: [RouterModule]
+  imports: [
+    BrowserModule,
+    PartialsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatchHeightModule,
+    BreadcrumbModule,
+    NgbModule,
+    FormsModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule, // imports firebase/firestore, only needed for database features
+    AngularFireAuthModule, // imports firebase/auth, only needed for auth features
+    routing,
+    // Settings modules
+    SettingsModule.forRoot(ThemeSettingsConfig, MenuSettingsConfig),
+    PerfectScrollbarModule,
+    ToastrModule.forRoot(
+      {
+        timeOut: 1000,
+        positionClass: 'toast-top-right'
+      }
+    ),
+    NgxSpinnerModule,
+    DeviceDetectorModule.forRoot(),
+    LoadingBarRouterModule,
+    BlockUIModule.forRoot({
+      template: BlockTemplateComponent
+    })
+  ],
+  declarations: [
+    AppComponent,
+    PublicLayoutComponent,
+    PrivateLayoutComponent,
+    HeaderComponent,
+    FullLayoutNavbarComponent,
+    HeaderHorizontalComponent,
+    HeaderVerticalComponent,
+    FooterComponent,
+    AppNavigationComponent,
+    AlertComponent,
+    RegisterComponent,
+    SocialSigninComponent,
+    LoginComponent,
+    ChangelogComponent,
+    VerticalnavComponent,
+    HorizontalnavComponent,
+    CustomizerComponent,
+    HorizontalCustomizerComponent,
+    BlockTemplateComponent,
+    FullLayoutComponent,
+  ],
+  providers: [
+    AuthGuard,
+    AlertService,
+    NavbarService,
+    DataApiService,
+    AuthService,
+    NotificationService,
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: HammerGestureConfig
+    },
+    NgbCarouselConfig,
+    NgbModalConfig,
+  ],
+  entryComponents: [
+    BlockTemplateComponent
+  ],
+  bootstrap: [AppComponent],
+  exports: [RouterModule]
 })
 
 export class AppModule {

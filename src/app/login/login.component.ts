@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AuthService } from '../_services/auth.service';
 import { AlertService } from '../_services/alert.service';
+import { NotificationService } from '../_services/notification/notification.service';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -20,8 +21,9 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private alertService: AlertService,
-        public authService: AuthService
-        ) { }
+        public authService: AuthService,
+        private notifyService: NotificationService,
+    ) { }
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
@@ -78,8 +80,8 @@ export class LoginComponent implements OnInit {
             }, err => {
                 this.submitted = false;
                 this.loading = false;
-                //this.notifyService.showSuccess("Anular", "¡La venta se anuló correctamente!");
-                this.alertService.error("Usuario o contraseña incorrecta");
+                this.notifyService.showError("Error", "¡Usuario o contraseña incorrecta!");
+                //this.alertService.error("Usuario o contraseña incorrecta");
             });
     }
 
