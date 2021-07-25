@@ -54,7 +54,25 @@ export const MenuSettingsConfig: MenuConfig = {
         icon: 'la-text-height',
         page: 'https://modern-admin-docs.web.app/html/ltr/documentation/index.html',
         isExternalLink: true,
-      }
+      },
+      { section: "DISEÑO", icon: 'la-ellipsis-h' },
+      {
+        title: 'Orientación',
+        icon: 'la-television',
+        page: 'null',
+        submenu: {
+          items: [
+            {
+              title: 'Horizontal',
+              page: 'null'
+            },
+            {
+              title: 'Vertical',
+              page: 'null'
+            },
+          ]
+        }
+      },
     ]
   },
   vertical_menu: {
@@ -84,7 +102,25 @@ export const MenuSettingsConfig: MenuConfig = {
         icon: 'la-text-height',
         page: 'https://modern-admin-docs.web.app/html/ltr/documentation/index.html',
         isExternalLink: true,
-      }
+      },
+      { section: "DISEÑO", icon: 'la-ellipsis-h' },
+      {
+        title: 'Orientación',
+        icon: 'la-television',
+        page: 'null',
+        submenu: {
+          items: [
+            {
+              title: 'Horizontal',
+              page: 'null'
+            },
+            {
+              title: 'Vertical',
+              page: 'null'
+            },
+          ]
+        }
+      },
     ]
   }
 
