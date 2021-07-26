@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { HarvestService } from '../../../_services/harvest/harvest.service';
 
 @Component({
   selector: 'app-harvests-view',
@@ -20,7 +21,9 @@ export class HarvestsViewComponent implements OnInit {
   public headElements = ['#', 'Categoría', 'Fecha inicio', 'Fecha término', 'Acciones'];
   private currentUser: any;
 
-  constructor() { }
+  constructor(
+    private harvestService: HarvestService,
+  ) { }
 
   ngOnInit(): void {
     this.breadcrumb = {
@@ -41,7 +44,15 @@ export class HarvestsViewComponent implements OnInit {
     };
 
     this.getUserLogged();
-    console.log("this.currentUser", this.currentUser);
+    this.getFullInfoHarvest();
+  }
+
+  getFullInfoHarvest(): void {
+    this.harvestService.getFullInfoHarvest().subscribe(data => {
+      data.forEach(element => {
+        console.log("Fecha inicio:", element.dateStart.toDate());
+      });
+    });
   }
 
   getUserLogged(): void {
