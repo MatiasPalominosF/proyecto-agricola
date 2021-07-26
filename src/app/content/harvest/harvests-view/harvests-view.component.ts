@@ -56,12 +56,12 @@ export class HarvestsViewComponent implements OnInit {
           'link': '/dashboard/show-data'
         },
         {
-          'name': 'Cosecha',
+          'name': 'Cosechas',
           'isLink': false,
           'link': '#'
         },
       ],
-      'options': true
+      'options': false
     };
     this.getUserLogged();
     this.getFullInfoHarvest();
@@ -114,7 +114,7 @@ export class HarvestsViewComponent implements OnInit {
   }
 
   showDetails(id: string): void {
-    const modalRef = this.modalService.open(RegistersHarvestComponent, { windowClass: 'animated fadeInDown', size: 'lg' });
+    const modalRef = this.modalService.open(RegistersHarvestComponent, { windowClass: 'animated fadeInDown my-class', size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.id = id;
     modalRef.result.then((result) => {
       if (!result) {
@@ -144,8 +144,6 @@ export class HarvestsViewComponent implements OnInit {
     setTimeout(() => {
       this.blockUIHarvest.stop();
     }, 2500);
-
-
   }
 
 }

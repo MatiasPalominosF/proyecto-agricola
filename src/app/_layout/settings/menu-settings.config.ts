@@ -99,8 +99,7 @@ export const MenuSettingsConfig: MenuConfig = {
       {
         title: 'Usuarios',
         icon: 'la-text-height',
-        page: 'https://modern-admin-docs.web.app/html/ltr/documentation/index.html',
-        isExternalLink: true,
+        page: '/dashboard/show-data'
       },
       { section: "DISEÑO", icon: 'la-ellipsis-h' },
       {
