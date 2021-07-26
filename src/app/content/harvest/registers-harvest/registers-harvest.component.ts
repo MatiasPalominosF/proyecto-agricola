@@ -27,7 +27,7 @@ export class RegistersHarvestComponent implements OnInit {
     minimize: true,
     reload: true
   };
-  public headElements = ['Run', 'Nombre', 'Peso acumulado', 'Fecha término', 'Acciones'];
+  public headElements = ['Run', 'Nombre', 'Peso acumulado (Kg)', 'Fecha término', 'Acciones'];
   private registerHarvests: RegisterHarvest[];
   public collectionSize: any;
   public page = 1;
