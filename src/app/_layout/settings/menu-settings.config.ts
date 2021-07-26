@@ -93,12 +93,12 @@ export const MenuSettingsConfig: MenuConfig = {
       { section: 'HISTORIAL', icon: 'la-ellipsis-h' },
       {
         title: 'Cosechas',
-        icon: 'la-support',
+        icon: 'la-leaf',
         page: '/harvest/harvests-view'
       },
       {
         title: 'Usuarios',
-        icon: 'la-text-height',
+        icon: 'la-user-plus',
         page: '/dashboard/show-data'
       },
       { section: "DISEÑO", icon: 'la-ellipsis-h' },

@@ -95,6 +95,7 @@
                         *ngFor="
                           let element of harvestSearch
                             | async
+                            | filterDate2: from:to
                             | slice
                               : (page - 1) * pageSize
                               : (page - 1) * pageSize + pageSize;
