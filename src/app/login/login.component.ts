@@ -81,7 +81,6 @@ export class LoginComponent implements OnInit {
                 this.submitted = false;
                 this.loading = false;
                 this.notifyService.showError("Error", "¡Usuario o contraseña incorrecta!");
-                //this.alertService.error("Usuario o contraseña incorrecta");
             });
     }
 

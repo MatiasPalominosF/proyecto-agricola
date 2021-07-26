@@ -18,6 +18,7 @@ export class HarvestsViewComponent implements OnInit {
     reload: true
   };
   public headElements = ['#', 'Categoría', 'Fecha inicio', 'Fecha término', 'Acciones'];
+  private currentUser: any;
 
   constructor() { }
 
@@ -38,6 +39,15 @@ export class HarvestsViewComponent implements OnInit {
       ],
       'options': true
     };
+
+    this.getUserLogged();
+    console.log("this.currentUser", this.currentUser);
+  }
+
+  getUserLogged(): void {
+    if (localStorage.getItem('currentUser')) {
+      this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    }
   }
 
   reload(): void {

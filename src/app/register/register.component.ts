@@ -6,6 +6,7 @@ import { AuthService } from '../_services/auth.service';
 import { AlertService } from '../_services/alert.service';
 import { UserService } from '../_services/user/user.service';
 import * as firebase from 'firebase/app';
+import { NotificationService } from '../_services/notification/notification.service';
 
 @Component({
     templateUrl: 'register.component.html',
@@ -24,7 +25,9 @@ export class RegisterComponent implements OnInit {
         private router: Router,
         private alertService: AlertService,
         private authService: AuthService,
-        private userService: UserService) { }
+        private userService: UserService,
+        private notifyService: NotificationService,
+    ) { }
 
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
@@ -81,7 +84,8 @@ export class RegisterComponent implements OnInit {
                 }, err => {
                     console.log(err);
                 });
-                this.alertService.success('Registro correcto', true);
+                this.notifyService.showSuccess("Registro", "¡Registrado correctamente!");
+                //this.alertService.success('Registro correcto', true);
                 if (this.users.length === 0) {
                     this.userService.createUser(this.user).then(user => {
                         console.log(user);
@@ -101,11 +105,12 @@ export class RegisterComponent implements OnInit {
                     console.log('error');
                 }
                 this.router.navigate(['/login']);
-                this.alertService.success('Registro correcto', false);
             }, err => {
                 console.log(err);
                 this.loading = false;
-                this.alertService.error(err.message);
+
+                this.notifyService.showError("Error", err.message);
+                //this.alertService.error(err.message);
             });
     }
 
