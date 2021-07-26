@@ -15,7 +15,7 @@ export const barChartOptions: any = {
         }]
     }
 };
-export const barChartLabels: string[] = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+export const barChartLabels: string[] = ['LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO', 'DOMINGO'];
 export const barChartType = 'bar';
 export const barChartLegend = true;
 export const barChartData: any[] = [
