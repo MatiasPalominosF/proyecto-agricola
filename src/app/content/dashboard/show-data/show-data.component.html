@@ -8,7 +8,10 @@
       <!-- Hospital Info cards -->
       <div class="row">
         <div class="col-xl-4 col-lg-6 col-md-6 col-12">
-          <div class="card pull-up" *blockUI="'categoriesCard'; message: 'Loading'">
+          <div
+            class="card pull-up"
+            *blockUI="'categoriesCard'; message: 'Loading'"
+          >
             <div class="card-content">
               <div class="card-body">
                 <div class="media d-flex">
@@ -19,7 +22,7 @@
                     <h5 class="text-muted text-bold-500">
                       Categorías disponibles
                     </h5>
-                    <h3 class="text-bold-600">12</h3>
+                    <h3 class="text-bold-600">{{ quantitieCategory | number}}</h3>
                   </div>
                 </div>
               </div>

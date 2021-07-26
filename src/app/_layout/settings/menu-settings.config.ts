@@ -93,14 +93,13 @@ export const MenuSettingsConfig: MenuConfig = {
       { section: 'HISTORIAL', icon: 'la-ellipsis-h' },
       {
         title: 'Cosechas',
-        icon: 'la-support',
+        icon: 'la-leaf',
         page: '/harvest/harvests-view'
       },
       {
         title: 'Usuarios',
-        icon: 'la-text-height',
-        page: 'https://modern-admin-docs.web.app/html/ltr/documentation/index.html',
-        isExternalLink: true,
+        icon: 'la-user-plus',
+        page: '/dashboard/show-data'
       },
       { section: "DISEÑO", icon: 'la-ellipsis-h' },
       {

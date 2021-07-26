@@ -1,19 +1,27 @@
-<div class="app-content content">
-  <div class="content-wrapper">
-    <div class="content-header row mb-1">
-      <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
-    </div>
-    <div class="content-body">
-      <section id="horizontal-form-layouts">
-        <div class="row">
-          <div class="col-md-12">
-            <m-card [options]="options" (reloadFunction)="reload($event)">
-              <ng-container mCardHeaderTitle>
-                Categorías de las cosechas
-              </ng-container>
-              <ng-container mCardBody>
-                <div class="d-flex justify-content-around">
-                  <form>
+<div class="modal-header">
+  <h4 class="modal-title" id="myModalLabel4">{{ title }}</h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body px-0">
+  <div style="overflow-y: hidden; height: calc(100vh - 15rem)">
+    <div class="px-2" style="overflow-y: auto; height: 100%">
+      <div class="row">
+        <div class="col-md-12">
+          <m-card [options]="options" (reloadFunction)="reload($event)">
+            <ng-container mCardHeaderTitle>
+              Categorías de las cosechas
+            </ng-container>
+            <ng-container mCardBody>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="d-flex justify-content-md-center">
                     <div class="form-group form-inline">
                       Buscar:
                       <input
@@ -22,31 +30,56 @@
                         type="text"
                       />
                     </div>
-                  </form>
-                  <div class="form-group form-inline">
-                    Desde:
-                    <input
-                      class="form-control ml-2"
-                      type="date"
-                      placeholder="yyyy-mm-dd"
-                      [(ngModel)]="from"
-                      name="from"
-                    />
-                  </div>
-                  <div class="form-group form-inline">
-                    Hasta:
-                    <input
-                      class="form-control ml-2"
-                      type="date"
-                      placeholder="yyyy-mm-dd"
-                      [(ngModel)]="to"
-                      name="to"
-                    />
                   </div>
                 </div>
+                <div class="col-md-3">
+                  <div class="d-flex justify-content-md-center">
+                    <div class="form-group form-inline">
+                      Desde:
+                      <input
+                        class="form-control ml-2"
+                        type="date"
+                        placeholder="yyyy-mm-dd"
+                        name="from"
+                        [(ngModel)]="from"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="d-flex justify-content-md-center">
+                    <div class="form-group form-inline">
+                      Hasta:
+                      <input
+                        class="form-control ml-2"
+                        type="date"
+                        placeholder="yyyy-mm-dd"
+                        name="to"
+                        [(ngModel)]="to"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="d-flex justify-content-md-center">
+                    <div class="form-group form-inline">
+                      <button
+                        (click)="exportToExcel()"
+                        type="button"
+                        class="
+                          btn btn-float btn-xs btn-square btn-outline-secondary
+                        "
+                      >
+                        <i class="feather ft-download"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
                 <div
                   class="table-responsive card-body"
-                  *blockUI="'harvests'; message: 'Loading'"
+                  *blockUI="'registerHarvest'; message: 'Loading'"
                 >
                   <table class="table table-striped">
                     <thead>
@@ -62,14 +95,20 @@
                         *ngFor="
                           let element of harvestSearch
                             | async
-                            | filterDate: from:to
+                            | filterDate2: from:to
                             | slice
                               : (page - 1) * pageSize
                               : (page - 1) * pageSize + pageSize;
                           index as i
                         "
                       >
-                        <th scope="row">{{ i + 1 }}</th>
+                        <td>
+                          <ngb-highlight
+                            [result]="element.id"
+                            [term]="filter.value"
+                          >
+                          </ngb-highlight>
+                        </td>
                         <td>
                           <ngb-highlight
                             [result]="element.name"
@@ -79,25 +118,19 @@
                         </td>
                         <td>
                           <ngb-highlight
-                            [result]="
-                              element.dateStart.toDate()
-                                | date: 'dd/MM/yyyy HH:mm'
-                            "
-                            [term]="
-                              element.dateStart.toDate()
-                                | date: 'dd/MM/yyyy HH:mm'
-                            "
+                            [result]="element.acumulate | number"
+                            [term]="filter.value"
                           >
                           </ngb-highlight>
                         </td>
                         <td>
                           <ngb-highlight
                             [result]="
-                              element.dateEnd.toDate().toString()
+                              element.lastDate.toDate()
                                 | date: 'dd/MM/yyyy HH:mm'
                             "
                             [term]="
-                              element.dateEnd.toDate().toString()
+                              element.lastDate.toDate()
                                 | date: 'dd/MM/yyyy HH:mm'
                             "
                           >
@@ -146,11 +179,21 @@
                     </select>
                   </div>
                 </div>
-              </ng-container>
-            </m-card>
-          </div>
+              </div>
+            </ng-container>
+          </m-card>
         </div>
-      </section>
+      </div>
     </div>
   </div>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn grey btn-outline-secondary"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    Cerrar
+  </button>
+  <!--button type="button" class="btn btn-outline-primary">Save changes</button-->
 </div>

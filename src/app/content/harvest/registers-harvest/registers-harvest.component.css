@@ -1,0 +1,11 @@
+:host ::ng-deep .close:not(:disabled):not(.disabled):hover,
+.close:not(:disabled):not(.disabled):focus {
+  outline: none !important;
+}
+:host ::ng-deep .block-ui-wrapper {
+  background: rgba(255, 249, 249, 0.5) !important;
+}
+::ng-deep .my-class .modal-dialog {
+  max-width: 90%;
+  width: 90%;
+}

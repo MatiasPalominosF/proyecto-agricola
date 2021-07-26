@@ -6,19 +6,24 @@ import { RouterModule } from '@angular/router';
 import { BlockUIModule } from 'ng-block-ui';
 import { BlockTemplateComponent } from 'src/app/_layout/blockui/block-template.component';
 import { CardModule } from '../partials/general/card/card.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PipeModule } from '../../_pipe/pipe.module';
+import { RegistersHarvestComponent } from './registers-harvest/registers-harvest.component';
+import { RegistersUsersComponent } from './registers-users/registers-users.component';
 
 @NgModule({
   declarations: [
-    HarvestsViewComponent
+    HarvestsViewComponent,
+    RegistersHarvestComponent,
+    RegistersUsersComponent
   ],
   imports: [
     CommonModule,
     BreadcrumbModule,
     CardModule,
     NgbModule,
+    NgbModalModule,
     FormsModule,
     ReactiveFormsModule,
     PipeModule,
@@ -29,6 +34,14 @@ import { PipeModule } from '../../_pipe/pipe.module';
       {
         path: 'harvests-view',
         component: HarvestsViewComponent,
+      },
+      {
+        path: 'registers-harvest',
+        component: RegistersHarvestComponent,
+      },
+      {
+        path: 'registers-users',
+        component: RegistersUsersComponent,
       },
     ]),
   ]
