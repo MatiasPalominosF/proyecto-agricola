@@ -44,7 +44,8 @@ export class ShowDataComponent implements OnInit {
           'isLink': false,
           'link': '#'
         },
-      ]
+      ],
+      'options': true
     };
   }
 

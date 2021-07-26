@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-harvests-view',
@@ -7,7 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HarvestsViewComponent implements OnInit {
 
+  @BlockUI('harvests') blockUIHarvest: NgBlockUI;
+
   public breadcrumb: any;
+  public options = {
+    close: false,
+    expand: true,
+    minimize: true,
+    reload: true
+  };
+  public headElements = ['#', 'Categoría', 'Fecha inicio', 'Fecha término', 'Acciones'];
 
   constructor() { }
 
@@ -25,8 +35,17 @@ export class HarvestsViewComponent implements OnInit {
           'isLink': false,
           'link': '#'
         },
-      ]
+      ],
+      'options': true
     };
+  }
+
+  reload(): void {
+    this.blockUIHarvest.start('Cargando...');
+
+    setTimeout(() => {
+      this.blockUIHarvest.stop();
+    }, 2500);
   }
 
 }
