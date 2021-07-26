@@ -10,6 +10,7 @@ import * as chartsData from './data';
 export class ShowDataComponent implements OnInit {
 
   @BlockUI('barCharts') blockUIProductsInfo: NgBlockUI;
+  @BlockUI('categoriesCard') a: NgBlockUI;
   public breadcrumb: any;
 
   //Options for bar charts.
@@ -47,6 +48,12 @@ export class ShowDataComponent implements OnInit {
       ],
       'options': true
     };
+
+    this.a.start('Cargando...');
+
+    setTimeout(() => {
+      this.a.stop();
+    }, 2500);
   }
 
   reloadBarCharts(): void {

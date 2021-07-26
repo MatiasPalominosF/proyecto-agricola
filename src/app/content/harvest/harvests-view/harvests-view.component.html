@@ -6,10 +6,7 @@
     <div class="content-body">
       <section id="horizontal-form-layouts">
         <div class="row">
-          <div
-            class="col-md-12"
-            *blockUI="'blockUIHarvest'; message: 'Loading'"
-          >
+          <div class="col-md-12">
             <m-card [options]="options" (reloadFunction)="reload($event)">
               <ng-container mCardHeaderTitle>
                 Categorías de las cosechas
@@ -47,7 +44,10 @@
                     />
                   </div>
                 </div>
-                <div class="table-responsive card-body">
+                <div
+                  class="table-responsive card-body"
+                  *blockUI="'harvests'; message: 'Loading'"
+                >
                   <table class="table table-striped">
                     <thead>
                       <tr>

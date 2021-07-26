@@ -8,7 +8,7 @@
       <!-- Hospital Info cards -->
       <div class="row">
         <div class="col-xl-4 col-lg-6 col-md-6 col-12">
-          <div class="card pull-up">
+          <div class="card pull-up" *blockUI="'categoriesCard'; message: 'Loading'">
             <div class="card-content">
               <div class="card-body">
                 <div class="media d-flex">
@@ -16,7 +16,9 @@
                     <i class="la la-folder-open-o font-large-2 success"></i>
                   </div>
                   <div class="media-body text-right">
-                    <h5 class="text-muted text-bold-500">Categorías disponibles</h5>
+                    <h5 class="text-muted text-bold-500">
+                      Categorías disponibles
+                    </h5>
                     <h3 class="text-bold-600">12</h3>
                   </div>
                 </div>
@@ -33,7 +35,9 @@
                     <i class="la la-server font-large-2 warning"></i>
                   </div>
                   <div class="media-body text-right">
-                    <h5 class="text-muted text-bold-500">Registros acumulados</h5>
+                    <h5 class="text-muted text-bold-500">
+                      Registros acumulados
+                    </h5>
                     <h3 class="text-bold-600">34</h3>
                   </div>
                 </div>
@@ -71,7 +75,9 @@
                     [options]="options"
                     (reloadFunction)="reloadBarCharts($event)"
                   >
-                    <ng-container mCardHeaderTitle> Registros de las cosechas </ng-container>
+                    <ng-container mCardHeaderTitle>
+                      Registros de las cosechas
+                    </ng-container>
                     <ng-container mCardBody>
                       <div class="z">
                         <canvas
