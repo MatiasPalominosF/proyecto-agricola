@@ -10,11 +10,13 @@ import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PipeModule } from '../../_pipe/pipe.module';
 import { RegistersHarvestComponent } from './registers-harvest/registers-harvest.component';
+import { RegistersUsersComponent } from './registers-users/registers-users.component';
 
 @NgModule({
   declarations: [
     HarvestsViewComponent,
-    RegistersHarvestComponent
+    RegistersHarvestComponent,
+    RegistersUsersComponent
   ],
   imports: [
     CommonModule,
@@ -36,6 +38,10 @@ import { RegistersHarvestComponent } from './registers-harvest/registers-harvest
       {
         path: 'registers-harvest',
         component: RegistersHarvestComponent,
+      },
+      {
+        path: 'registers-users',
+        component: RegistersUsersComponent,
       },
     ]),
   ]

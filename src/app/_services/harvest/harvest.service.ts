@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { RegisterUser } from 'src/app/_models/register-user';
 import { Harvest } from '../../_models/harvest';
 import { RegisterHarvest } from '../../_models/register-harvest';
 
@@ -14,6 +15,7 @@ export class HarvestService {
   private harvestDoc: AngularFirestoreDocument<Harvest>;
   private harvests: Observable<Harvest[]>;
   private registerHarvests: Observable<RegisterHarvest[]>;
+  private registerUsers: Observable<RegisterUser[]>;
   constructor(
     public afs: AngularFirestore
   ) {
@@ -44,6 +46,17 @@ export class HarvestService {
           return data;
         });
       }));
+  }
 
+  getFullInfoRegisterUser(category: string, idUser: string): Observable<RegisterUser[]> {
+    return this.registerUsers = this.afs.collection('category').doc(`${category}`).collection('registers').doc(`${idUser}`).collection<RegisterUser>('workerRegisters', ref => ref.where('category', '==', `${category}`))
+      .snapshotChanges()
+      .pipe(map(changes => {
+        return changes.map(action => {
+          const data = action.payload.doc.data() as RegisterUser;
+          data.id = action.payload.doc.id;
+          return data;
+        });
+      }));
   }
 }

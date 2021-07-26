@@ -1,12 +1,13 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, Input, OnInit, PipeTransform } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalDismissReasons, NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { RegisterHarvest } from 'src/app/_models/register-harvest';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
+import { RegistersUsersComponent } from '../registers-users/registers-users.component';
 
 @Component({
   selector: 'app-registers-harvest',
@@ -15,6 +16,7 @@ import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 })
 export class RegistersHarvestComponent implements OnInit {
   @Input() public id: string;
+  @Input() public name: string;
   @BlockUI('registerHarvest') blockUIHarvest: NgBlockUI;
 
   public title: string;
@@ -35,10 +37,12 @@ export class RegistersHarvestComponent implements OnInit {
   private dataToExport = [];
   public from = new Date('December 25, 1995 13:30:00');;
   public to = new Date();
+  private closeResult = '';
 
   constructor(
     public activeModal: NgbActiveModal,
     private harvestService: HarvestService,
+    private modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
@@ -50,8 +54,30 @@ export class RegistersHarvestComponent implements OnInit {
     console.log("this.dataToExport", this.dataToExport);
   }
 
-  showDetails(id: string): void {
-    console.log("ID" + id);
+  showDetails(id: string, name: string): void {
+    const modalRef = this.modalService.open(RegistersUsersComponent, { windowClass: 'animated fadeInDown', size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.id = id; //ID del usuario.
+    modalRef.componentInstance.category = this.id; //ID de la categoría.
+    modalRef.componentInstance.name = this.name;
+    modalRef.componentInstance.nameUser = name;
+    modalRef.result.then((result) => {
+      if (!result) {
+        //this.notifyService.showSuccess("Editar", "¡El producto se editó correctamente!");
+      }
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      console.log(this.closeResult);
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 
   getFullInfoRegisterHarvest(): void {
@@ -61,6 +87,7 @@ export class RegistersHarvestComponent implements OnInit {
       this.collectionSize = this.registerHarvests.length;
       this.searchData(this.pipe);
       this.getDataToExport();
+      this.title += " - " + this.name;
       this.blockUIHarvest.stop();
     });
   }

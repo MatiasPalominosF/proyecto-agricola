@@ -113,9 +113,10 @@ export class HarvestsViewComponent implements OnInit {
     }
   }
 
-  showDetails(id: string): void {
+  showDetails(id: string, name: string): void {
     const modalRef = this.modalService.open(RegistersHarvestComponent, { windowClass: 'animated fadeInDown my-class', size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.id = id;
+    modalRef.componentInstance.name = name;
     modalRef.result.then((result) => {
       if (!result) {
         this.notifyService.showSuccess("Editar", "¡El producto se editó correctamente!");
