@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AuthService } from '../_services/auth.service';
 import { AlertService } from '../_services/alert.service';
+import { NotificationService } from '../_services/notification/notification.service';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -20,15 +21,27 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private alertService: AlertService,
-        public authService: AuthService) { }
+        public authService: AuthService,
+        private notifyService: NotificationService,
+    ) { }
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
-            email: ['john@pixinvent.com', Validators.required],
-            password: ['password@123', Validators.required]
+            email: ['', Validators.required],
+            password: ['', Validators.required],
+            rememberMe: [false]
         });
 
-        if (localStorage.getItem('currentUser')) {
+        /*if (localStorage.getItem('currentUser')) {
+            this.authService.doLogout();
+        }*/
+
+        console.log("localStorage.getItem('remember')", localStorage.getItem('remember'));
+        if (localStorage.getItem('remember')) {
+            localStorage.removeItem('currentLayoutStyle');
+            let returnUrl = this.onLoginRedirect();
+            this.router.navigate([returnUrl]);
+        } else if (localStorage.getItem('currentUser')) {
             this.authService.doLogout();
         }
     }
@@ -38,9 +51,10 @@ export class LoginComponent implements OnInit {
 
     tryLogin() {
         this.submitted = true;
-
+        this.loading = true;
         // stop here if form is invalid
         if (this.loginForm.invalid) {
+            this.loading = false;
             return;
         }
         const value = {
@@ -49,16 +63,24 @@ export class LoginComponent implements OnInit {
         };
         this.authService.doLogin(value)
             .then(res => {
+                if (this.f.rememberMe.value) {
+                    localStorage.setItem('remember', 'true');
+                } else {
+                    localStorage.removeItem('remember');
+                }
+
                 this.setUserInStorage(res);
                 localStorage.removeItem('currentLayoutStyle');
-                let returnUrl = '/dashboard/sales';
+                let returnUrl = '/dashboard/show-data';
                 if (this.returnUrl) {
                     returnUrl = this.returnUrl;
                 }
+                console.log("returnUrl", returnUrl);
                 this.router.navigate([returnUrl]);
             }, err => {
                 this.submitted = false;
-                this.alertService.error(err.message);
+                this.loading = false;
+                this.notifyService.showError("Error", "¡Usuario o contraseña incorrecta!");
             });
     }
 
@@ -68,5 +90,9 @@ export class LoginComponent implements OnInit {
         } else {
             localStorage.setItem('currentUser', JSON.stringify(res));
         }
+    }
+
+    onLoginRedirect() {
+        return '/dashboard/show-data';
     }
 }

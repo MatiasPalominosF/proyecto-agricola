@@ -67,6 +67,7 @@ export class VerticalComponent implements OnInit, AfterViewInit {
     if (localStorage.getItem('currentUser')) {
       this.authService.doLogout().then(res => {
         window.location.href = '/login';
+        localStorage.removeItem('remember');
       }, err => {
         console.log(err);
       });

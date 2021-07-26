@@ -1,0 +1,106 @@
+<div class="app-content content">
+  <div class="content-overlay"></div>
+  <div class="content-wrapper">
+    <div class="content-header row mb-1">
+      <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+    </div>
+    <div class="content-body">
+      <!-- Hospital Info cards -->
+      <div class="row">
+        <div class="col-xl-4 col-lg-6 col-md-6 col-12">
+          <div class="card pull-up" *blockUI="'categoriesCard'; message: 'Loading'">
+            <div class="card-content">
+              <div class="card-body">
+                <div class="media d-flex">
+                  <div class="align-self-center">
+                    <i class="la la-folder-open-o font-large-2 success"></i>
+                  </div>
+                  <div class="media-body text-right">
+                    <h5 class="text-muted text-bold-500">
+                      Categorías disponibles
+                    </h5>
+                    <h3 class="text-bold-600">12</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4 col-lg-6 col-md-6 col-12">
+          <div class="card pull-up">
+            <div class="card-content">
+              <div class="card-body">
+                <div class="media d-flex">
+                  <div class="align-self-center">
+                    <i class="la la-server font-large-2 warning"></i>
+                  </div>
+                  <div class="media-body text-right">
+                    <h5 class="text-muted text-bold-500">
+                      Registros acumulados
+                    </h5>
+                    <h3 class="text-bold-600">34</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4 col-lg-6 col-md-6 col-12">
+          <div class="card pull-up">
+            <div class="card-content">
+              <div class="card-body">
+                <div class="media d-flex">
+                  <div class="align-self-center">
+                    <i class="la la-pencil-square-o font-large-2 info"></i>
+                  </div>
+                  <div class="media-body text-right">
+                    <h5 class="text-muted text-bold-500">Registros totales</h5>
+                    <h3 class="text-bold-600">3.5K</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Hospital Info cards Ends -->
+      <!-- Appointment Bar Line Chart -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <section id="chartjs-bar-charts">
+              <div class="row">
+                <div class="col-12" *blockUI="'barCharts'; message: 'Loading'">
+                  <m-card
+                    [options]="options"
+                    (reloadFunction)="reloadBarCharts($event)"
+                  >
+                    <ng-container mCardHeaderTitle>
+                      Registros de las cosechas
+                    </ng-container>
+                    <ng-container mCardBody>
+                      <div class="z">
+                        <canvas
+                          class="barchart"
+                          height="328"
+                          baseChart
+                          [datasets]="barChartData"
+                          [labels]="barChartLabels"
+                          [options]="barChartOptions"
+                          [colors]="barChartColors"
+                          [legend]="barChartLegend"
+                          [chartType]="barChartType"
+                        ></canvas>
+                      </div>
+                    </ng-container>
+                  </m-card>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+      <!-- Appointment Bar Line Chart Ends -->
+    </div>
+  </div>
+</div>

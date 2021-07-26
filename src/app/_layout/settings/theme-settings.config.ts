@@ -28,5 +28,5 @@ export const ThemeSettingsConfig = {
       // value:'http://evolvision.com/wp-content/uploads/2018/01/envelope4-green.png'
     },
   },
-  defaultTitleSuffix: 'Proyecto agrícola - Angular 12'
+  defaultTitleSuffix: 'Proyecto agrícola'
 };

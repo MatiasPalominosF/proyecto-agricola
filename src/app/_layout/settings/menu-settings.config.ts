@@ -26,13 +26,38 @@ export const MenuSettingsConfig: MenuConfig = {
   horizontal_menu: {
     items: [
       {
-        title: 'Changelog',
-        icon: 'la-file',
-        page: '/changelog',
-        badge: { type: 'badge-danger', value: '2.5' }
+        title: 'Dashboard',
+        icon: 'la-home',
+        page: 'null',
+        submenu: {
+          items: [
+            /*{
+               title: 'Sales',
+               page: '/dashboard/sales'
+             },*/
+            {
+              title: 'Vista 1',
+              page: '/dashboard/show-data'
+            },
+          ]
+        }
+      },
+      { section: 'HISTORIAL', icon: 'la-ellipsis-h' },
+      {
+        title: 'Cosechas',
+        icon: 'la-support',
+        page: 'https://pixinvent.ticksy.com/',
+        isExternalLink: true
       },
       {
-        title: 'Templates',
+        title: 'Usuarios',
+        icon: 'la-text-height',
+        page: 'https://modern-admin-docs.web.app/html/ltr/documentation/index.html',
+        isExternalLink: true,
+      },
+      { section: "DISEÑO", icon: 'la-ellipsis-h' },
+      {
+        title: 'Orientación',
         icon: 'la-television',
         page: 'null',
         submenu: {
@@ -48,30 +73,38 @@ export const MenuSettingsConfig: MenuConfig = {
           ]
         }
       },
-      {
-        title: 'Raise Support',
-        icon: 'la-support',
-        page: 'https://pixinvent.ticksy.com/',
-        isExternalLink: true
-      },
-      {
-        title: 'Documentaion',
-        icon: 'la-text-height',
-        page: 'https://modern-admin-docs.web.app/html/ltr/documentation/index.html',
-        isExternalLink: true,
-      }
     ]
   },
   vertical_menu: {
     items: [
       {
-        title: 'Changelog',
-        icon: 'la-file',
-        page: '/changelog',
-        badge: { type: 'badge-danger', value: '2.5' }
+        title: 'Dashboard',
+        icon: 'la-home',
+        page: '/dashboard/show-data',
+        /*submenu: {
+          items: [
+            {
+              title: 'Vista 1',
+              page: '/dashboard/show-data'
+            },
+          ]
+        }*/
+      },
+      { section: 'HISTORIAL', icon: 'la-ellipsis-h' },
+      {
+        title: 'Cosechas',
+        icon: 'la-support',
+        page: '/harvest/harvests-view'
       },
       {
-        title: 'Templates',
+        title: 'Usuarios',
+        icon: 'la-text-height',
+        page: 'https://modern-admin-docs.web.app/html/ltr/documentation/index.html',
+        isExternalLink: true,
+      },
+      { section: "DISEÑO", icon: 'la-ellipsis-h' },
+      {
+        title: 'Orientación',
         icon: 'la-television',
         page: 'null',
         submenu: {
@@ -87,19 +120,6 @@ export const MenuSettingsConfig: MenuConfig = {
           ]
         }
       },
-      { section: 'SUPPORT', icon: 'la-ellipsis-h' },
-      {
-        title: 'Raise Support',
-        icon: 'la-support',
-        page: 'https://pixinvent.ticksy.com/',
-        isExternalLink: true
-      },
-      {
-        title: 'Documentaion',
-        icon: 'la-text-height',
-        page: 'https://modern-admin-docs.web.app/html/ltr/documentation/index.html',
-        isExternalLink: true,
-      }
     ]
   }
 
