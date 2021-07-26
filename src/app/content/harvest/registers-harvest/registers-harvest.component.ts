@@ -95,6 +95,9 @@ export class RegistersHarvestComponent implements OnInit {
   getFullInfoRegisterHarvest(): void {
     this.blockUIHarvest.start("Cargando...");
     this.harvestService.getFullInfoRegisterHarvest(this.id).subscribe(data => {
+      data.forEach(element => {
+        console.log(element.lastDate.toDate().toLocaleDateString('es-CL', { weekday: 'long' }));
+      });
       this.registerHarvests = data;
       this.collectionSize = this.registerHarvests.length;
       this.searchData(this.pipe);
