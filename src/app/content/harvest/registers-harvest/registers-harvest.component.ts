@@ -8,6 +8,7 @@ import { map, startWith } from 'rxjs/operators';
 import { RegisterHarvest } from 'src/app/_models/register-harvest';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 import { RegistersUsersComponent } from '../registers-users/registers-users.component';
+import { TableExcelService } from '../../../_services/table-excel/table-excel.service';
 
 @Component({
   selector: 'app-registers-harvest',
@@ -34,7 +35,7 @@ export class RegistersHarvestComponent implements OnInit {
   public pipe: any;
   public harvestSearch: Observable<RegisterHarvest[]>;
   public filter = new FormControl('');
-  private dataToExport = [];
+  private dataToExport: Array<RegisterHarvest> = [];
   public from = new Date('December 25, 1995 13:30:00');;
   public to = new Date();
   private closeResult = '';
@@ -43,6 +44,7 @@ export class RegistersHarvestComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private harvestService: HarvestService,
     private modalService: NgbModal,
+    private tableexcelService: TableExcelService
   ) { }
 
   ngOnInit(): void {
@@ -51,7 +53,17 @@ export class RegistersHarvestComponent implements OnInit {
   }
 
   exportToExcel() {
-    console.log("this.dataToExport", this.dataToExport);
+    let data = [];
+    this.dataToExport.forEach(element => {
+      let object = { Rut: "", Nombre: "", Fecha: null, PesoAcumulado: 0 };
+      object.Nombre = element.name;
+      object.Rut = element.id;
+      object.Fecha = element.lastDate.toDate();
+      object.PesoAcumulado = element.acumulate;
+      data.push(object);
+    });
+
+    this.tableexcelService.exportAsExcelFile(data, 'Proyecto agrícola - Registro de cosechas');
   }
 
   showDetails(id: string, name: string): void {
