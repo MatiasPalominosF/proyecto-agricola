@@ -1,4 +1,4 @@
-import { DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, OnInit, PipeTransform } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
@@ -37,7 +37,7 @@ export class HarvestsViewComponent implements OnInit {
   private dataToExport = [];
 
   constructor(
-    private harvestService: HarvestService,
+    private harvestService: HarvestService
   ) { }
 
   ngOnInit(): void {
@@ -57,9 +57,6 @@ export class HarvestsViewComponent implements OnInit {
       ],
       'options': true
     };
-
-
-
     this.getUserLogged();
     this.getFullInfoHarvest();
   }
@@ -108,6 +105,10 @@ export class HarvestsViewComponent implements OnInit {
     if (localStorage.getItem('currentUser')) {
       this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     }
+  }
+
+  showDetails(id: string): void {
+    console.log("ID: " + id);
   }
 
   reload(): void {

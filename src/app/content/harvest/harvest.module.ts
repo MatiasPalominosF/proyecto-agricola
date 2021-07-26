@@ -8,8 +8,7 @@ import { BlockTemplateComponent } from 'src/app/_layout/blockui/block-template.c
 import { CardModule } from '../partials/general/card/card.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-
+import { PipeModule } from '../../_pipe/pipe.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NgbModule,
     FormsModule,
     ReactiveFormsModule,
+    PipeModule,
     BlockUIModule.forRoot({
       template: BlockTemplateComponent
     }),
