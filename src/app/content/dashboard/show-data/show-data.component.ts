@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Harvest } from 'src/app/_models/harvest';
+import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 import * as chartsData from './data';
 
 @Component({
@@ -10,7 +12,7 @@ import * as chartsData from './data';
 export class ShowDataComponent implements OnInit {
 
   @BlockUI('barCharts') blockUIProductsInfo: NgBlockUI;
-  @BlockUI('categoriesCard') a: NgBlockUI;
+  @BlockUI('categoriesCard') blockUIcategoriesCard: NgBlockUI;
   public breadcrumb: any;
 
   //Options for bar charts.
@@ -29,7 +31,12 @@ export class ShowDataComponent implements OnInit {
   public barChartData = chartsData.barChartData;
   public barChartColors = chartsData.barChartColors;
 
-  constructor() { }
+  private harvests: Harvest[];
+  public quantitieCategory: number;
+
+  constructor(
+    private harvestService: HarvestService,
+  ) { }
 
   ngOnInit(): void {
     this.breadcrumb = {
@@ -49,11 +56,16 @@ export class ShowDataComponent implements OnInit {
       'options': true
     };
 
-    this.a.start('Cargando...');
+    this.getFullInfoHarvest();
+  }
 
-    setTimeout(() => {
-      this.a.stop();
-    }, 2500);
+  getFullInfoHarvest(): void {
+    this.blockUIcategoriesCard.start("Cargando...");
+    this.harvestService.getFullInfoHarvest().subscribe(data => {
+      this.harvests = data;
+      this.quantitieCategory = this.harvests.length;
+      this.blockUIcategoriesCard.stop();
+    });
   }
 
   reloadBarCharts(): void {
