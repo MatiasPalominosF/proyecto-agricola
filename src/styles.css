@@ -1,8 +1,2 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~perfect-scrollbar/css/perfect-scrollbar.css';
-
-:host ::ng-deep .email-fixed-header {
-    min-height: calc(100% - 207px)!important;
-    margin-top: 0!important;
-    overflow-y: hidden !important;
-  }
+@import "~perfect-scrollbar/css/perfect-scrollbar.css";

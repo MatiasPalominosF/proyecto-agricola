@@ -136,9 +136,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbCarouselConfig,
     NgbModalConfig,
   ],
-  entryComponents: [
-    BlockTemplateComponent
-  ],
   bootstrap: [AppComponent],
   exports: [RouterModule]
 })
