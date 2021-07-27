@@ -13,6 +13,7 @@ export class ShowDataComponent implements OnInit {
 
   @BlockUI('barCharts') blockUIProductsInfo: NgBlockUI;
   @BlockUI('categoriesCard') blockUIcategoriesCard: NgBlockUI;
+  @BlockUI('registersCard') blockUIregisterCard: NgBlockUI;
   public breadcrumb: any;
 
   //Options for bar charts.
@@ -33,6 +34,7 @@ export class ShowDataComponent implements OnInit {
 
   private harvests: Harvest[];
   public quantitieCategory: number;
+  public quantitieRegisters: number;
 
   constructor(
     private harvestService: HarvestService,
@@ -72,8 +74,18 @@ export class ShowDataComponent implements OnInit {
 
   }
 
-  setValuesInDashboard(event: any): void {
-    console.log(event);
+  setValuesInDashboard(harvest: Harvest): void {
+    console.log(harvest);
+    this.getDataCardRegister(harvest.id);
+
+  }
+
+  getDataCardRegister(id: string): void {
+    this.blockUIregisterCard.start("Cargando...");
+    this.harvestService.getFullInfoRegisterHarvest(id).subscribe(data => {
+      this.quantitieRegisters = data.length;
+      this.blockUIregisterCard.stop();
+    });
   }
 
 }
