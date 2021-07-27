@@ -36,6 +36,10 @@ export class HarvestService {
       }));
   }
 
+  getFullInHarvest() {
+    return this.afs.firestore.collection('category').get();
+  }
+
   getFullInfoRegisterHarvest(id: string): Observable<RegisterHarvest[]> {
     return this.registerHarvests = this.afs.collection('category').doc(`${id}`).collection<RegisterHarvest>('registers')
       .snapshotChanges()

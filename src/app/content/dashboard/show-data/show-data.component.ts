@@ -13,6 +13,7 @@ export class ShowDataComponent implements OnInit {
 
   @BlockUI('barCharts') blockUIProductsInfo: NgBlockUI;
   @BlockUI('categoriesCard') blockUIcategoriesCard: NgBlockUI;
+  @BlockUI('registersCard') blockUIregisterCard: NgBlockUI;
   public breadcrumb: any;
 
   //Options for bar charts.
@@ -31,8 +32,23 @@ export class ShowDataComponent implements OnInit {
   public barChartData = chartsData.barChartData;
   public barChartColors = chartsData.barChartColors;
 
+  /**
+   * Pie
+   */
+  public pieChartLabels = chartsData.pieChartLabels;
+  public pieChartData = chartsData.pieChartData;
+  public pieChartType = chartsData.pieChartType;
+  public pieChartColors = chartsData.pieChartColors;
+  public pieChartOptions = chartsData.pieChartOptions;
+
+  public pieChartLabels2: string[] = []; //nombres
+  public pieChartData2: number[] = []; // pesos de cosecha
+
+  /**/
+
   private harvests: Harvest[];
   public quantitieCategory: number;
+  public quantitieRegisters: number;
 
   constructor(
     private harvestService: HarvestService,
@@ -72,4 +88,24 @@ export class ShowDataComponent implements OnInit {
 
   }
 
+  setValuesInDashboard(harvest: Harvest): void {
+    console.log(harvest);
+    this.getDataCardRegister(harvest.id);
+
+  }
+
+  getDataCardRegister(id: string): void {
+    this.blockUIregisterCard.start("Cargando...");
+    this.harvestService.getFullInfoRegisterHarvest(id).subscribe(data => {
+      this.pieChartLabels2 = [];
+      this.pieChartData2 = [];
+      data.forEach(element => {
+        this.pieChartLabels2.push(element.name);
+        var num = parseFloat((Math.round(element.acumulate * 100) / 100).toFixed(2));
+        this.pieChartData2.push(num);
+      });
+      this.quantitieRegisters = data.length;
+      this.blockUIregisterCard.stop();
+    });
+  }
 }

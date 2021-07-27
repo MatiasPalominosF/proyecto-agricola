@@ -20,19 +20,17 @@
     </div>
   </div>
   <div *ngIf="breadcrumb.options" class="content-header-right col-md-6 col-12">
-    <div class="d-inline-block float-md-right" ngbDropdown>
-      <button class="btn btn-info" id="dropdownBasic1" ngbDropdownToggle>
-        Acciones
-      </button>
-      <div
-        ngbDropdownMenu
-        class="arrow _dropdown_mob dropdown-menu-right"
-        aria-labelledby="dropdownBasic1"
-      >
-        <button class="dropdown-item">A</button>
-        <button class="dropdown-item">B</button>
-        <div class="dropdown-divider"></div>
-        <button class="dropdown-item">C</button>
+    <div class="d-flex justify-content-end">
+      <div class="col-md-6" *blockUI="'selectBlockUi'; message: 'Loading'">
+        <ng-select
+          [items]="dataForSelect"
+          [searchable]="true"
+          bindLabel="name"
+          placeholder="Selecciona una categoría"
+          [(ngModel)]="singlebasicSelected.name"
+          (ngModelChange)="change($event)"
+        >
+        </ng-select>
       </div>
     </div>
   </div>
