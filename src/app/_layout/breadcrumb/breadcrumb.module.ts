@@ -6,6 +6,8 @@ import { BreadcrumbComponent } from './breadcrumb.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
+import { BlockUIModule } from 'ng-block-ui';
+import { BlockTemplateComponent } from '../blockui/block-template.component';
 
 
 @NgModule({
@@ -15,6 +17,9 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     NgSelectModule,
     NgbModule,
+    BlockUIModule.forRoot({
+      template: BlockTemplateComponent
+    }),
     RouterModule.forChild([])
   ],
   declarations: [BreadcrumbComponent],

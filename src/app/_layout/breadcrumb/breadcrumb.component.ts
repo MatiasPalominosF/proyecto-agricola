@@ -1,4 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Harvest } from 'src/app/_models/harvest';
+import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -30,23 +33,54 @@ export class BreadcrumbComponent implements OnInit {
       "item_id": 7, "item_text": "New York"
     }
   ];
-  singlebasicSelected: any;
-
-  constructor() { }
+  public dataForSelect: Harvest[];
+  public dataForSelect2: Array<Harvest> = [];
+  public singlebasicSelected: Harvest;
+  @BlockUI('selectBlockUi') blockUISelect: NgBlockUI;
+  constructor(
+    private harvestService: HarvestService,
+  ) { }
 
   @Input() breadcrumb: object;
-  @Output() idCategory = new EventEmitter<String>();
+  @Output() idCategory = new EventEmitter<Harvest>();
 
   ngOnInit() {
     this.processBreadCrumbLinks();
-    this.singlebasicSelected = this.singleSelectArray[0].item_text;
-    this.idCategory.emit(this.singlebasicSelected);
+    this.getFullInfoHarvest();
+    //this.a();
   }
   private processBreadCrumbLinks() {
   }
 
-  change($event): void {
-    this.singlebasicSelected = $event.item_text;
-    this.idCategory.emit(this.singlebasicSelected);
+  getFullInfoHarvest(): void {
+    this.blockUISelect.start("Cargando...");
+    this.harvestService.getFullInfoHarvest().subscribe(data => {
+      //console.log("DATA", data);
+      this.dataForSelect = data;
+      this.singlebasicSelected = this.dataForSelect[0];
+      this.idCategory.emit(this.singlebasicSelected);
+      //this.harvests = data;
+      this.blockUISelect.stop();
+    });
+  }
+
+  a() {
+    this.harvestService.getFullInHarvest().then((data => {
+      data.forEach(element => {
+        this.dataForSelect2.push(element.data());
+      });
+    })).finally(() => {
+      this.dataForSelect = this.dataForSelect2;
+      console.log("dataForSelect", this.dataForSelect);
+      this.singlebasicSelected = this.dataForSelect[0];
+      console.log("singlebasicSelected", this.singlebasicSelected);
+      this.idCategory.emit(this.singlebasicSelected);
+    });
+  }
+  change($event: Harvest): void {
+    if ($event) {
+      this.singlebasicSelected = $event;
+      this.idCategory.emit(this.singlebasicSelected);
+    }
   }
 }

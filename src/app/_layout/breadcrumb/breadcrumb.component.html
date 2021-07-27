@@ -21,13 +21,13 @@
   </div>
   <div *ngIf="breadcrumb.options" class="content-header-right col-md-6 col-12">
     <div class="d-flex justify-content-end">
-      <div class="col-md-6">
+      <div class="col-md-6" *blockUI="'selectBlockUi'; message: 'Loading'">
         <ng-select
-          [items]="singleSelectArray"
+          [items]="dataForSelect"
           [searchable]="true"
-          bindLabel="item_text"
+          bindLabel="name"
           placeholder="Selecciona una categoría"
-          [(ngModel)]="singlebasicSelected"
+          [(ngModel)]="singlebasicSelected.name"
           (ngModelChange)="change($event)"
         >
         </ng-select>
