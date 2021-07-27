@@ -32,6 +32,20 @@ export class ShowDataComponent implements OnInit {
   public barChartData = chartsData.barChartData;
   public barChartColors = chartsData.barChartColors;
 
+  /**
+   * Pie
+   */
+  public pieChartLabels = chartsData.pieChartLabels;
+  public pieChartData = chartsData.pieChartData;
+  public pieChartType = chartsData.pieChartType;
+  public pieChartColors = chartsData.pieChartColors;
+  public pieChartOptions = chartsData.pieChartOptions;
+
+  public pieChartLabels2: string[] = []; //nombres
+  public pieChartData2: number[] = []; // pesos de cosecha
+
+  /**/
+
   private harvests: Harvest[];
   public quantitieCategory: number;
   public quantitieRegisters: number;
@@ -83,9 +97,15 @@ export class ShowDataComponent implements OnInit {
   getDataCardRegister(id: string): void {
     this.blockUIregisterCard.start("Cargando...");
     this.harvestService.getFullInfoRegisterHarvest(id).subscribe(data => {
+      this.pieChartLabels2 = [];
+      this.pieChartData2 = [];
+      data.forEach(element => {
+        this.pieChartLabels2.push(element.name);
+        var num = parseFloat((Math.round(element.acumulate * 100) / 100).toFixed(2));
+        this.pieChartData2.push(num);
+      });
       this.quantitieRegisters = data.length;
       this.blockUIregisterCard.stop();
     });
   }
-
 }

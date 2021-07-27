@@ -24,8 +24,8 @@ export class BreadcrumbComponent implements OnInit {
   ngOnInit() {
     this.processBreadCrumbLinks();
 
-    //this.getFullInfoHarvest();
-    this.getFullInHarvest();
+    this.getFullInfoHarvest();
+    //this.getFullInHarvest();
   }
   private processBreadCrumbLinks() {
   }
@@ -34,14 +34,10 @@ export class BreadcrumbComponent implements OnInit {
    * Utilizar si se necesita que exista sincronización de datos en tiempo real.
    */
   getFullInfoHarvest(): void {
-    this.blockUISelect.start("Cargando...");
     this.harvestService.getFullInfoHarvest().subscribe(data => {
-      //console.log("DATA", data);
       this.dataForSelect = data;
       this.singlebasicSelected = this.dataForSelect[0];
       this.idCategory.emit(this.singlebasicSelected);
-      //this.harvests = data;
-      this.blockUISelect.stop();
     });
   }
 
