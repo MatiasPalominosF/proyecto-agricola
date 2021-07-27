@@ -72,4 +72,8 @@ export class ShowDataComponent implements OnInit {
 
   }
 
+  setValuesInDashboard(event: any): void {
+    console.log(event);
+  }
+
 }

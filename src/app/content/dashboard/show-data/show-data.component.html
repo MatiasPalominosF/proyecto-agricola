@@ -2,7 +2,11 @@
   <div class="content-overlay"></div>
   <div class="content-wrapper">
     <div class="content-header row mb-1">
-      <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+      <app-breadcrumb
+        class="col-12"
+        (idCategory)="setValuesInDashboard($event)"
+        [breadcrumb]="breadcrumb"
+      ></app-breadcrumb>
     </div>
     <div class="content-body">
       <!-- Hospital Info cards -->
@@ -22,7 +26,9 @@
                     <h5 class="text-muted text-bold-500">
                       Categorías disponibles
                     </h5>
-                    <h3 class="text-bold-600">{{ quantitieCategory | number}}</h3>
+                    <h3 class="text-bold-600">
+                      {{ quantitieCategory | number }}
+                    </h3>
                   </div>
                 </div>
               </div>
