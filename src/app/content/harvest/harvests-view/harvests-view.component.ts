@@ -137,7 +137,7 @@ export class HarvestsViewComponent implements OnInit {
     }
   }
 
-  reload(): void {
+  reload(event: any): void {
     console.log("que hay: ", this.dataToExport);
 
     this.blockUIHarvest.start('Cargando...');
