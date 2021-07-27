@@ -33,9 +33,9 @@ export class BreadcrumbComponent implements OnInit {
       "item_id": 7, "item_text": "New York"
     }
   ];
-  public dataForSelect: Harvest[];
+  public dataForSelect: Array<Harvest> = [];
   public dataForSelect2: Array<Harvest> = [];
-  public singlebasicSelected: Harvest;
+  public singlebasicSelected: Harvest = {};
   @BlockUI('selectBlockUi') blockUISelect: NgBlockUI;
   constructor(
     private harvestService: HarvestService,
@@ -46,6 +46,7 @@ export class BreadcrumbComponent implements OnInit {
 
   ngOnInit() {
     this.processBreadCrumbLinks();
+
     this.getFullInfoHarvest();
     //this.a();
   }
