@@ -10,29 +10,6 @@ import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 })
 export class BreadcrumbComponent implements OnInit {
 
-  public singleSelectArray = [
-    {
-      "item_id": 1, "item_text": "Alaska"
-    },
-    {
-      "item_id": 2, "item_text": "California"
-    },
-    {
-      "item_id": 3, "item_text": "Colorado"
-    },
-    {
-      "item_id": 4, "item_text": "New Mexico"
-    },
-    {
-      "item_id": 5, "item_text": "Alabama"
-    },
-    {
-      "item_id": 6, "item_text": "Connecticut"
-    },
-    {
-      "item_id": 7, "item_text": "New York"
-    }
-  ];
   public dataForSelect: Array<Harvest> = [];
   public dataForSelect2: Array<Harvest> = [];
   public singlebasicSelected: Harvest = {};
@@ -47,12 +24,15 @@ export class BreadcrumbComponent implements OnInit {
   ngOnInit() {
     this.processBreadCrumbLinks();
 
-    this.getFullInfoHarvest();
-    //this.a();
+    //this.getFullInfoHarvest();
+    this.getFullInHarvest();
   }
   private processBreadCrumbLinks() {
   }
 
+  /**
+   * Utilizar si se necesita que exista sincronización de datos en tiempo real.
+   */
   getFullInfoHarvest(): void {
     this.blockUISelect.start("Cargando...");
     this.harvestService.getFullInfoHarvest().subscribe(data => {
@@ -65,16 +45,18 @@ export class BreadcrumbComponent implements OnInit {
     });
   }
 
-  a() {
+
+  /**
+   * Método parecido a getFullInfoHarvest(), pero no se obtienen los datos en tiempo real.
+   */
+  getFullInHarvest() {
     this.harvestService.getFullInHarvest().then((data => {
       data.forEach(element => {
         this.dataForSelect2.push(element.data());
       });
     })).finally(() => {
       this.dataForSelect = this.dataForSelect2;
-      console.log("dataForSelect", this.dataForSelect);
       this.singlebasicSelected = this.dataForSelect[0];
-      console.log("singlebasicSelected", this.singlebasicSelected);
       this.idCategory.emit(this.singlebasicSelected);
     });
   }
