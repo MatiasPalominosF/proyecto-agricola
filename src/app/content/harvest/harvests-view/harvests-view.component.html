@@ -91,17 +91,25 @@
                           </ngb-highlight>
                         </td>
                         <td>
-                          <ngb-highlight
-                            [result]="
-                              element.dateEnd.toDate().toString()
-                                | date: 'dd/MM/yyyy HH:mm'
-                            "
-                            [term]="
-                              element.dateEnd.toDate().toString()
-                                | date: 'dd/MM/yyyy HH:mm'
-                            "
+                          <div
+                            *ngIf="prueba; else elseBlock"
+                            class="badge border-info info badge-border"
                           >
-                          </ngb-highlight>
+                            En proceso...
+                          </div>
+                          <ng-template #elseBlock
+                            ><ngb-highlight
+                              [result]="
+                                element.dateEnd.toDate()
+                                  | date: 'dd/MM/yyyy HH:mm'
+                              "
+                              [term]="
+                                element.dateEnd.toDate()
+                                  | date: 'dd/MM/yyyy HH:mm'
+                              "
+                            >
+                            </ngb-highlight
+                          ></ng-template>
                         </td>
                         <td>
                           <div class="d-flex justify-content-start">

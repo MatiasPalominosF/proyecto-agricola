@@ -39,6 +39,7 @@ export class HarvestsViewComponent implements OnInit {
   public pageSize = 4;
   private dataToExport = [];
   private closeResult = '';
+  public prueba = false;
 
   constructor(
     private harvestService: HarvestService,
