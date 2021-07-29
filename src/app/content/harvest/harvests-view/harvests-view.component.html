@@ -93,9 +93,15 @@
                         <td>
                           <div
                             *ngIf="prueba; else elseBlock"
-                            class="badge border-info info badge-border"
+                            class="
+                              badge
+                              border-left-info border-right-info
+                              round
+                              badge-striped
+                            "
                           >
-                            En proceso...
+                            <i class="la la-clock-o font-medium-2"></i>
+                            <span>En proceso...</span>
                           </div>
                           <ng-template #elseBlock
                             ><ngb-highlight
