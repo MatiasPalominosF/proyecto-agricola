@@ -9,6 +9,24 @@ import { RegisterHarvest } from 'src/app/_models/register-harvest';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 import { RegistersUsersComponent } from '../registers-users/registers-users.component';
 import { TableExcelService } from '../../../_services/table-excel/table-excel.service';
+import { Harvest } from 'src/app/_models/harvest';
+
+export interface Test {
+  idCategory?: string;
+  idUser?: string;
+  nameUser?: string;
+  acumulate?: number;
+  lastDate?: any;
+}
+
+export interface FullInfo {
+  idCategory?: string;
+  nameCategory?: string;
+  idUser?: string;
+  nameUser?: string;
+  acumulate?: number;
+  lastDate?: any;
+}
 
 @Component({
   selector: 'app-registers-harvest',
@@ -18,6 +36,8 @@ import { TableExcelService } from '../../../_services/table-excel/table-excel.se
 export class RegistersHarvestComponent implements OnInit {
   @Input() public id: string;
   @Input() public name: string;
+  @Input() public categories: Array<string>;
+  @Input() public harvests: Harvest[];
   @BlockUI('registerHarvest') blockUIHarvest: NgBlockUI;
 
   public title: string;
@@ -36,6 +56,9 @@ export class RegistersHarvestComponent implements OnInit {
   public harvestSearch: Observable<RegisterHarvest[]>;
   public filter = new FormControl('');
   private dataToExport: Array<RegisterHarvest> = [];
+  private dataToExport2: Array<FullInfo>;
+  private a: Array<any> = [];
+  private b: Array<Test>;
   public from = new Date('December 25, 1995 13:30:00');;
   public to = new Date();
   private closeResult = '';
@@ -50,10 +73,40 @@ export class RegistersHarvestComponent implements OnInit {
   ngOnInit(): void {
     this.title = "Registros de las cosechas";
     this.getFullInfoRegisterHarvest();
+
   }
 
   exportToExcel() {
-    let data = [];
+    //this.prueba();
+
+    this.dataToExport2 = [];
+    console.log("this.b ----> ", this.b);
+
+    this.harvests.forEach(harvest => {
+      this.b.forEach(data => {
+        if (harvest.id == data.idCategory) {
+          let object = {
+            idCategory: "",
+            nameCategory: "",
+            idUser: "",
+            nameUser: "",
+            acumulate: 0,
+            lastDate: null,
+          }
+          object.idCategory = harvest.id;
+          object.nameCategory = harvest.name;
+          object.idUser = data.idUser;
+          object.nameUser = data.nameUser;
+          object.acumulate = data.acumulate;
+          object.lastDate = data.lastDate.toDate();
+          this.dataToExport2.push(object);
+        }
+      });
+    });
+
+    console.log("this.dataToExport2 --->", this.dataToExport2);
+
+    /*let data = [];
     this.dataToExport.forEach(element => {
       let object = { Rut: "", Nombre: "", Fecha: null, PesoAcumulado: 0 };
       object.Nombre = element.name;
@@ -62,8 +115,51 @@ export class RegistersHarvestComponent implements OnInit {
       object.PesoAcumulado = element.acumulate;
       data.push(object);
     });
+  */
+    this.tableexcelService.exportAsExcelFile(this.dataToExport2, 'Proyecto agrícola - Registro de cosechas');
+  }
 
-    this.tableexcelService.exportAsExcelFile(data, 'Proyecto agrícola - Registro de cosechas');
+
+  prueba() {
+    this.b = [];
+    this.categories.forEach(idCategory => {
+      this.dataToExport.forEach(registers => {
+        this.harvestService.getFullInfoRegisterHarvestCondition(idCategory, registers.id).subscribe(data => {
+          data.forEach(element => {
+            let object = {
+              idCategory: "",
+              idUser: "",
+              nameUser: "",
+              acumulate: 0,
+              lastDate: null,
+            };
+            object.idCategory = idCategory;
+            object.idUser = registers.id;
+            object.nameUser = element.name;
+            object.acumulate = element.acumulate;
+            object.lastDate = element.lastDate;
+            //Si ya no se añadió, que lo agregue.
+            if (this.b.indexOf(object) === -1) {
+              this.b.push(object);
+            }
+          });
+
+          console.log("ACÁ HAY: ", this.b);
+          //console.log(data);
+          //this.a.push(data);
+          //this.a = this.clearArray(this.a);
+
+        });
+      });
+    });
+  }
+
+  clearArray2(any, object) {
+  }
+
+  clearArray(any) {
+    any = any.filter((i) => i.length !== 0);
+    return any;
   }
 
   showDetails(id: string, name: string): void {
@@ -95,9 +191,9 @@ export class RegistersHarvestComponent implements OnInit {
   getFullInfoRegisterHarvest(): void {
     this.blockUIHarvest.start("Cargando...");
     this.harvestService.getFullInfoRegisterHarvest(this.id).subscribe(data => {
-      data.forEach(element => {
+      /*data.forEach(element => {
         console.log(element.lastDate.toDate().toLocaleDateString('es-CL', { weekday: 'long' }));
-      });
+      });*/ ///SE OBTIENE EL DÍA DE LA SEMANA CON ESTO....
       this.registerHarvests = data;
       this.collectionSize = this.registerHarvests.length;
       this.searchData(this.pipe);
@@ -134,6 +230,7 @@ export class RegistersHarvestComponent implements OnInit {
   getDataToExport(): void {
     this.harvestSearch.subscribe(data => {
       this.dataToExport = data;
+      this.prueba();
     });
   }
 

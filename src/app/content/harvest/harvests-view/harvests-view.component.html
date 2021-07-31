@@ -92,7 +92,7 @@
                         </td>
                         <td>
                           <div
-                            *ngIf="prueba; else elseBlock"
+                            *ngIf="element.dateEnd == null; else elseBlock"
                             class="
                               badge
                               border-left-info border-right-info
@@ -154,9 +154,6 @@
                       <option [ngValue]="2">2 ítems por página</option>
                       <option [ngValue]="4">4 ítems por página</option>
                       <option [ngValue]="6">6 ítems por página</option>
-                      <option [ngValue]="collectionSize">
-                        Mostrar todos lo ítems
-                      </option>
                     </select>
                   </div>
                 </div>

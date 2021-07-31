@@ -40,6 +40,7 @@ export class HarvestsViewComponent implements OnInit {
   private dataToExport = [];
   private closeResult = '';
   public prueba = false;
+  private categories: Array<string>;
 
   constructor(
     private harvestService: HarvestService,
@@ -69,8 +70,12 @@ export class HarvestsViewComponent implements OnInit {
   }
 
   getFullInfoHarvest(): void {
+    this.categories = [];
     this.blockUIHarvest.start("Cargando...");
     this.harvestService.getFullInfoHarvest().subscribe(data => {
+      data.forEach(element => {
+        this.categories.push(element.id);
+      });
       this.harvests = data;
       this.collectionSize = this.harvests.length;
       this.searchData(this.pipe);
@@ -118,6 +123,8 @@ export class HarvestsViewComponent implements OnInit {
     const modalRef = this.modalService.open(RegistersHarvestComponent, { windowClass: 'animated fadeInDown my-class', size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.id = id;
     modalRef.componentInstance.name = name;
+    modalRef.componentInstance.categories = this.categories;
+    modalRef.componentInstance.harvests = this.harvests;
     modalRef.result.then((result) => {
       if (!result) {
         this.notifyService.showSuccess("Editar", "¡El producto se editó correctamente!");

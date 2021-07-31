@@ -51,6 +51,18 @@ export class HarvestService {
         });
       }));
   }
+  getFullInfoRegisterHarvestCondition(idCategory: string, idUser: string): Observable<RegisterHarvest[]> {
+    return this.registerHarvests = this.afs.collection('category').doc(`${idCategory}`).collection<RegisterHarvest>('registers', ref => ref.where('id', '==', `${idUser}`))
+      .snapshotChanges()
+      .pipe(map(changes => {
+        return changes.map(action => {
+          const data = action.payload.doc.data() as RegisterHarvest;
+          data.id = action.payload.doc.id;
+          return data;
+        });
+      }));
+  }
+
 
   getFullInfoRegisterUser(category: string, idUser: string): Observable<RegisterUser[]> {
     return this.registerUsers = this.afs.collection('category').doc(`${category}`).collection('registers').doc(`${idUser}`).collection<RegisterUser>('workerRegisters', ref => ref.where('category', '==', `${category}`))
