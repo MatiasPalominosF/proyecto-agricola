@@ -1,4 +1,4 @@
-import { DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, formatDate } from '@angular/common';
 import { Component, Input, OnInit, PipeTransform } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ModalDismissReasons, NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,21 +10,14 @@ import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 import { RegistersUsersComponent } from '../registers-users/registers-users.component';
 import { TableExcelService } from '../../../_services/table-excel/table-excel.service';
 import { Harvest } from 'src/app/_models/harvest';
+import { DataCategory } from '../harvests-view/harvests-view.component';
 
-export interface Test {
-  idCategory?: string;
-  idUser?: string;
-  nameUser?: string;
-  acumulate?: number;
-  lastDate?: any;
-}
-
-export interface FullInfo {
+export interface DataToExcel {
   idCategory?: string;
   nameCategory?: string;
   idUser?: string;
   nameUser?: string;
-  acumulate?: number;
+  weight?: string;
   lastDate?: any;
 }
 
@@ -36,9 +29,12 @@ export interface FullInfo {
 export class RegistersHarvestComponent implements OnInit {
   @Input() public id: string;
   @Input() public name: string;
-  @Input() public categories: Array<string>;
+  @Input() public categories: Array<DataCategory>;
   @Input() public harvests: Harvest[];
   @BlockUI('registerHarvest') blockUIHarvest: NgBlockUI;
+  @BlockUI('buttonExcel') buttonExcelBlock: NgBlockUI;
+
+
 
   public title: string;
   public options = {
@@ -56,9 +52,8 @@ export class RegistersHarvestComponent implements OnInit {
   public harvestSearch: Observable<RegisterHarvest[]>;
   public filter = new FormControl('');
   private dataToExport: Array<RegisterHarvest> = [];
-  private dataToExport2: Array<FullInfo>;
-  private a: Array<any> = [];
-  private b: Array<Test>;
+  private dataToExport2: Array<DataToExcel>;
+  private dataToExcel: Array<DataToExcel>;
   public from = new Date('December 25, 1995 13:30:00');;
   public to = new Date();
   private closeResult = '';
@@ -77,12 +72,49 @@ export class RegistersHarvestComponent implements OnInit {
   }
 
   exportToExcel() {
-    //this.prueba();
-
     this.dataToExport2 = [];
-    console.log("this.b ----> ", this.b);
 
-    this.harvests.forEach(harvest => {
+    console.log("this.dataToExcel: ", this.dataToExcel);
+    this.dataToExcel.forEach(data => {
+      let objectFinded = this.dataToExport2.find(function (el) { return el.idUser == data.idUser && el.idCategory == data.idCategory });
+      if (objectFinded != undefined) {
+        let objectInArray = this.dataToExport2.find(function (el) { return el.idUser == data.idUser && el.idCategory == data.idCategory});
+        let indexObjectInArray = this.dataToExport2.indexOf(objectInArray);
+        let object: DataToExcel = {};
+        object.idUser = data.idUser;
+        object.nameUser = data.nameUser;
+        object.idCategory = data.idCategory;
+        object.lastDate = data.lastDate;
+        object.nameCategory = data.nameCategory;
+        let acumulate = parseFloat(data.weight) + parseFloat(objectInArray.weight);
+        acumulate = Math.round((acumulate + Number.EPSILON) * 100) / 100;
+        object.weight = acumulate.toString();
+        this.dataToExport2[indexObjectInArray] = object;
+        objectFinded = undefined;
+      } else {
+        this.dataToExport2.push(data);
+        objectFinded = undefined;
+      }
+
+      /*if (!isInArray) {
+        this.dataToExport2.push(data);
+      } else {
+        let objectInArray = this.dataToExport2.find(function (el) { return el.idUser === data.idUser });
+        let indexObjectInArray = this.dataToExport2.indexOf(objectInArray);
+        let object: DataToExcel = {};
+        object.idUser = data.idUser;
+        object.nameUser = data.nameUser;
+        object.idCategory = data.idCategory;
+        object.lastDate = data.lastDate;
+        object.nameCategory = data.nameCategory;
+        let acumulate = parseFloat(data.weight) + parseFloat(objectInArray.weight);
+        object.weight = acumulate.toString();
+        this.dataToExport2[indexObjectInArray] = object;
+      }*/
+
+    });
+
+    /*this.harvests.forEach(harvest => {
       this.b.forEach(data => {
         if (harvest.id == data.idCategory) {
           let object = {
@@ -90,21 +122,21 @@ export class RegistersHarvestComponent implements OnInit {
             nameCategory: "",
             idUser: "",
             nameUser: "",
-            acumulate: 0,
+            weight: 0,
             lastDate: null,
           }
           object.idCategory = harvest.id;
           object.nameCategory = harvest.name;
           object.idUser = data.idUser;
           object.nameUser = data.nameUser;
-          object.acumulate = data.acumulate;
+          object.weight = data.weight;
           object.lastDate = data.lastDate.toDate();
           this.dataToExport2.push(object);
         }
       });
-    });
+    });*/
 
-    console.log("this.dataToExport2 --->", this.dataToExport2);
+    //console.log("this.dataToExport2 --->", this.dataToExport2);
 
     /*let data = [];
     this.dataToExport.forEach(element => {
@@ -120,46 +152,92 @@ export class RegistersHarvestComponent implements OnInit {
   }
 
 
-  prueba() {
-    this.b = [];
-    this.categories.forEach(idCategory => {
-      this.dataToExport.forEach(registers => {
-        this.harvestService.getFullInfoRegisterHarvestCondition(idCategory, registers.id).subscribe(data => {
-          data.forEach(element => {
-            let object = {
-              idCategory: "",
-              idUser: "",
-              nameUser: "",
-              acumulate: 0,
-              lastDate: null,
-            };
-            object.idCategory = idCategory;
-            object.idUser = registers.id;
-            object.nameUser = element.name;
-            object.acumulate = element.acumulate;
-            object.lastDate = element.lastDate;
-            //Si ya no se añadió, que lo agregue.
-            if (this.b.indexOf(object) === -1) {
-              this.b.push(object);
-            }
+
+
+  getDataToExcel() {
+    this.dataToExcel = [];
+    //console.log("this.dataToExport", this.dataToExport);
+
+    const waitFor = (ms) => new Promise(r => setTimeout(r, ms))
+    const asyncForEach = async (array, callback) => {
+      for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array)
+      }
+    }
+
+    const start = async () => {
+      await asyncForEach(this.categories, async (category) => {
+        await waitFor(50);
+        await asyncForEach(this.dataToExport, async (register) => {
+          await waitFor(50);
+          const datepipe: DatePipe = new DatePipe('en-US')
+          let a = datepipe.transform(register.lastDate.toDate(), 'yyyy-MM-dd');
+          let b = datepipe.transform(register.lastDate.toDate(), 'yyyy-MM-dd');
+          let dateInit = new Date(a + "T00:00:00");
+          let dateEnd = new Date(b + "T23:59:59.999999999");
+          this.harvestService.getFullInfoRegisterHarvestCondition(category.idCategory, register.id, dateInit, dateEnd).subscribe(data => {
+            //console.log("data --->", data);
+            data.forEach(element => {
+              let object: DataToExcel = {};
+              object.idCategory = category.idCategory;
+              object.nameCategory = category.nameCategory;
+              object.idUser = register.id;
+              object.nameUser = register.name;
+              object.weight = element.weight;
+              object.lastDate = element.date.toDate();
+
+              //console.log("object ----------------------------->", object);
+
+              if (!this.dataToExcel.some(el => el === object)) {
+                this.dataToExcel.push(object);
+
+              }
+              object = {};
+            });
           });
-
-          console.log("ACÁ HAY: ", this.b);
-          //console.log(data);
-          //this.a.push(data);
-          //this.a = this.clearArray(this.a);
-
         });
       });
-    });
-  }
+      this.buttonExcelBlock.stop();
+    }
+    start();
+    /*this.categories.forEach(category => {
+      this.dataToExport.forEach(registers => {
+        let dateInit = new Date(registers.lastDate.toDate().toISOString().split('T')[0] + "T00:00:00");
+        let dateEnd = new Date(registers.lastDate.toDate().toISOString().split('T')[0] + "T23:59:59.999999999");
 
-  clearArray2(any, object) {
-  }
 
-  clearArray(any) {
-    any = any.filter((i) => i.length !== 0);
-    return any;
+        this.harvestService.getFullInfoRegisterHarvestCondition(category.idCategory, registers.id, dateInit, dateEnd).subscribe(data => {
+          //console.log("data ", data);
+
+          /*data.forEach(element => {
+            //console.log("Category ", category);
+            //console.log("registers: ", registers);
+            let object: DataToExcel = {};
+            object.idCategory = category.idCategory;
+            object.nameCategory = category.nameCategory;
+            object.idUser = registers.id;
+            object.nameUser = registers.name;
+            object.weight = element.weight;
+            object.lastDate = element.date.toDate();
+
+            //console.log("object ----------------------------->", object);
+
+            if (!this.dataToExcel.some(el => el === object)) {
+              this.dataToExcel.push(object);
+
+            }
+            object = {};
+
+            console.log("ESTO TIENE: ", this.dataToExcel);
+            //Si ya no se añadió, que lo agregue.
+            /*if (this.dataToExcel.indexOf(object) === -1) {
+              this.dataToExcel.push(object);
+            }
+
+          });
+        });
+      });
+    });*/
   }
 
   showDetails(id: string, name: string): void {
@@ -190,6 +268,7 @@ export class RegistersHarvestComponent implements OnInit {
 
   getFullInfoRegisterHarvest(): void {
     this.blockUIHarvest.start("Cargando...");
+    this.buttonExcelBlock.start("Cargando...");
     this.harvestService.getFullInfoRegisterHarvest(this.id).subscribe(data => {
       /*data.forEach(element => {
         console.log(element.lastDate.toDate().toLocaleDateString('es-CL', { weekday: 'long' }));
@@ -230,7 +309,7 @@ export class RegistersHarvestComponent implements OnInit {
   getDataToExport(): void {
     this.harvestSearch.subscribe(data => {
       this.dataToExport = data;
-      this.prueba();
+      this.getDataToExcel();
     });
   }
 

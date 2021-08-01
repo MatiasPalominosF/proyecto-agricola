@@ -34,7 +34,7 @@ export class RegistersUsersComponent implements OnInit {
   getFullInfoRegisterUser() {
     this.blockUIHarvest.start("Cargando...");
     this.harvestService.getFullInfoRegisterUser(this.category, this.id).subscribe(data => {
-      console.log(data);
+      //console.log(data);
       this.registersUsers = data;
       this.categoryName = this.name;
       this.title += " - " + this.nameUser

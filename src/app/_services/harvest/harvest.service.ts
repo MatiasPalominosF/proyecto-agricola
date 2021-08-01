@@ -51,12 +51,26 @@ export class HarvestService {
         });
       }));
   }
-  getFullInfoRegisterHarvestCondition(idCategory: string, idUser: string): Observable<RegisterHarvest[]> {
-    return this.registerHarvests = this.afs.collection('category').doc(`${idCategory}`).collection<RegisterHarvest>('registers', ref => ref.where('id', '==', `${idUser}`))
+
+
+  async getFullInfoRegisterHarvestCondition2(idCategory: string, idUser: string, dateInit: Date, dateEnd: Date) {
+    console.log("idCategory: ", idCategory, " --> ", "idUser: ", idUser);
+    return await this.afs.firestore.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`)
+      .collection('workerRegisters').where('category', '==', `${idCategory}`)
+      .where('date', '>=', dateInit)
+      .where('date', '<', dateEnd).get();
+  }
+
+  getFullInfoRegisterHarvestCondition(idCategory: string, idUser: string, dateInit: Date, dateEnd: Date): Observable<RegisterUser[]> {
+    return this.registerHarvests = this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`)
+      .collection<RegisterUser>('workerRegisters', ref => ref
+        .where('category', '==', `${idCategory}`)
+        .where('date', '>=', dateInit)
+        .where('date', '<=', dateEnd))
       .snapshotChanges()
       .pipe(map(changes => {
         return changes.map(action => {
-          const data = action.payload.doc.data() as RegisterHarvest;
+          const data = action.payload.doc.data() as RegisterUser;
           data.id = action.payload.doc.id;
           return data;
         });

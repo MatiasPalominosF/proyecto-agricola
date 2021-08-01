@@ -10,6 +10,11 @@ import { NotificationService } from 'src/app/_services/notification/notification
 import { HarvestService } from '../../../_services/harvest/harvest.service';
 import { RegistersHarvestComponent } from '../registers-harvest/registers-harvest.component';
 
+export interface DataCategory {
+  idCategory?: string;
+  nameCategory?: string;
+}
+
 @Component({
   selector: 'app-harvests-view',
   templateUrl: './harvests-view.component.html',
@@ -40,7 +45,7 @@ export class HarvestsViewComponent implements OnInit {
   private dataToExport = [];
   private closeResult = '';
   public prueba = false;
-  private categories: Array<string>;
+  private categories: Array<DataCategory>;
 
   constructor(
     private harvestService: HarvestService,
@@ -74,7 +79,14 @@ export class HarvestsViewComponent implements OnInit {
     this.blockUIHarvest.start("Cargando...");
     this.harvestService.getFullInfoHarvest().subscribe(data => {
       data.forEach(element => {
-        this.categories.push(element.id);
+        let object = {
+          idCategory: "",
+          nameCategory: ""
+        }
+
+        object.idCategory = element.id;
+        object.nameCategory = element.name;
+        this.categories.push(object);
       });
       this.harvests = data;
       this.collectionSize = this.harvests.length;

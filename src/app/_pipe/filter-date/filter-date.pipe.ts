@@ -11,12 +11,10 @@ export class FilterDatePipe implements PipeTransform {
       return;
     }
     row.forEach(element => {
-      console.log("element.dateEnd", element.dateEnd);
       if (element.dateEnd == null) {
         flag = false;
       }
     });
-    console.log("flag : ", flag);
     if (flag) {
       f1.toString().length == 0 ? f1 = new Date() : f1;
       f2 == null ? f2 = new Date() : f2;
