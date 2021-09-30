@@ -11,12 +11,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PipeModule } from '../../_pipe/pipe.module';
 import { RegistersHarvestComponent } from './registers-harvest/registers-harvest.component';
 import { RegistersUsersComponent } from './registers-users/registers-users.component';
+import { HarvestEditComponent } from './harvest-edit/harvest-edit.component';
 
 @NgModule({
   declarations: [
     HarvestsViewComponent,
     RegistersHarvestComponent,
-    RegistersUsersComponent
+    RegistersUsersComponent,
+    HarvestEditComponent
   ],
   imports: [
     CommonModule,
