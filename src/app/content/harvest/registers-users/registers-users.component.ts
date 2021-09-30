@@ -63,7 +63,7 @@ export class RegistersUsersComponent implements OnInit {
 
   delete(id: string, weight: number): void {
 
-    this.confirmationDialogService.confirm('Confirmación', '¿Estás seguro de eliminar el producto?').then(confirmed => {
+    this.confirmationDialogService.confirm('Confirmación', '¿Estás seguro de eliminar el registro?').then(confirmed => {
       if (!confirmed) {
       } else {
         this.harvestService.deleteProduct(this.category, this.id, id).finally(() => {
