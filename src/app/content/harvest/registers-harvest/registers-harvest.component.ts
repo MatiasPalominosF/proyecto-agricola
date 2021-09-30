@@ -78,7 +78,7 @@ export class RegistersHarvestComponent implements OnInit {
     this.dataToExcel.forEach(data => {
       let objectFinded = this.dataToExport2.find(function (el) { return el.idUser == data.idUser && el.idCategory == data.idCategory });
       if (objectFinded != undefined) {
-        let objectInArray = this.dataToExport2.find(function (el) { return el.idUser == data.idUser && el.idCategory == data.idCategory});
+        let objectInArray = this.dataToExport2.find(function (el) { return el.idUser == data.idUser && el.idCategory == data.idCategory });
         let indexObjectInArray = this.dataToExport2.indexOf(objectInArray);
         let object: DataToExcel = {};
         object.idUser = data.idUser;
@@ -240,10 +240,11 @@ export class RegistersHarvestComponent implements OnInit {
     });*/
   }
 
-  showDetails(id: string, name: string): void {
+  showDetails(id: string, name: string, acumulate: number): void {
     const modalRef = this.modalService.open(RegistersUsersComponent, { windowClass: 'animated fadeInDown', size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.id = id; //ID del usuario.
     modalRef.componentInstance.category = this.id; //ID de la categoría.
+    modalRef.componentInstance.acumulate = acumulate;
     modalRef.componentInstance.name = this.name;
     modalRef.componentInstance.nameUser = name;
     modalRef.result.then((result) => {

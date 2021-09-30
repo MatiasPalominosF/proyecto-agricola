@@ -12,11 +12,13 @@ import { RegisterUser } from '../../../_models/register-user';
 export class RegistersUsersComponent implements OnInit {
   @Input() public id: string;
   @Input() public category: string;
+  @Input() public acumulate: number;
   @Input() public name: string;
   @Input() public nameUser: string;
   @BlockUI('userRegister') blockUIHarvest: NgBlockUI;
 
   public categoryName: string;
+  public rol: boolean;
   private registersUsers: RegisterUser[];
   public title: string;
   items = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
@@ -38,7 +40,27 @@ export class RegistersUsersComponent implements OnInit {
       this.registersUsers = data;
       this.categoryName = this.name;
       this.title += " - " + this.nameUser
+      this.rol = true;
       this.blockUIHarvest.stop();
+    });
+  }
+
+  editRegister(id: string) {
+    console.log("Se edita registro ID: " + id);
+  }
+
+  updateAcumulate(weight: number): void {
+    weight = +weight;
+    this.acumulate -= weight;
+    this.harvestService.updateFieldInRegisterUsers(this.category, this.id, this.acumulate);
+    // idCategory, idUser y se actualiza el acumulado
+
+  }
+
+  delete(id: string, weight: number): void {
+    this.harvestService.deleteProduct(this.category, this.id, id).finally(() => {
+      //LLamar función que actualizas el promedio.
+      this.updateAcumulate(weight);
     });
   }
 

@@ -18,9 +18,20 @@
             <div class="card overflow-hidden">
               <div class="card-content">
                 <div class="media align-items-stretch">
-                  <div class="bg-info p-1 media-middle">
-                    <i class="icon-pencil font-large-2 text-white"></i>
-                  </div>
+                  <ng-container *ngIf="rol; else elseEdit">
+                    <div
+                      class="bg-info p-1 media-middle"
+                      (click)="editRegister(item.id)"
+                    >
+                      <i class="icon-pencil font-large-2 text-white"></i>
+                    </div>
+                  </ng-container>
+                  <ng-template #elseEdit
+                    ><div class="bg-info p-1 media-middle">
+                      <i
+                        class="icon-book-open font-large-2 text-white"
+                      ></i></div
+                  ></ng-template>
                   <div class="media-body p-1">
                     <h4>{{ categoryName }}</h4>
                     <span>{{
@@ -30,6 +41,18 @@
                   <div class="media-right p-1 media-middle">
                     <h1 class="info">{{ item.weight | number }} kg</h1>
                   </div>
+                  <ng-container *ngIf="rol">
+                    <div class="media-right mr-1">
+                      <button
+                        type="button"
+                        class="close"
+                        aria-label="Close"
+                        (click)="delete(item.id, item.weight)"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  </ng-container>
                 </div>
               </div>
             </div>

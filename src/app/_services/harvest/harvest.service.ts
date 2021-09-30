@@ -89,4 +89,16 @@ export class HarvestService {
         });
       }));
   }
+
+  async deleteProduct(idCategory: string, idUser: string, idRegister: string) {
+    /*this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`).collection<RegisterUser>('workerRegisters').doc(`${idRegister}`);
+    return await this.harvestDoc.delete();*/
+    console.log("Si entra");
+    this.harvestDoc = this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`).collection<RegisterUser>('workerRegisters').doc(`${idRegister}`);
+    this.harvestDoc.delete();
+  }
+
+  updateFieldInRegisterUsers(idCategory: string, idUser: string, acumulate: number) {
+    this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`).update({ "acumulate": acumulate });
+  }
 }
