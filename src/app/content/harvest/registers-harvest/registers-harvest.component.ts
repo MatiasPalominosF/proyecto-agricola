@@ -66,7 +66,7 @@ export class RegistersHarvestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.title = "Registros de las cosechas";
+    this.title = "Registros de las cosechas - " + this.name;;
     this.getFullInfoRegisterHarvest();
 
   }
@@ -278,7 +278,6 @@ export class RegistersHarvestComponent implements OnInit {
       this.collectionSize = this.registerHarvests.length;
       this.searchData(this.pipe);
       this.getDataToExport();
-      this.title += " - " + this.name;
       this.blockUIHarvest.stop();
     });
   }

@@ -33,7 +33,7 @@ export class RegistersUsersComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.title = "Registro de los usuarios";
+    this.title = "Registro de los usuarios - " + this.nameUser;
     this.getFullInfoRegisterUser();
   }
 
@@ -43,7 +43,6 @@ export class RegistersUsersComponent implements OnInit {
       //console.log(data);
       this.registersUsers = data;
       this.categoryName = this.name;
-      this.title += " - " + this.nameUser
       this.rol = true;
       this.blockUIHarvest.stop();
     });
@@ -69,8 +68,8 @@ export class RegistersUsersComponent implements OnInit {
         this.harvestService.deleteProduct(this.category, this.id, id).finally(() => {
           //LLamar función que actualizas el promedio.
           this.updateAcumulate(weight);
+          this.notifyService.showSuccess("Eliminar", "¡El registro se eliminó correctamente!");
         });
-        this.notifyService.showSuccess("Eliminar", "¡El registro se eliminó correctamente!");
       }
     }).catch(() => {
       console.log("Not ok");
