@@ -21,7 +21,7 @@
                   <ng-container *ngIf="rol; else elseEdit">
                     <div
                       class="bg-info p-1 media-middle"
-                      (click)="editRegister(item.id)"
+                      (click)="editRegister(item.id, item.weight)"
                     >
                       <i class="icon-pencil font-large-2 text-white"></i>
                     </div>

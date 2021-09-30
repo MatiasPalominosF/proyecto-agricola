@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalDismissReasons, NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ConfirmationService } from 'src/app/_services/confirmation/confirmation.service';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 import { NotificationService } from 'src/app/_services/notification/notification.service';
 import { RegisterUser } from '../../../_models/register-user';
+import { HarvestEditComponent } from '../harvest-edit/harvest-edit.component';
 
 @Component({
   selector: 'app-registers-users',
@@ -19,6 +20,7 @@ export class RegistersUsersComponent implements OnInit {
   @Input() public nameUser: string;
   @BlockUI('userRegister') blockUIHarvest: NgBlockUI;
 
+  private closeResult = '';
   public categoryName: string;
   public rol: boolean;
   private registersUsers: RegisterUser[];
@@ -27,6 +29,7 @@ export class RegistersUsersComponent implements OnInit {
 
   constructor(
     public activeModal: NgbActiveModal,
+    private modalService: NgbModal,
     private harvestService: HarvestService,
     private confirmationDialogService: ConfirmationService,
     private notifyService: NotificationService,
@@ -48,8 +51,32 @@ export class RegistersUsersComponent implements OnInit {
     });
   }
 
-  editRegister(id: string) {
-    console.log("Se edita registro ID: " + id);
+  editRegister(id: string, weight: number) {
+    weight = +weight;
+    const modalRef = this.modalService.open(HarvestEditComponent, { windowClass: 'animated fadeInDown', size: 'sm', backdrop: 'static' });
+    modalRef.componentInstance.weight = weight;
+    modalRef.componentInstance.idCategory = this.category;
+    modalRef.componentInstance.idUser = this.id;
+    modalRef.componentInstance.id = id;
+    modalRef.componentInstance.acumulate = this.acumulate;
+    modalRef.result.then((result) => {
+      if (result) {
+        this.notifyService.showSuccess("Editar", "¡El registro se editó correctamente!");
+      }
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      console.log(this.closeResult);
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 
   updateAcumulate(weight: number): void {
