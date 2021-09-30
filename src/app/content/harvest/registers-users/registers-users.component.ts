@@ -22,9 +22,10 @@ export class RegistersUsersComponent implements OnInit {
 
   private closeResult = '';
   public categoryName: string;
-  public rol: boolean;
+  public rol: string;
   private registersUsers: RegisterUser[];
   public title: string;
+  private currentUser: any;
   items = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
 
   constructor(
@@ -38,6 +39,14 @@ export class RegistersUsersComponent implements OnInit {
   ngOnInit(): void {
     this.title = "Registro de los usuarios - " + this.nameUser;
     this.getFullInfoRegisterUser();
+    this.getDataUserLogged();
+    console.log("this.currentUser", this.currentUser);
+  }
+
+  getDataUserLogged(): void {
+    if (localStorage.getItem('dataCurrentUser')) {
+      this.currentUser = JSON.parse(localStorage.getItem('dataCurrentUser'));
+    }
   }
 
   getFullInfoRegisterUser() {
@@ -46,7 +55,7 @@ export class RegistersUsersComponent implements OnInit {
       //console.log(data);
       this.registersUsers = data;
       this.categoryName = this.name;
-      this.rol = true;
+      this.rol = this.currentUser.rol;
       this.blockUIHarvest.stop();
     });
   }

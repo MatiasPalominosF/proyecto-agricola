@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { UserInterface } from '../../_models/user';
 
 @Injectable({
@@ -26,4 +27,18 @@ export class UserService {
   createUser(user) {
     return firebase.firestore().collection("users").doc(user.uid).set(user);
   }
+
+  getOneUser(userId: string) {
+    this.userDoc = this.firestore.doc<UserInterface>(`users/${userId}`);
+    return this.user = this.userDoc.snapshotChanges().pipe(map(action => {
+      if (action.payload.exists === false) {
+        return null;
+      } else {
+        const data = action.payload.data() as UserInterface;
+        data.uid = action.payload.id;
+        return data;
+      }
+    }));
+  }
+
 }

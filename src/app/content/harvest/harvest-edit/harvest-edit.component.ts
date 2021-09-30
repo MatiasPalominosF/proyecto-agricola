@@ -111,13 +111,7 @@ export class HarvestEditComponent implements OnInit {
       this.updateReg(this.acumulate, +this.f.weight.value);
       this.passEntry.emit(true);
       this.activeModal.close(true);
-    }
-    else if (this.restante == 0) {
-      this.restante = weightFlag * -1;
-      weightFlag = 0;
-      this.acumulate += this.restante;
-      this.updateReg(this.acumulate, +this.f.weight.value);
-      this.passEntry.emit(true);
+    } else {
       this.activeModal.close(true);
     }
   }

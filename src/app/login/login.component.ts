@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { AuthService } from '../_services/auth.service';
 import { AlertService } from '../_services/alert.service';
 import { NotificationService } from '../_services/notification/notification.service';
+import { UserService } from '../_services/user/user.service';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -23,6 +24,7 @@ export class LoginComponent implements OnInit {
         private alertService: AlertService,
         public authService: AuthService,
         private notifyService: NotificationService,
+        private userService: UserService,
     ) { }
 
     ngOnInit() {
@@ -69,19 +71,29 @@ export class LoginComponent implements OnInit {
                     localStorage.removeItem('remember');
                 }
 
-                this.setUserInStorage(res);
-                localStorage.removeItem('currentLayoutStyle');
-                let returnUrl = '/dashboard/show-data';
-                if (this.returnUrl) {
-                    returnUrl = this.returnUrl;
-                }
-                console.log("returnUrl", returnUrl);
-                this.router.navigate([returnUrl]);
+                this.userService.getOneUser(res.user.uid).subscribe(user => {
+                    this.setUserInStorage(res);
+                    this.setDataUserInfoInStorage(user);
+                    localStorage.removeItem('currentLayoutStyle');
+                    let returnUrl = '/dashboard/show-data';
+                    if (this.returnUrl) {
+                        returnUrl = this.returnUrl;
+                    }
+                    console.log("returnUrl", returnUrl);
+                    this.router.navigate([returnUrl]);
+                });
+
             }, err => {
                 this.submitted = false;
                 this.loading = false;
                 this.notifyService.showError("Error", "¡Usuario o contraseña incorrecta!");
             });
+    }
+
+    setDataUserInfoInStorage(data) {
+        if (data) {
+            localStorage.setItem('dataCurrentUser', JSON.stringify(data));
+        }
     }
 
     setUserInStorage(res) {
