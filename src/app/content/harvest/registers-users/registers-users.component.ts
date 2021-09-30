@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { ConfirmationService } from 'src/app/_services/confirmation/confirmation.service';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
+import { NotificationService } from 'src/app/_services/notification/notification.service';
 import { RegisterUser } from '../../../_models/register-user';
 
 @Component({
@@ -26,6 +28,8 @@ export class RegistersUsersComponent implements OnInit {
   constructor(
     public activeModal: NgbActiveModal,
     private harvestService: HarvestService,
+    private confirmationDialogService: ConfirmationService,
+    private notifyService: NotificationService,
   ) { }
 
   ngOnInit(): void {
@@ -58,10 +62,21 @@ export class RegistersUsersComponent implements OnInit {
   }
 
   delete(id: string, weight: number): void {
-    this.harvestService.deleteProduct(this.category, this.id, id).finally(() => {
-      //LLamar función que actualizas el promedio.
-      this.updateAcumulate(weight);
+
+    this.confirmationDialogService.confirm('Confirmación', '¿Estás seguro de eliminar el producto?').then(confirmed => {
+      if (!confirmed) {
+      } else {
+        this.harvestService.deleteProduct(this.category, this.id, id).finally(() => {
+          //LLamar función que actualizas el promedio.
+          this.updateAcumulate(weight);
+        });
+        this.notifyService.showSuccess("Eliminar", "¡El registro se eliminó correctamente!");
+      }
+    }).catch(() => {
+      console.log("Not ok");
     });
+
+
   }
 
 }
