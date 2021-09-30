@@ -10,6 +10,11 @@ import { NotificationService } from 'src/app/_services/notification/notification
 import { HarvestService } from '../../../_services/harvest/harvest.service';
 import { RegistersHarvestComponent } from '../registers-harvest/registers-harvest.component';
 
+export interface DataCategory {
+  idCategory?: string;
+  nameCategory?: string;
+}
+
 @Component({
   selector: 'app-harvests-view',
   templateUrl: './harvests-view.component.html',
@@ -39,6 +44,8 @@ export class HarvestsViewComponent implements OnInit {
   public pageSize = 4;
   private dataToExport = [];
   private closeResult = '';
+  public prueba = false;
+  private categories: Array<DataCategory>;
 
   constructor(
     private harvestService: HarvestService,
@@ -68,8 +75,19 @@ export class HarvestsViewComponent implements OnInit {
   }
 
   getFullInfoHarvest(): void {
+    this.categories = [];
     this.blockUIHarvest.start("Cargando...");
     this.harvestService.getFullInfoHarvest().subscribe(data => {
+      data.forEach(element => {
+        let object = {
+          idCategory: "",
+          nameCategory: ""
+        }
+
+        object.idCategory = element.id;
+        object.nameCategory = element.name;
+        this.categories.push(object);
+      });
       this.harvests = data;
       this.collectionSize = this.harvests.length;
       this.searchData(this.pipe);
@@ -117,6 +135,8 @@ export class HarvestsViewComponent implements OnInit {
     const modalRef = this.modalService.open(RegistersHarvestComponent, { windowClass: 'animated fadeInDown my-class', size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.id = id;
     modalRef.componentInstance.name = name;
+    modalRef.componentInstance.categories = this.categories;
+    modalRef.componentInstance.harvests = this.harvests;
     modalRef.result.then((result) => {
       if (!result) {
         this.notifyService.showSuccess("Editar", "¡El producto se editó correctamente!");
@@ -137,7 +157,7 @@ export class HarvestsViewComponent implements OnInit {
     }
   }
 
-  reload(): void {
+  reload(event: any): void {
     console.log("que hay: ", this.dataToExport);
 
     this.blockUIHarvest.start('Cargando...');

@@ -52,6 +52,32 @@ export class HarvestService {
       }));
   }
 
+
+  async getFullInfoRegisterHarvestCondition2(idCategory: string, idUser: string, dateInit: Date, dateEnd: Date) {
+    console.log("idCategory: ", idCategory, " --> ", "idUser: ", idUser);
+    return await this.afs.firestore.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`)
+      .collection('workerRegisters').where('category', '==', `${idCategory}`)
+      .where('date', '>=', dateInit)
+      .where('date', '<', dateEnd).get();
+  }
+
+  getFullInfoRegisterHarvestCondition(idCategory: string, idUser: string, dateInit: Date, dateEnd: Date): Observable<RegisterUser[]> {
+    return this.registerHarvests = this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`)
+      .collection<RegisterUser>('workerRegisters', ref => ref
+        .where('category', '==', `${idCategory}`)
+        .where('date', '>=', dateInit)
+        .where('date', '<=', dateEnd))
+      .snapshotChanges()
+      .pipe(map(changes => {
+        return changes.map(action => {
+          const data = action.payload.doc.data() as RegisterUser;
+          data.id = action.payload.doc.id;
+          return data;
+        });
+      }));
+  }
+
+
   getFullInfoRegisterUser(category: string, idUser: string): Observable<RegisterUser[]> {
     return this.registerUsers = this.afs.collection('category').doc(`${category}`).collection('registers').doc(`${idUser}`).collection<RegisterUser>('workerRegisters', ref => ref.where('category', '==', `${category}`))
       .snapshotChanges()
@@ -62,5 +88,17 @@ export class HarvestService {
           return data;
         });
       }));
+  }
+
+  async deleteProduct(idCategory: string, idUser: string, idRegister: string) {
+    /*this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`).collection<RegisterUser>('workerRegisters').doc(`${idRegister}`);
+    return await this.harvestDoc.delete();*/
+    console.log("Si entra");
+    this.harvestDoc = this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`).collection<RegisterUser>('workerRegisters').doc(`${idRegister}`);
+    this.harvestDoc.delete();
+  }
+
+  updateFieldInRegisterUsers(idCategory: string, idUser: string, acumulate: number) {
+    this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`).update({ "acumulate": acumulate });
   }
 }

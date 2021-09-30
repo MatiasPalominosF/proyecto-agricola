@@ -91,17 +91,31 @@
                           </ngb-highlight>
                         </td>
                         <td>
-                          <ngb-highlight
-                            [result]="
-                              element.dateEnd.toDate().toString()
-                                | date: 'dd/MM/yyyy HH:mm'
-                            "
-                            [term]="
-                              element.dateEnd.toDate().toString()
-                                | date: 'dd/MM/yyyy HH:mm'
+                          <div
+                            *ngIf="element.dateEnd == null; else elseBlock"
+                            class="
+                              badge
+                              border-left-info border-right-info
+                              round
+                              badge-striped
                             "
                           >
-                          </ngb-highlight>
+                            <i class="la la-clock-o font-medium-2"></i>
+                            <span>En proceso...</span>
+                          </div>
+                          <ng-template #elseBlock
+                            ><ngb-highlight
+                              [result]="
+                                element.dateEnd.toDate()
+                                  | date: 'dd/MM/yyyy HH:mm'
+                              "
+                              [term]="
+                                element.dateEnd.toDate()
+                                  | date: 'dd/MM/yyyy HH:mm'
+                              "
+                            >
+                            </ngb-highlight
+                          ></ng-template>
                         </td>
                         <td>
                           <div class="d-flex justify-content-start">
@@ -140,9 +154,6 @@
                       <option [ngValue]="2">2 ítems por página</option>
                       <option [ngValue]="4">4 ítems por página</option>
                       <option [ngValue]="6">6 ítems por página</option>
-                      <option [ngValue]="collectionSize">
-                        Mostrar todos lo ítems
-                      </option>
                     </select>
                   </div>
                 </div>

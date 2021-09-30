@@ -60,7 +60,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-2">
+                <div
+                  class="col-md-2"
+                  *blockUI="'buttonExcel'; message: 'Loading'"
+                >
                   <div class="d-flex justify-content-md-center">
                     <div class="form-group form-inline">
                       <button
@@ -139,7 +142,13 @@
                         <td>
                           <div class="d-flex justify-content-start">
                             <button
-                              (click)="showDetails(element.id, element.name)"
+                              (click)="
+                                showDetails(
+                                  element.id,
+                                  element.name,
+                                  element.acumulate
+                                )
+                              "
                               class="
                                 btn btn-xs btn-social-icon
                                 mr-1
@@ -173,9 +182,6 @@
                       <option [ngValue]="2">2 ítems por página</option>
                       <option [ngValue]="4">4 ítems por página</option>
                       <option [ngValue]="6">6 ítems por página</option>
-                      <option [ngValue]="collectionSize">
-                        Mostrar todos lo ítems
-                      </option>
                     </select>
                   </div>
                 </div>
