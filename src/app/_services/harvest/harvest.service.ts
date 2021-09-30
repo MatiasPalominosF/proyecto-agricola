@@ -101,4 +101,8 @@ export class HarvestService {
   updateFieldInRegisterUsers(idCategory: string, idUser: string, acumulate: number) {
     this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`).update({ "acumulate": acumulate });
   }
+
+  updateFieldInRegisters(idCategory: string, idUser: string, idRegister: string, weight: number) {
+    this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`).collection('workerRegisters').doc(`${idRegister}`).update({ "weight": weight });
+  }
 }

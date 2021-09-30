@@ -1,0 +1,59 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="myModalLabel4">Editar registro</h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="registerInfo">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label for="weight">Peso *</label>
+          <input
+            (keypress)="keyPress($event)"
+            formControlName="weight"
+            type="text"
+            id="weight"
+            class="form-control border-primary"
+            placeholder="Peso del registro"
+            [ngClass]="{ 'is-invalid': submitted && f.weight.errors }"
+          />
+          <small
+            class="form-text text-muted danger"
+            *ngIf="submitted && f.weight.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="hasError('weight', 'required')">
+              El peso es requerido.
+            </div>
+            <div *ngIf="hasError('weight', 'min')">
+              El valor debe ser mayor a 0.
+            </div>
+          </small>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn grey btn-outline-secondary"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    Cerrar
+  </button>
+  <button
+    type="button"
+    (click)="onFormSubmit()"
+    class="btn btn-outline-primary"
+  >
+    Aceptar
+  </button>
+</div>
