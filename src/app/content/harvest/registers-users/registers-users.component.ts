@@ -40,7 +40,6 @@ export class RegistersUsersComponent implements OnInit {
     this.title = "Registro de los usuarios - " + this.nameUser;
     this.getFullInfoRegisterUser();
     this.getDataUserLogged();
-    console.log("this.currentUser", this.currentUser);
   }
 
   getDataUserLogged(): void {

@@ -27,6 +27,7 @@ const appRoutes: Routes = [
       { path: 'harvest', loadChildren: () => import('../app/content/harvest/harvest.module').then(m => m.HarvestModule) },
       { path: 'logout', component: LoginComponent },
       { path: 'changelog', component: ChangelogComponent },
+      { path: '', component: LoginComponent }
     ],
   },
   // otherwise redirect to home

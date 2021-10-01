@@ -25,7 +25,7 @@ export class HarvestService {
   }
 
   getFullInfoHarvest(): Observable<Harvest[]> {
-    return this.harvests = this.afs.collection<Harvest>('category')
+    return this.harvests = this.afs.collection<Harvest>('category', ref => ref.orderBy('dateEnd'))
       .snapshotChanges()
       .pipe(map(changes => {
         return changes.map(action => {
