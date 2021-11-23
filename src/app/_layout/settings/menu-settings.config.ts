@@ -96,12 +96,19 @@ export const MenuSettingsConfig: MenuConfig = {
         icon: 'la-leaf',
         page: '/harvest/harvests-view'
       },
+      { section: 'GESTIÓN', icon: 'la-ellipsis-h' },
+      {
+        title: 'Categorías',
+        icon: 'la-list-ul',
+        page: '/dashboard/show-data'
+      },
+      /*
       {
         title: 'Usuarios',
         icon: 'la-user-plus',
         page: '/dashboard/show-data'
-      },
-      { section: "DISEÑO", icon: 'la-ellipsis-h' },
+      },*/
+      /*{ section: "DISEÑO", icon: 'la-ellipsis-h' },
       {
         title: 'Orientación',
         icon: 'la-television',
@@ -118,7 +125,7 @@ export const MenuSettingsConfig: MenuConfig = {
             },
           ]
         }
-      },
+      },*/
     ]
   }
 
