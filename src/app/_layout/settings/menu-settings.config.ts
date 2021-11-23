@@ -100,7 +100,7 @@ export const MenuSettingsConfig: MenuConfig = {
       {
         title: 'Categorías',
         icon: 'la-list-ul',
-        page: '/dashboard/show-data'
+        page: '/category/categories-list'
       },
       /*
       {

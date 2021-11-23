@@ -25,6 +25,7 @@ const appRoutes: Routes = [
     children: [
       { path: 'dashboard', loadChildren: () => import('../app/content/dashboard/dashboard.module').then(m => m.DashboardModule) },
       { path: 'harvest', loadChildren: () => import('../app/content/harvest/harvest.module').then(m => m.HarvestModule) },
+      { path: 'category', loadChildren: () => import('../app/content/category/category.module').then(m => m.CategoryModule) },
       { path: 'logout', component: LoginComponent },
       { path: 'changelog', component: ChangelogComponent },
       { path: '', component: LoginComponent }
