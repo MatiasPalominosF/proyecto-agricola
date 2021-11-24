@@ -1,1 +1,69 @@
-<p>create-category works!</p>
+<div class="modal-header">
+  <h4 class="modal-title" id="myModalLabel4">{{ title }}</h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="categoryForm">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="name">Nombre categoría</label>
+          <div class="position-relative has-icon-left">
+            <input
+              type="text"
+              id="name"
+              class="form-control"
+              placeholder="Nombre categoría"
+              formControlName="name"
+            />
+            <div class="form-control-position">
+              <i class="la la-list"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="dateStart">Fecha</label>
+          <div class="position-relative has-icon-left">
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="dd-mm-yyyy"
+                name="dp"
+                ngbDatepicker
+                #d3="ngbDatepicker"
+                formControlName="dateStart"
+              />
+              <div class="input-group-append">
+                <div class="input-group-text" (click)="d3.toggle()">
+                  <i class="fa fa-calendar" style="cursor: pointer"></i>
+                </div>
+              </div>
+            </div>
+            <div class="form-control-position">
+              <i class="feather ft-message-square"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn grey btn-outline-secondary"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    Cerrar
+  </button>
+  <button type="button" class="btn btn-outline-primary">Aceptar</button>
+</div>

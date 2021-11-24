@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-create-category',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateCategoryComponent implements OnInit {
 
-  constructor() { }
+  public title: string;
+  public categoryForm: FormGroup;
+
+  constructor(
+    public activeModal: NgbActiveModal,
+    private formBuilder: FormBuilder
+  ) { }
 
   ngOnInit(): void {
+    this.title = 'Crear categoría';
+
+    this.categoryForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      id: ['', Validators.required],
+      dateEnd: ['', Validators.required],
+      dateStart: ['', Validators.required],
+    });
+
   }
 
 }
