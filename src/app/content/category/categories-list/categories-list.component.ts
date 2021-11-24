@@ -93,6 +93,10 @@ export class CategoriesListComponent implements OnInit {
     });
   }
 
+  delete(id: string): void {
+    console.log("ID: " + id);
+  }
+
   getUserLogged(): void {
     if (localStorage.getItem('currentUser')) {
       this.currentUser = JSON.parse(localStorage.getItem('currentUser'));

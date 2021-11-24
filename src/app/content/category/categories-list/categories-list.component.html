@@ -11,17 +11,26 @@
               Categorías disponibles
             </ng-container>
             <ng-container mCardBody>
-              <div class="d-flex justify-content-start">
-                <form>
-                  <div class="form-group form-inline">
-                    Buscar:
-                    <input
-                      class="form-control ml-2"
-                      [formControl]="filter"
-                      type="text"
-                    />
-                  </div>
-                </form>
+              <div class="col-md-12">
+                <div class="d-flex justify-content-between">
+                  <form>
+                    <div class="form-group form-inline">
+                      Buscar:
+                      <input
+                        class="form-control ml-2"
+                        [formControl]="filter"
+                        type="text"
+                      />
+                    </div>
+                  </form>
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-min-width ml-1 mr-1 mb-1"
+                    onclick=""
+                  >
+                    <i class="la la-plus"></i> Crear categoría
+                  </button>
+                </div>
               </div>
               <div
                 class="table-responsive card-body"
@@ -96,17 +105,16 @@
                         ></ng-template>
                       </td>
                       <td>
-                        <div class="d-flex justify-content-start">
+                        <div class="d-flex justify-content-between">
                           <button
-                            (click)="showDetails(element.id, element.name)"
-                            class="
-                              btn btn-xs btn-social-icon
-                              mr-1
-                              mb-1
-                              btn-instagram
-                            "
+                            type="button"
+                            (click)="delete(element.id)"
+                            class="btn btn-outline-danger btn-sm"
+                            triggers="hover:click:hover"
+                            [autoClose]="'outside'"
+                            ngbTooltip="Eliminar"
                           >
-                            <span class="la la-info"></span>
+                            x
                           </button>
                         </div>
                       </td>
