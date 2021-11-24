@@ -1,11 +1,14 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, OnInit, PipeTransform } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Harvest } from 'src/app/_models/harvest';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
+import { NotificationService } from 'src/app/_services/notification/notification.service';
+import { CreateCategoryComponent } from '../create-category/create-category.component';
 
 @Component({
   selector: 'app-categories-list',
@@ -32,10 +35,14 @@ export class CategoriesListComponent implements OnInit {
   public pageSize = 4;
   public harvestSearch: Observable<Harvest[]>;
   public filter = new FormControl('');
+  private closeResult = '';
 
 
   constructor(
     private harvestService: HarvestService,
+    private modalService: NgbModal,
+    private notifyService: NotificationService,
+
   ) { }
 
   ngOnInit(): void {
@@ -62,7 +69,6 @@ export class CategoriesListComponent implements OnInit {
   getFullInfoHarvest(): void {
     this.blockUICategories.start("Cargando...");
     this.harvestService.getFullInfoHarvest().subscribe(data => {
-      console.log("Data:", data);
       this.harvests = data;
       this.collectionSize = this.harvests.length;
       this.searchData(this.pipe);
@@ -93,6 +99,18 @@ export class CategoriesListComponent implements OnInit {
     });
   }
 
+  createCategory(): void {
+    const modalRef = this.modalService.open(CreateCategoryComponent, { windowClass: 'animated fadeInDown my-class', backdrop: 'static' });
+    modalRef.result.then((result) => {
+      if (!result) {
+        this.notifyService.showSuccess("Editar", "¡El producto se editó correctamente!");
+      }
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      console.log(this.closeResult);
+    });
+  }
+
   delete(id: string): void {
     console.log("ID: " + id);
   }
@@ -100,6 +118,16 @@ export class CategoriesListComponent implements OnInit {
   getUserLogged(): void {
     if (localStorage.getItem('currentUser')) {
       this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    }
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
     }
   }
 

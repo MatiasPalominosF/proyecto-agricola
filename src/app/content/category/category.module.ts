@@ -9,12 +9,14 @@ import { BlockUIModule } from 'ng-block-ui';
 import { BlockTemplateComponent } from 'src/app/_layout/blockui/block-template.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PipeModule } from 'src/app/_pipe/pipe.module';
+import { CreateCategoryComponent } from './create-category/create-category.component';
 
 
 
 @NgModule({
   declarations: [
-    CategoriesListComponent
+    CategoriesListComponent,
+    CreateCategoryComponent
   ],
   imports: [
     CommonModule,
