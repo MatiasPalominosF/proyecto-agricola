@@ -76,7 +76,7 @@ export class VerticalnavComponent implements OnInit {
       .pipe(takeUntil(this._unsubscribeAllMenu))
       .subscribe((config) => {
         var elemRol = [];
-        if (this.rol != 'admin') {
+        if (this.rol == 'worker') {
           config.vertical_menu.items.forEach(element => {
             if (element.section != 'GESTIÓN'
               && element.title != 'Categorías'
