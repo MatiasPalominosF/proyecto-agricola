@@ -105,4 +105,11 @@ export class HarvestService {
   updateFieldInRegisters(idCategory: string, idUser: string, idRegister: string, weight: number) {
     this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`).collection('workerRegisters').doc(`${idRegister}`).update({ "weight": weight });
   }
+
+  addNewProduct(harvest: Harvest) {
+    let id = this.afs.createId();
+    harvest.dateEnd = null;
+    harvest.id = id;
+    this.afs.collection<Harvest>('category').doc(id).set(harvest);
+  }
 }

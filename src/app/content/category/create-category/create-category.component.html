@@ -22,10 +22,22 @@
               class="form-control"
               placeholder="Nombre categoría"
               formControlName="name"
+              [ngClass]="{
+                'is-invalid': submitted && f.name.errors
+              }"
             />
             <div class="form-control-position">
               <i class="la la-list"></i>
             </div>
+            <small
+              class="form-text text-muted danger"
+              *ngIf="submitted && f.name.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.name.errors.required">
+                El nombre de la categoría es requerido
+              </div>
+            </small>
           </div>
         </div>
       </div>
@@ -41,12 +53,27 @@
                 ngbDatepicker
                 #d3="ngbDatepicker"
                 formControlName="dateStart"
+                [ngClass]="{
+                  'is-invalid': submitted && f.dateStart.errors
+                }"
               />
               <div class="input-group-append">
                 <div class="input-group-text" (click)="d3.toggle()">
                   <i class="fa fa-calendar" style="cursor: pointer"></i>
                 </div>
               </div>
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.dateStart.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f.dateStart.errors.required">
+                  La fecha de inicio es requerida
+                </div>
+                <div *ngIf="f.dateStart.errors.pattern">
+                  Formato de fecha inválida
+                </div>
+              </small>
             </div>
             <div class="form-control-position">
               <i class="feather ft-message-square"></i>
@@ -65,5 +92,11 @@
   >
     Cerrar
   </button>
-  <button type="button" class="btn btn-outline-primary">Aceptar</button>
+  <button
+    type="button"
+    (click)="onProductSubmit()"
+    class="btn btn-outline-primary"
+  >
+    Aceptar
+  </button>
 </div>

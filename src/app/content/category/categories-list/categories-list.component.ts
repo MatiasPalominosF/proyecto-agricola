@@ -102,8 +102,8 @@ export class CategoriesListComponent implements OnInit {
   createCategory(): void {
     const modalRef = this.modalService.open(CreateCategoryComponent, { windowClass: 'animated fadeInDown my-class', backdrop: 'static' });
     modalRef.result.then((result) => {
-      if (!result) {
-        this.notifyService.showSuccess("Editar", "¡El producto se editó correctamente!");
+      if (result) {
+        this.notifyService.showSuccess("Agregar", "¡La categoría se añadió correctamente!");
       }
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
