@@ -38,7 +38,6 @@ export class LoginComponent implements OnInit {
             this.authService.doLogout();
         }*/
 
-        console.log("localStorage.getItem('remember')", localStorage.getItem('remember'));
         if (localStorage.getItem('remember')) {
             localStorage.removeItem('currentLayoutStyle');
             let returnUrl = this.onLoginRedirect();
@@ -79,7 +78,6 @@ export class LoginComponent implements OnInit {
                     if (this.returnUrl) {
                         returnUrl = this.returnUrl;
                     }
-                    console.log("returnUrl", returnUrl);
                     this.router.navigate([returnUrl]);
                 });
 

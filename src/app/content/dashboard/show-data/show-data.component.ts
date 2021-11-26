@@ -89,9 +89,7 @@ export class ShowDataComponent implements OnInit {
   }
 
   setValuesInDashboard(harvest: Harvest): void {
-    console.log(harvest);
     this.getDataCardRegister(harvest.id);
-
   }
 
   getDataCardRegister(id: string): void {

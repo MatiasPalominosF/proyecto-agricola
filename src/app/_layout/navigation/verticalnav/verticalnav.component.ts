@@ -8,7 +8,7 @@ import { Router, NavigationEnd, Event } from '@angular/router';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { MenuSettingsService } from '../../settings/menu-settings.service';
 // import { isArray } from 'util';
-import { trigger, state, style, animate, transition} from '@angular/animations';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 import { AppConstants } from 'src/app/_helpers/app.constants';
 @Component({
 
@@ -19,8 +19,8 @@ import { AppConstants } from 'src/app/_helpers/app.constants';
     trigger('popOverState', [
       state('show', style({
         opacity: '1',
-       })),
-      state('hide',   style({
+      })),
+      state('hide', style({
         opacity: '0',
         height: '*',
       })),
@@ -31,6 +31,7 @@ import { AppConstants } from 'src/app/_helpers/app.constants';
 })
 export class VerticalnavComponent implements OnInit {
   child: any;
+  rol: any;
   insideTm: any;
   outsideTm: any;
   private _themeSettingsConfig: any;
@@ -63,6 +64,7 @@ export class VerticalnavComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getRole();
     // Subscribe to config changes
     this._themeSettingsService.config
       .pipe(takeUntil(this._unsubscribeAll))
@@ -73,6 +75,18 @@ export class VerticalnavComponent implements OnInit {
     this._menuSettingsService.config
       .pipe(takeUntil(this._unsubscribeAllMenu))
       .subscribe((config) => {
+        var elemRol = [];
+        if (this.rol == 'worker') {
+          config.vertical_menu.items.forEach(element => {
+            if (element.section != 'GESTIÓN'
+              && element.title != 'Categorías'
+            ) {
+              elemRol.push(element);
+            }
+          });
+          config.vertical_menu.items = elemRol;
+        }
+
         this._menuSettingsConfig = config;
       });
     // TODO Patch to reset menu after login
@@ -102,14 +116,19 @@ export class VerticalnavComponent implements OnInit {
 
   resetSubmenuItems(parentItem) {
     if (parentItem['submenu'] &&
-        parentItem['submenu']['items'] &&
-        parentItem['submenu']['items'].length > 0) {
-          parentItem['isOpen'] = false;
-          for (let j = 0; j < parentItem['submenu']['items'].length; j++) {
-            parentItem['submenu']['items'][j]['isSelected'] = false;
-            this.resetSubmenuItems(parentItem['submenu']['items'][j]);
-          }
+      parentItem['submenu']['items'] &&
+      parentItem['submenu']['items'].length > 0) {
+      parentItem['isOpen'] = false;
+      for (let j = 0; j < parentItem['submenu']['items'].length; j++) {
+        parentItem['submenu']['items'][j]['isSelected'] = false;
+        this.resetSubmenuItems(parentItem['submenu']['items'][j]);
+      }
     }
+  }
+
+  getRole(): void {
+    var token = JSON.parse(localStorage.getItem('dataCurrentUser'));
+    this.rol = token.rol;
   }
 
   refreshView() {
@@ -132,7 +151,7 @@ export class VerticalnavComponent implements OnInit {
     }
   }
 
-  setActiveRouteInNavbar () {
+  setActiveRouteInNavbar() {
     for (let i = 0; i < this._menuSettingsConfig.vertical_menu.items.length; i++) {
       if (!this._menuSettingsConfig.vertical_menu.items[i].submenu &&
         this._menuSettingsConfig.vertical_menu.items[i].page === this.router.url) {
@@ -142,11 +161,11 @@ export class VerticalnavComponent implements OnInit {
         // Level 1 menu
         for (let j = 0; j < this._menuSettingsConfig.vertical_menu.items[i].submenu.items.length; j++) {
           if (!this._menuSettingsConfig.vertical_menu.items[i].submenu.items[j].submenu &&
-              this._menuSettingsConfig.vertical_menu.items[i].submenu.items[j].page === this.router.url) {
-              this._menuSettingsConfig.vertical_menu.items[i]['isSelected'] = true;
-              this._menuSettingsConfig.vertical_menu.items[i].submenu.items[j]['isSelected'] = true;
-              this._menuSettingsConfig.vertical_menu.items[i].isOpen = true;
-              break;
+            this._menuSettingsConfig.vertical_menu.items[i].submenu.items[j].page === this.router.url) {
+            this._menuSettingsConfig.vertical_menu.items[i]['isSelected'] = true;
+            this._menuSettingsConfig.vertical_menu.items[i].submenu.items[j]['isSelected'] = true;
+            this._menuSettingsConfig.vertical_menu.items[i].isOpen = true;
+            break;
           } else if (this._menuSettingsConfig.vertical_menu.items[i].submenu.items[j].submenu) {
             // Level 2 menu
             for (let k = 0; k < this._menuSettingsConfig.vertical_menu.items[i].submenu.items[j].submenu.items.length; k++) {
@@ -166,7 +185,7 @@ export class VerticalnavComponent implements OnInit {
     }
   }
 
-  resetOpenMenu () {
+  resetOpenMenu() {
     for (let i = 0; i < this._menuSettingsConfig.vertical_menu.items.length; i++) {
       const menu = this._menuSettingsConfig.vertical_menu.items[i];
       if (!menu.submenu) {
@@ -184,7 +203,7 @@ export class VerticalnavComponent implements OnInit {
     }
   }
 
-  setOpenInNavbar (value) {
+  setOpenInNavbar(value) {
     for (let i = 0; i < this._menuSettingsConfig.vertical_menu.items.length; i++) {
       const menu = this._menuSettingsConfig.vertical_menu.items[i];
       if (!menu.submenu &&
@@ -194,11 +213,11 @@ export class VerticalnavComponent implements OnInit {
       } else if (menu.submenu) {
         for (let j = 0; j < menu.submenu.items.length; j++) {
           if (menu.submenu.items[j].page === this.router.url) {
-              menu['isOpen'] = value;
-              menu['isActive'] = value;
-              menu.submenu.items[j]['isOpen'] = value;
-              menu.submenu.items[j]['isActive'] = value;
-              break;
+            menu['isOpen'] = value;
+            menu['isActive'] = value;
+            menu.submenu.items[j]['isOpen'] = value;
+            menu.submenu.items[j]['isActive'] = value;
+            break;
           }
         }
       }
@@ -252,9 +271,9 @@ export class VerticalnavComponent implements OnInit {
   }
 
   /**
-	 * Use for fixed left aside menu, to show menu on mouseenter event.
-	 * @param e Event
-	 */
+   * Use for fixed left aside menu, to show menu on mouseenter event.
+   * @param e Event
+   */
   mouseEnter(e) {
     if (this.navbarService.isFixedMenu()) {
       return;
@@ -273,9 +292,9 @@ export class VerticalnavComponent implements OnInit {
   }
 
   /**
-	 * Use for fixed left aside menu, to show menu on mouseenter event.
-	 * @param e Event
-	 */
+   * Use for fixed left aside menu, to show menu on mouseenter event.
+   * @param e Event
+   */
   mouseLeave(event) {
     if (this.navbarService.isFixedMenu()) {
       return;
@@ -312,22 +331,22 @@ export class VerticalnavComponent implements OnInit {
       localStorage.setItem('currentLayoutStyle', AppConstants.LAYOUT_STYLE_VERTICAL);
       window.location.reload();
     } else if (parentItem['submenu'] &&
-        parentItem['submenu']['items'] &&
-        parentItem['submenu']['items'].length > 0) {
-          if (parentItem.title !== selectedChild.title && parentItem['isOpen'] === true && !isSubmenuOfSubmenu &&
-              this._themeSettingsConfig.navigation === AppConstants.NAVIGATION_TYPE_COLLAPSIBLE) {
-            parentItem['isOpen'] = false;
-          }
-          for (let j = 0; j < parentItem['submenu']['items'].length; j++) {
-            if (selectedChild.page !== 'null') {
-              parentItem['submenu']['items'][j]['isSelected'] = false;
-            }
-            this.handleSubmenuItems(parentItem['submenu']['items'][j], selectedChild, isSubmenuOfSubmenu);
-          }
+      parentItem['submenu']['items'] &&
+      parentItem['submenu']['items'].length > 0) {
+      if (parentItem.title !== selectedChild.title && parentItem['isOpen'] === true && !isSubmenuOfSubmenu &&
+        this._themeSettingsConfig.navigation === AppConstants.NAVIGATION_TYPE_COLLAPSIBLE) {
+        parentItem['isOpen'] = false;
+      }
+      for (let j = 0; j < parentItem['submenu']['items'].length; j++) {
+        if (selectedChild.page !== 'null') {
+          parentItem['submenu']['items'][j]['isSelected'] = false;
+        }
+        this.handleSubmenuItems(parentItem['submenu']['items'][j], selectedChild, isSubmenuOfSubmenu);
+      }
     } else if (parentItem.title !== selectedChild.title && !selectedChild.submenu
       && this._themeSettingsConfig.navigation === AppConstants.NAVIGATION_TYPE_COLLAPSIBLE
-                                && parentItem['isOpen'] === true) {
-        parentItem['isOpen'] = false;
+      && parentItem['isOpen'] === true) {
+      parentItem['isOpen'] = false;
     }
   }
 

@@ -25,7 +25,7 @@ export class HarvestService {
   }
 
   getFullInfoHarvest(): Observable<Harvest[]> {
-    return this.harvests = this.afs.collection<Harvest>('category')
+    return this.harvests = this.afs.collection<Harvest>('category', ref => ref.orderBy('dateEnd'))
       .snapshotChanges()
       .pipe(map(changes => {
         return changes.map(action => {
@@ -104,5 +104,12 @@ export class HarvestService {
 
   updateFieldInRegisters(idCategory: string, idUser: string, idRegister: string, weight: number) {
     this.afs.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`).collection('workerRegisters').doc(`${idRegister}`).update({ "weight": weight });
+  }
+
+  addNewProduct(harvest: Harvest) {
+    let id = this.afs.createId();
+    harvest.dateEnd = null;
+    harvest.id = id;
+    this.afs.collection<Harvest>('category').doc(id).set(harvest);
   }
 }
