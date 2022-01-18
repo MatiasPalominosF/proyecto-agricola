@@ -14,7 +14,8 @@ const appRoutes: Routes = [
     children: [
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
-      { path: '', component: LoginComponent }
+      { path: '', component: LoginComponent },
+      { path: 'product', loadChildren: () => import('../app/content/product/product.module').then(m => m.ProductModule) },
     ]
   },
   // Private layout
@@ -26,7 +27,6 @@ const appRoutes: Routes = [
       { path: 'dashboard', loadChildren: () => import('../app/content/dashboard/dashboard.module').then(m => m.DashboardModule) },
       { path: 'harvest', loadChildren: () => import('../app/content/harvest/harvest.module').then(m => m.HarvestModule) },
       { path: 'category', loadChildren: () => import('../app/content/category/category.module').then(m => m.CategoryModule) },
-      { path: 'product', loadChildren: () => import('../app/content/product/product.module').then(m => m.ProductModule) },
       { path: 'logout', component: LoginComponent },
       { path: 'changelog', component: ChangelogComponent },
       { path: '', component: LoginComponent }
