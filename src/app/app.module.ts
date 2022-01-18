@@ -66,6 +66,7 @@ import { FullLayoutComponent } from './_layout/full-layout/full-layout.component
 import { NotificationService } from './_services/notification/notification.service';
 import { ToastrModule } from 'ngx-toastr';
 import { ConfirmationService } from './_services/confirmation/confirmation.service';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -135,6 +136,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       provide: HAMMER_GESTURE_CONFIG,
       useClass: HammerGestureConfig
     },
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
     NgbCarouselConfig,
     NgbModalConfig,
   ],
