@@ -53,9 +53,8 @@ export class HarvestService {
   }
 
 
-  async getFullInfoRegisterHarvestCondition2(idCategory: string, idUser: string, dateInit: Date, dateEnd: Date) {
-    console.log("idCategory: ", idCategory, " --> ", "idUser: ", idUser);
-    return await this.afs.firestore.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`)
+  getFullInfoRegisterHarvestCondition2(idCategory: string, idUser: string, dateInit: Date, dateEnd: Date) {
+    return this.afs.firestore.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`)
       .collection('workerRegisters').where('category', '==', `${idCategory}`)
       .where('date', '>=', dateInit)
       .where('date', '<', dateEnd).get();

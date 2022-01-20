@@ -11,14 +11,15 @@ import { RegistersUsersComponent } from '../registers-users/registers-users.comp
 import { TableExcelService } from '../../../_services/table-excel/table-excel.service';
 import { Harvest } from 'src/app/_models/harvest';
 import { DataCategory } from '../harvests-view/harvests-view.component';
+import { RegisterUser } from 'src/app/_models/register-user';
 
 export interface DataToExcel {
-  idCategory?: string;
-  nameCategory?: string;
-  idUser?: string;
-  nameUser?: string;
-  weight?: string;
-  lastDate?: any;
+  idCategoria?: string;
+  nombreCategoria?: string;
+  idUsuario?: string;
+  nombreUsuario?: string;
+  peso?: string;
+  fechaCosecha?: any;
 }
 
 @Component({
@@ -53,10 +54,11 @@ export class RegistersHarvestComponent implements OnInit {
   public filter = new FormControl('');
   private dataToExport: Array<RegisterHarvest> = [];
   private dataToExport2: Array<DataToExcel>;
-  private dataToExcel: Array<DataToExcel>;
+  private dataToExcel: Array<DataToExcel> = [];
   public from = new Date('December 25, 1995 13:30:00');;
   public to = new Date();
   private closeResult = '';
+  private registersUsers: any[] = [];
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -74,89 +76,36 @@ export class RegistersHarvestComponent implements OnInit {
   exportToExcel() {
     this.dataToExport2 = [];
 
-    console.log("this.dataToExcel: ", this.dataToExcel);
     this.dataToExcel.forEach(data => {
-      let objectFinded = this.dataToExport2.find(function (el) { return el.idUser == data.idUser && el.idCategory == data.idCategory });
+      let objectFinded = this.dataToExport2.find(function (el) { return el.idUsuario == data.idUsuario && el.idCategoria == data.idCategoria });
       if (objectFinded != undefined) {
-        let objectInArray = this.dataToExport2.find(function (el) { return el.idUser == data.idUser && el.idCategory == data.idCategory });
+        let objectInArray = this.dataToExport2.find(function (el) { return el.idUsuario == data.idUsuario && el.idCategoria == data.idCategoria });
         let indexObjectInArray = this.dataToExport2.indexOf(objectInArray);
         let object: DataToExcel = {};
-        object.idUser = data.idUser;
-        object.nameUser = data.nameUser;
-        object.idCategory = data.idCategory;
-        object.lastDate = data.lastDate;
-        object.nameCategory = data.nameCategory;
-        let acumulate = parseFloat(data.weight) + parseFloat(objectInArray.weight);
+        object.idUsuario = data.idUsuario;
+        object.nombreUsuario = data.nombreUsuario;
+        object.idCategoria = data.idCategoria;
+        object.fechaCosecha = data.fechaCosecha;
+        object.nombreCategoria = data.nombreCategoria;
+        let acumulate = parseFloat(data.peso) + parseFloat(objectInArray.peso);
         acumulate = Math.round((acumulate + Number.EPSILON) * 100) / 100;
-        object.weight = acumulate.toString();
+        object.peso = acumulate.toString();
         this.dataToExport2[indexObjectInArray] = object;
         objectFinded = undefined;
       } else {
         this.dataToExport2.push(data);
         objectFinded = undefined;
       }
-
-      /*if (!isInArray) {
-        this.dataToExport2.push(data);
-      } else {
-        let objectInArray = this.dataToExport2.find(function (el) { return el.idUser === data.idUser });
-        let indexObjectInArray = this.dataToExport2.indexOf(objectInArray);
-        let object: DataToExcel = {};
-        object.idUser = data.idUser;
-        object.nameUser = data.nameUser;
-        object.idCategory = data.idCategory;
-        object.lastDate = data.lastDate;
-        object.nameCategory = data.nameCategory;
-        let acumulate = parseFloat(data.weight) + parseFloat(objectInArray.weight);
-        object.weight = acumulate.toString();
-        this.dataToExport2[indexObjectInArray] = object;
-      }*/
-
     });
 
-    /*this.harvests.forEach(harvest => {
-      this.b.forEach(data => {
-        if (harvest.id == data.idCategory) {
-          let object = {
-            idCategory: "",
-            nameCategory: "",
-            idUser: "",
-            nameUser: "",
-            weight: 0,
-            lastDate: null,
-          }
-          object.idCategory = harvest.id;
-          object.nameCategory = harvest.name;
-          object.idUser = data.idUser;
-          object.nameUser = data.nameUser;
-          object.weight = data.weight;
-          object.lastDate = data.lastDate.toDate();
-          this.dataToExport2.push(object);
-        }
-      });
-    });*/
-
-    //console.log("this.dataToExport2 --->", this.dataToExport2);
-
-    /*let data = [];
-    this.dataToExport.forEach(element => {
-      let object = { Rut: "", Nombre: "", Fecha: null, PesoAcumulado: 0 };
-      object.Nombre = element.name;
-      object.Rut = element.id;
-      object.Fecha = element.lastDate.toDate();
-      object.PesoAcumulado = element.acumulate;
-      data.push(object);
-    });
-  */
     this.tableexcelService.exportAsExcelFile(this.dataToExport2, 'Proyecto agrícola - Registro de cosechas');
   }
 
 
 
 
-  getDataToExcel() {
+  async getDataToExcel() {
     this.dataToExcel = [];
-    //console.log("this.dataToExport", this.dataToExport);
 
     const waitFor = (ms) => new Promise(r => setTimeout(r, ms))
     const asyncForEach = async (array, callback) => {
@@ -176,17 +125,14 @@ export class RegistersHarvestComponent implements OnInit {
           let dateInit = new Date(a + "T00:00:00");
           let dateEnd = new Date(b + "T23:59:59.999999999");
           this.harvestService.getFullInfoRegisterHarvestCondition(category.idCategory, register.id, dateInit, dateEnd).subscribe(data => {
-            //console.log("data --->", data);
             data.forEach(element => {
               let object: DataToExcel = {};
-              object.idCategory = category.idCategory;
-              object.nameCategory = category.nameCategory;
-              object.idUser = register.id;
-              object.nameUser = register.name;
-              object.weight = element.weight;
-              object.lastDate = element.date.toDate();
-
-              //console.log("object ----------------------------->", object);
+              object.idCategoria = category.idCategory;
+              object.nombreCategoria = category.nameCategory;
+              object.idUsuario = register.id;
+              object.nombreUsuario = register.name;
+              object.peso = element.weight;
+              object.fechaCosecha = element.date.toDate();
 
               if (!this.dataToExcel.some(el => el === object)) {
                 this.dataToExcel.push(object);
@@ -200,44 +146,6 @@ export class RegistersHarvestComponent implements OnInit {
       this.buttonExcelBlock.stop();
     }
     start();
-    /*this.categories.forEach(category => {
-      this.dataToExport.forEach(registers => {
-        let dateInit = new Date(registers.lastDate.toDate().toISOString().split('T')[0] + "T00:00:00");
-        let dateEnd = new Date(registers.lastDate.toDate().toISOString().split('T')[0] + "T23:59:59.999999999");
-
-
-        this.harvestService.getFullInfoRegisterHarvestCondition(category.idCategory, registers.id, dateInit, dateEnd).subscribe(data => {
-          //console.log("data ", data);
-
-          /*data.forEach(element => {
-            //console.log("Category ", category);
-            //console.log("registers: ", registers);
-            let object: DataToExcel = {};
-            object.idCategory = category.idCategory;
-            object.nameCategory = category.nameCategory;
-            object.idUser = registers.id;
-            object.nameUser = registers.name;
-            object.weight = element.weight;
-            object.lastDate = element.date.toDate();
-
-            //console.log("object ----------------------------->", object);
-
-            if (!this.dataToExcel.some(el => el === object)) {
-              this.dataToExcel.push(object);
-
-            }
-            object = {};
-
-            console.log("ESTO TIENE: ", this.dataToExcel);
-            //Si ya no se añadió, que lo agregue.
-            /*if (this.dataToExcel.indexOf(object) === -1) {
-              this.dataToExcel.push(object);
-            }
-
-          });
-        });
-      });
-    });*/
   }
 
   showDetails(id: string, name: string, acumulate: number): void {

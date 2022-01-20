@@ -14,7 +14,7 @@ const appRoutes: Routes = [
     children: [
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
-      { path: '', component: LoginComponent }
+      { path: '', component: LoginComponent },
     ]
   },
   // Private layout
