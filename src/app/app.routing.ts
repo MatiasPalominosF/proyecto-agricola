@@ -15,7 +15,6 @@ const appRoutes: Routes = [
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
       { path: '', component: LoginComponent },
-      { path: 'product', loadChildren: () => import('../app/content/product/product.module').then(m => m.ProductModule) },
     ]
   },
   // Private layout

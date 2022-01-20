@@ -14,12 +14,12 @@ import { DataCategory } from '../harvests-view/harvests-view.component';
 import { RegisterUser } from 'src/app/_models/register-user';
 
 export interface DataToExcel {
-  idCategory?: string;
-  nameCategory?: string;
-  idUser?: string;
-  nameUser?: string;
-  weight?: string;
-  lastDate?: any;
+  idCategoria?: string;
+  nombreCategoria?: string;
+  idUsuario?: string;
+  nombreUsuario?: string;
+  peso?: string;
+  fechaCosecha?: any;
 }
 
 @Component({
@@ -54,7 +54,7 @@ export class RegistersHarvestComponent implements OnInit {
   public filter = new FormControl('');
   private dataToExport: Array<RegisterHarvest> = [];
   private dataToExport2: Array<DataToExcel>;
-  private dataToExcel: Array<DataToExcel>;
+  private dataToExcel: Array<DataToExcel> = [];
   public from = new Date('December 25, 1995 13:30:00');;
   public to = new Date();
   private closeResult = '';
@@ -77,19 +77,19 @@ export class RegistersHarvestComponent implements OnInit {
     this.dataToExport2 = [];
 
     this.dataToExcel.forEach(data => {
-      let objectFinded = this.dataToExport2.find(function (el) { return el.idUser == data.idUser && el.idCategory == data.idCategory });
+      let objectFinded = this.dataToExport2.find(function (el) { return el.idUsuario == data.idUsuario && el.idCategoria == data.idCategoria });
       if (objectFinded != undefined) {
-        let objectInArray = this.dataToExport2.find(function (el) { return el.idUser == data.idUser && el.idCategory == data.idCategory });
+        let objectInArray = this.dataToExport2.find(function (el) { return el.idUsuario == data.idUsuario && el.idCategoria == data.idCategoria });
         let indexObjectInArray = this.dataToExport2.indexOf(objectInArray);
         let object: DataToExcel = {};
-        object.idUser = data.idUser;
-        object.nameUser = data.nameUser;
-        object.idCategory = data.idCategory;
-        object.lastDate = data.lastDate;
-        object.nameCategory = data.nameCategory;
-        let acumulate = parseFloat(data.weight) + parseFloat(objectInArray.weight);
+        object.idUsuario = data.idUsuario;
+        object.nombreUsuario = data.nombreUsuario;
+        object.idCategoria = data.idCategoria;
+        object.fechaCosecha = data.fechaCosecha;
+        object.nombreCategoria = data.nombreCategoria;
+        let acumulate = parseFloat(data.peso) + parseFloat(objectInArray.peso);
         acumulate = Math.round((acumulate + Number.EPSILON) * 100) / 100;
-        object.weight = acumulate.toString();
+        object.peso = acumulate.toString();
         this.dataToExport2[indexObjectInArray] = object;
         objectFinded = undefined;
       } else {
@@ -107,28 +107,45 @@ export class RegistersHarvestComponent implements OnInit {
   async getDataToExcel() {
     this.dataToExcel = [];
 
-    await Promise.all(this.categories.map(async (category) => {
-      await Promise.all(this.dataToExport.map(async (register) => {
-        let dateInit = new Date(register.lastDate.toDate().toISOString().split('T')[0] + "T00:00:00");
-        let dateEnd = new Date(register.lastDate.toDate().toISOString().split('T')[0] + "T23:59:59.999999999");
+    const waitFor = (ms) => new Promise(r => setTimeout(r, ms))
+    const asyncForEach = async (array, callback) => {
+      for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array)
+      }
+    }
 
-        this.harvestService.getFullInfoRegisterHarvestCondition2(category.idCategory, register.id, dateInit, dateEnd).then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            const registerUser: any = doc.data();
-            let object: DataToExcel = {};
-            object.idCategory = category.idCategory;
-            object.nameCategory = category.nameCategory;
-            object.idUser = register.id;
-            object.nameUser = register.name;
-            object.weight = registerUser.weight;
-            object.lastDate = registerUser.date.toDate();
-            this.dataToExcel.push(object);
+    const start = async () => {
+      await asyncForEach(this.categories, async (category) => {
+        await waitFor(50);
+        await asyncForEach(this.dataToExport, async (register) => {
+          await waitFor(50);
+          const datepipe: DatePipe = new DatePipe('en-US')
+          let a = datepipe.transform(register.lastDate.toDate(), 'yyyy-MM-dd');
+          let b = datepipe.transform(register.lastDate.toDate(), 'yyyy-MM-dd');
+          let dateInit = new Date(a + "T00:00:00");
+          let dateEnd = new Date(b + "T23:59:59.999999999");
+          this.harvestService.getFullInfoRegisterHarvestCondition(category.idCategory, register.id, dateInit, dateEnd).subscribe(data => {
+            data.forEach(element => {
+              let object: DataToExcel = {};
+              object.idCategoria = category.idCategory;
+              object.nombreCategoria = category.nameCategory;
+              object.idUsuario = register.id;
+              object.nombreUsuario = register.name;
+              object.peso = element.weight;
+              object.fechaCosecha = element.date.toDate();
+
+              if (!this.dataToExcel.some(el => el === object)) {
+                this.dataToExcel.push(object);
+
+              }
+              object = {};
+            });
           });
-        }).finally(() => {
-          this.buttonExcelBlock.stop();
         });
-      }));
-    }));
+      });
+      this.buttonExcelBlock.stop();
+    }
+    start();
   }
 
   showDetails(id: string, name: string, acumulate: number): void {
