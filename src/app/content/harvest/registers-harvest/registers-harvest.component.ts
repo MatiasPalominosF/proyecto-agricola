@@ -222,7 +222,7 @@ export class RegistersHarvestComponent implements OnInit {
   }
 
 
-  reload(): void {
+  reload(event: any): void {
     this.getFullInfoRegisterHarvest();
   }
 
