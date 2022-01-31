@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { BreadcrumbInterface } from 'src/app/_models/breadcrumb';
 import { Harvest } from 'src/app/_models/harvest';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 
@@ -18,7 +19,7 @@ export class BreadcrumbComponent implements OnInit {
     private harvestService: HarvestService,
   ) { }
 
-  @Input() breadcrumb: object;
+  @Input() breadcrumb: BreadcrumbInterface;
   @Output() idCategory = new EventEmitter<Harvest>();
 
   ngOnInit() {

@@ -2,7 +2,7 @@
 import { BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgbModule, NgbCarouselConfig, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbCarouselConfig, NgbModalConfig, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
@@ -66,6 +66,8 @@ import { FullLayoutComponent } from './_layout/full-layout/full-layout.component
 import { NotificationService } from './_services/notification/notification.service';
 import { ToastrModule } from 'ngx-toastr';
 import { ConfirmationService } from './_services/confirmation/confirmation.service';
+import { NgbDateCustomParserFormatter } from '../app/_helpers/dateCustomFormatter';
+
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -131,6 +133,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AuthService,
     NotificationService,
     ConfirmationService,
+    {
+      provide: NgbDateParserFormatter,
+      useClass: NgbDateCustomParserFormatter,
+    },
     {
       provide: HAMMER_GESTURE_CONFIG,
       useClass: HammerGestureConfig

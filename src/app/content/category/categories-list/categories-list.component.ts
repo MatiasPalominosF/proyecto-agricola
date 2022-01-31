@@ -5,6 +5,7 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { BreadcrumbInterface } from 'src/app/_models/breadcrumb';
 import { Harvest } from 'src/app/_models/harvest';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 import { NotificationService } from 'src/app/_services/notification/notification.service';
@@ -19,7 +20,7 @@ export class CategoriesListComponent implements OnInit {
 
   @BlockUI('categoriesCard') blockUICategories: NgBlockUI;
 
-  public breadcrumb: any;
+  public breadcrumb: BreadcrumbInterface;
   private currentUser: any;
   public options = {
     close: false,
@@ -68,7 +69,7 @@ export class CategoriesListComponent implements OnInit {
 
   getFullInfoHarvest(): void {
     this.blockUICategories.start("Cargando...");
-    this.harvestService.getFullInfoHarvest().subscribe(data => {
+    this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
       this.harvests = data;
       this.collectionSize = this.harvests.length;
       this.searchData(this.pipe);
@@ -100,7 +101,7 @@ export class CategoriesListComponent implements OnInit {
   }
 
   createCategory(): void {
-    const modalRef = this.modalService.open(CreateCategoryComponent, { windowClass: 'animated fadeInDown my-class', backdrop: 'static' });
+    const modalRef = this.modalService.open(CreateCategoryComponent, { windowClass: 'animated fadeInDown', backdrop: 'static' });
     modalRef.result.then((result) => {
       if (result) {
         this.notifyService.showSuccess("Agregar", "¡La categoría se añadió correctamente!");
@@ -116,8 +117,8 @@ export class CategoriesListComponent implements OnInit {
   }
 
   getUserLogged(): void {
-    if (localStorage.getItem('currentUser')) {
-      this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (localStorage.getItem('dataCurrentUser')) {
+      this.currentUser = JSON.parse(localStorage.getItem('dataCurrentUser'));
     }
   }
 

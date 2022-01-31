@@ -36,6 +36,31 @@ export class HarvestService {
       }));
   }
 
+  test(uid: string, idCategory: string): Observable<RegisterHarvest[]> {
+    return this.registerHarvests = this.afs.collection('category', ref => ref.where('uid', '==', `${uid}`)).doc(`${idCategory}`)
+      .collection<RegisterHarvest>('registers')
+      .snapshotChanges()
+      .pipe(map(changes => {
+        return changes.map(action => {
+          const data = action.payload.doc.data() as RegisterHarvest;
+          data.id = action.payload.doc.id;
+          return data;
+        });
+      }));
+  }
+
+  getFullInfoHarvestWithUid(uid: string): Observable<Harvest[]> {
+    return this.harvests = this.afs.collection<Harvest>('category', ref => ref.where('uid', '==', `${uid}`).orderBy('dateEnd'))
+      .snapshotChanges()
+      .pipe(map(changes => {
+        return changes.map(action => {
+          const data = action.payload.doc.data() as Harvest;
+          data.id = action.payload.doc.id;
+          return data;
+        });
+      }));
+  }
+
   getFullInHarvest() {
     return this.afs.firestore.collection('category').get();
   }

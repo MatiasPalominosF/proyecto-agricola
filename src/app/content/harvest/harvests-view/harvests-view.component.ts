@@ -5,6 +5,7 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { BreadcrumbInterface } from 'src/app/_models/breadcrumb';
 import { Harvest } from 'src/app/_models/harvest';
 import { NotificationService } from 'src/app/_services/notification/notification.service';
 import { HarvestService } from '../../../_services/harvest/harvest.service';
@@ -24,7 +25,7 @@ export class HarvestsViewComponent implements OnInit {
 
   @BlockUI('harvests') blockUIHarvest: NgBlockUI;
 
-  public breadcrumb: any;
+  public breadcrumb: BreadcrumbInterface;
   public options = {
     close: false,
     expand: true,
@@ -77,7 +78,7 @@ export class HarvestsViewComponent implements OnInit {
   getFullInfoHarvest(): void {
     this.categories = [];
     this.blockUIHarvest.start("Cargando...");
-    this.harvestService.getFullInfoHarvest().subscribe(data => {
+    this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
       data.forEach(element => {
         let object = {
           idCategory: "",
@@ -126,8 +127,8 @@ export class HarvestsViewComponent implements OnInit {
   }
 
   getUserLogged(): void {
-    if (localStorage.getItem('currentUser')) {
-      this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (localStorage.getItem('dataCurrentUser')) {
+      this.currentUser = JSON.parse(localStorage.getItem('dataCurrentUser'));
     }
   }
 
