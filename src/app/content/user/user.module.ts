@@ -13,10 +13,12 @@ import { BlockTemplateComponent } from 'src/app/_layout/blockui/block-template.c
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UiSwitchModule } from 'ngx-ui-switch';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserModalComponent } from './user-modal/user-modal.component';
 
 @NgModule({
   declarations: [
     UserViewComponent,
+    UserModalComponent,
   ],
   imports: [
     CommonModule,
