@@ -67,6 +67,8 @@ import { NotificationService } from './_services/notification/notification.servi
 import { ToastrModule } from 'ngx-toastr';
 import { ConfirmationService } from './_services/confirmation/confirmation.service';
 import { NgbDateCustomParserFormatter } from '../app/_helpers/dateCustomFormatter';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { getSpanishPaginatorIntl } from './spanish-paginator';
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -133,6 +135,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AuthService,
     NotificationService,
     ConfirmationService,
+    {
+      provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl()
+    },
     {
       provide: NgbDateParserFormatter,
       useClass: NgbDateCustomParserFormatter,

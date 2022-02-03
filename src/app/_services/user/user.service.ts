@@ -36,8 +36,8 @@ export class UserService {
       }));
   }
 
-  getAllUsers(): Observable<UserInterface[]> {
-    return this.users = this.afs.collection<UserInterface>('users', ref => ref.orderBy('run'))
+  getAllUsers(cuid: string): Observable<UserInterface[]> {
+    return this.users = this.afs.collection<UserInterface>('users', ref => ref.where('cuid', '==', `${cuid}`,).orderBy('run'))
       .snapshotChanges()
       .pipe(map(changes => {
         return changes.map(action => {

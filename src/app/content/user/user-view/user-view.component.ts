@@ -152,7 +152,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
         this.blockUIUser.stop();
       });
     } else {
-      this.userService.getAllUsers().subscribe(users => {
+      this.userService.getAllUsers(this.currentUser.cuid).subscribe(users => {
         if (users.length === 0) {
           this.isEmpty = true;
           this.blockUIUser.stop();
