@@ -4,7 +4,152 @@
       <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
     </div>
     <div class="content-body">
-      <p>user-view works!</p>
+      <div class="d-flex justify-content-between">
+        <mat-form-field appearance="standard">
+          <mat-label>Buscar</mat-label>
+          <input
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Ej. Juan"
+            #input
+          />
+        </mat-form-field>
+        <div *ngIf="isadmin" class="justify-content-center">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm mt-2"
+            (click)="addUser()"
+          >
+            <i class="la la-plus"></i> Nuevo ciclo
+          </button>
+        </div>
+      </div>
+      <mat-table
+        #table
+        class="mat-elevation-z8"
+        [dataSource]="dataSource"
+        matSort
+        matSortActive="run"
+        matSortDirection="asc"
+        class="mat-cell"
+        *blockUI="'cicles'; message: 'Loading'"
+      >
+        <!-- position Definition -->
+        <ng-container matColumnDef="position">
+          <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+          <mat-cell *matCellDef="let row; let i = index" data-label="No">
+            {{ paginator.pageIndex * paginator.pageSize + i + 1 }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- run Definition -->
+        <ng-container matColumnDef="run">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            RUT
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="RUT">
+            {{ row.run }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- name Definition -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Usuario
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="Nombre ciclo">
+            {{ row.firstName }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- rol Definition -->
+        <ng-container matColumnDef="rol">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Rol
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="Rol">
+            {{
+              row.rol == "admin"
+                ? "Administrador"
+                : row.rol == "worker"
+                ? "Trabajador"
+                : row.rol == "planner"
+                ? "Planillero"
+                : "Error datos"
+            }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- actions Definition -->
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="Acciones">
+            <div class="d-flex justify-content-end">
+              <button
+                (click)="editUser(row)"
+                triggers="hover:click:hover"
+                [autoClose]="'outside'"
+                placement="left"
+                ngbTooltip="Eliminar usuario"
+                class="btn btn-social-icon btn-xs mt-1 mb-1 mr-1 btn-outline-vimeo"
+              >
+                <span class="feather ft-edit-2"></span>
+              </button>
+              <button
+                (click)="deleteUser(row)"
+                triggers="hover:click:hover"
+                [autoClose]="'outside'"
+                placement="left"
+                ngbTooltip="Editar usuario"
+                class="btn btn-social-icon btn-xs mt-1 mb-1 mr-1 btn-outline-soundcloud"
+              >
+                <span class="la la-eye"></span>
+              </button>
+              <ui-switch
+                *ngIf="currentUser.issuperadmin && currentUser.iscompany"
+                class="mt-1 mb-1 mr-1"
+                triggers="hover:click:hover"
+                [autoClose]="'outside'"
+                placement="left"
+                ngbTooltip="Usuario desactivado"
+                size="small"
+                type="checkbox"
+                [checked]="row.isenabled"
+                [loading]="isLoading"
+                (change)="onChange($event, row)"
+                name="enabled"
+                ><i class="fa fa-spinner fa-pulse" *ngIf="isLoading"></i
+              ></ui-switch>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Header and Row Declarations -->
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row
+          *matRowDef="let row; columns: displayedColumns; let i = index"
+        ></mat-row>
+
+        <!-- Row shown when there is no matching data. -->
+
+        <tr class="mat-row" *matNoDataRow>
+          <td *ngIf="!isEmpty" class="mat-cell" colspan="4">
+            <br />
+            No hay coincidencias para "{{ input.value }}"
+          </td>
+          <td *ngIf="isEmpty" class="mat-cell" colspan="4">
+            <br />
+            No hay datos para mostrar
+          </td>
+        </tr>
+      </mat-table>
+      <!-- Pagination-->
+      <mat-paginator
+        #paginator
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 15, 50, 100]"
+      >
+      </mat-paginator>
     </div>
   </div>
 </div>
