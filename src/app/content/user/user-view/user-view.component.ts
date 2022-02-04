@@ -102,6 +102,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
     this.isLoading = true;
     this.confirmationDialogService.confirm('Confirmación', '¿Estás seguro de desactivar el usuario?')
       .then(confirmed => {
+        console.log(confirmed);
         if (!confirmed) {
           this.isLoading = false;
           this.getUsers();
@@ -111,8 +112,8 @@ export class UserViewComponent implements OnInit, AfterViewInit {
             this.isLoading = false;
           });
         }
-      }).catch(() => {
-        console.log("Not ok");
+      }).catch((error) => {
+        console.log("Not ok", error);
       });
 
 

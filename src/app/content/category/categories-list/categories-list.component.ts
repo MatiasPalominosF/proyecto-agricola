@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { BreadcrumbInterface } from 'src/app/_models/breadcrumb';
 import { Harvest } from 'src/app/_models/harvest';
+import { UserInterface } from 'src/app/_models/user';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 import { NotificationService } from 'src/app/_services/notification/notification.service';
 import { CreateCategoryComponent } from '../create-category/create-category.component';

@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { BreadcrumbInterface } from 'src/app/_models/breadcrumb';
 import { Harvest } from 'src/app/_models/harvest';
+import { UserInterface } from 'src/app/_models/user';
 import { NotificationService } from 'src/app/_services/notification/notification.service';
 import { HarvestService } from '../../../_services/harvest/harvest.service';
 import { RegistersHarvestComponent } from '../registers-harvest/registers-harvest.component';
@@ -78,7 +79,7 @@ export class HarvestsViewComponent implements OnInit {
   getFullInfoHarvest(): void {
     this.categories = [];
     this.blockUIHarvest.start("Cargando...");
-    this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
+    this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
       data.forEach(element => {
         let object = {
           idCategory: "",

@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Harvest } from 'src/app/_models/harvest';
+import { UserInterface } from 'src/app/_models/user';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 
 @Component({

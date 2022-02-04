@@ -2,32 +2,40 @@
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserInterface } from '../_models/user';
+import { UserService } from '../_services/user/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
 
-    constructor(private router: Router) { }
+    constructor(
+        private router: Router,
+        private userService: UserService,
+    ) { }
 
     /** TODO: SET LOCALSTORAGE WHEN I UPDATE STATE IN USERS */
-    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-
+    async canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (localStorage.getItem('currentUser')) {
-            if (localStorage.getItem('dataCurrentUser')) {
-                let data: UserInterface = JSON.parse(localStorage.getItem('dataCurrentUser'));
-                console.table(data)
-                if (data.isenabled) {
-                    console.log("Activo");
-                    // logged in so return true
-                    return true;
-                }
+            try {
+                return await this.userService.getUserToGuard(currentUser.uid).then(doc => {
+                    if (doc.exists) {
+                        let user: UserInterface = doc.data();
+                        localStorage.setItem('dataCurrentUser', JSON.stringify(user));
+                        if (user.isenabled) {
+                            return true;
+                        }
+                    }
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('dataCurrentUser');
+                    // not logged in so redirect to login page with the return url
+                    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+                    return false;
+
+                })
+            } catch (error) {
+                console.log(error);
             }
         }
-
-        //localStorage.removeItem('currentUser');
-        // not logged in so redirect to login page with the return url
-        //this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-        console.log("Desactivado");
-        return false;
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -37,6 +45,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         }
 
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('dataCurrentUser');
         // not logged in so redirect to login page with the return url
         this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
         return false;

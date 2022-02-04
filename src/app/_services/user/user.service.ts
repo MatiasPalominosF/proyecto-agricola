@@ -70,4 +70,8 @@ export class UserService {
     }));
   }
 
+  async getUserToGuard(userId: string): Promise<firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>> {
+    return await this.afs.firestore.collection('users').doc(userId).get();
+  }
+
 }
