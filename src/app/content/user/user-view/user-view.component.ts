@@ -26,7 +26,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   public dataSource: MatTableDataSource<UserInterface> = new MatTableDataSource<UserInterface>();
   public isEmpty: boolean = false;
   public breadcrumb: BreadcrumbInterface;
-  private currentUser: UserInterface;
+  public currentUser: UserInterface;
   public isLoading: boolean = false;
   public enabled: boolean;
   constructor(
