@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { UserInterface } from 'src/app/_models/user';
 import { NotificationService } from 'src/app/_services/notification/notification.service';
 import { UserService } from 'src/app/_services/user/user.service';
@@ -116,9 +117,25 @@ export class UserViewComponent implements OnInit, AfterViewInit {
           this.getUsers();
         } else {
           user.isenabled = event;
+          let users: Array<UserInterface> = [];
           this.userService.updateUser(user).then(() => {
-            this.isLoading = false;
-            this.notifyService.showSuccess(str.charAt(0).toUpperCase() + str.slice(1), "¡El usuario se editó correctamente!");
+            this.userService.getUsersAdmin(user.uid, user.uid).pipe(take(1)).toPromise().then((data) => {
+              users = data;
+            }).finally(() => {
+              var bar = new Promise<void>((resolve, reject) => {
+                users.forEach(async (item, index, array) => {
+                  item.isenabled = event;
+                  await this.userService.updateUser(item);
+                  if (index === array.length - 1) resolve();
+                });
+              });
+
+              bar.then(() => {
+                this.isLoading = false;
+                this.notifyService.showSuccess(str.charAt(0).toUpperCase() + str.slice(1), "¡El usuario se editó correctamente!");
+              })
+            });
+
           });
         }
       }).catch((error) => {
