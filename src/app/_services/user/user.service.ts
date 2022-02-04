@@ -24,7 +24,7 @@ export class UserService {
     return this.afs.collection('users').snapshotChanges(); // use only for login.
   }
 
-  getUsersCompany(): Observable<UserInterface[]> {
+  getUsersSuperAdmin(): Observable<UserInterface[]> {
     return this.users = this.afs.collection<UserInterface>('users', ref => ref.where('rol', '==', 'company'))
       .snapshotChanges()
       .pipe(map(changes => {
@@ -36,7 +36,7 @@ export class UserService {
       }));
   }
 
-  getAllUsers(cuid: string, uid: string): Observable<UserInterface[]> {
+  getUsersAdmin(cuid: string, uid: string): Observable<UserInterface[]> {
     return this.users = this.afs.collection<UserInterface>('users', ref => ref.where('uid', '!=', uid).where('cuid', '==', `${cuid}`))
       .snapshotChanges()
       .pipe(map(changes => {

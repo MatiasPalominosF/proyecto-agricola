@@ -76,10 +76,20 @@ export class VerticalnavComponent implements OnInit {
       .pipe(takeUntil(this._unsubscribeAllMenu))
       .subscribe((config) => {
         var elemRol = [];
-        if (this.rol == 'worker') {
+        if (this.rol === 'worker') {
           config.vertical_menu.items.forEach(element => {
-            if (element.section != 'GESTIÓN'
-              && element.title != 'Categorías' && element.title != 'Usuarios'
+            if (element.section !== 'GESTIÓN'
+              && element.title !== 'Categorías' && element.title !== 'Usuarios'
+            ) {
+              elemRol.push(element);
+            }
+          });
+          config.vertical_menu.items = elemRol;
+        }
+        if (this.rol === 'superadmin') {
+          config.vertical_menu.items.forEach(element => {
+            if (element.section !== 'HISTORIAL'
+              && element.title !== 'Cosechas' && element.title !== 'Categorías'
             ) {
               elemRol.push(element);
             }

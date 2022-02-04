@@ -26,7 +26,6 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   public isEmpty: boolean = false;
   public breadcrumb: BreadcrumbInterface;
   private currentUser: UserInterface;
-  public isadmin: boolean = false;
   public isLoading: boolean = false;
   public enabled: boolean;
   constructor(
@@ -152,7 +151,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
     this.isEmpty = true;
 
     if (this.currentUser.rol === 'superadmin') {
-      this.userService.getUsersCompany().subscribe((users) => {
+      this.userService.getUsersSuperAdmin().subscribe((users) => {
         if (users.length === 0) {
           this.isEmpty = true;
           this.blockUIUser.stop();
@@ -162,8 +161,8 @@ export class UserViewComponent implements OnInit, AfterViewInit {
         this.dataSource.data = users;
         this.blockUIUser.stop();
       });
-    } if (this.currentUser.rol === 'admin') {
-      this.userService.getAllUsers(this.currentUser.cuid, this.currentUser.uid).subscribe(users => {
+    } else if (this.currentUser.rol === 'admin') {
+      this.userService.getUsersAdmin(this.currentUser.cuid, this.currentUser.uid).subscribe(users => {
         if (users.length === 0) {
           this.isEmpty = true;
           this.blockUIUser.stop();
@@ -173,9 +172,17 @@ export class UserViewComponent implements OnInit, AfterViewInit {
         this.dataSource.data = users;
         this.blockUIUser.stop();
       });
-    }
-    else {
-      console.log("Entro al else en user-view");
+    } else if (this.currentUser.rol === 'company') {
+      this.userService.getUsersAdmin(this.currentUser.uid, this.currentUser.uid).subscribe(users => {
+        if (users.length === 0) {
+          this.isEmpty = true;
+          this.blockUIUser.stop();
+          this.isEmpty = false;
+          return;
+        }
+        this.dataSource.data = users;
+        this.blockUIUser.stop();
+      });
     }
   }
 
@@ -203,17 +210,14 @@ export class UserViewComponent implements OnInit, AfterViewInit {
     switch (rol) {
       case 'superadmin': {
         this.displayedColumns = ['position', 'run', 'name', 'rol', 'actions'];
-        this.isadmin = true;
         break;
       }
       case 'admin': {
         this.displayedColumns = ['position', 'run', 'name', 'rol', 'actions'];
-        this.isadmin = true;
         break;
       }
       case 'company': {
         this.displayedColumns = ['position', 'run', 'name', 'rol', 'actions'];
-        this.isadmin = true;
         break;
       }
       case 'worker': {

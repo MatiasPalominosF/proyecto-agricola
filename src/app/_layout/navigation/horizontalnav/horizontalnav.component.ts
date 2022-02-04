@@ -59,10 +59,20 @@ export class HorizontalnavComponent implements OnInit, AfterViewInit {
       .pipe(takeUntil(this._unsubscribeAllMenu))
       .subscribe((config) => {
         var elemRol = [];
-        if (this.rol == 'worker') {
+        if (this.rol === 'worker') {
           config.horizontal_menu.items.forEach(element => {
-            if (element.section != 'GESTIÓN'
-              && element.title != 'Categorías' && element.title != 'Usuarios'
+            if (element.section !== 'GESTIÓN'
+              && element.title !== 'Categorías' && element.title !== 'Usuarios'
+            ) {
+              elemRol.push(element);
+            }
+          });
+          config.horizontal_menu.items = elemRol;
+        }
+        if (this.rol === 'superadmin') {
+          config.horizontal_menu.items.forEach(element => {
+            if (element.section !== 'HISTORIAL'
+              && element.title !== 'Cosechas' && element.title !== 'Categorías'
             ) {
               elemRol.push(element);
             }

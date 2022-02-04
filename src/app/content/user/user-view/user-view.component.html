@@ -14,13 +14,20 @@
             #input
           />
         </mat-form-field>
-        <div *ngIf="isadmin" class="justify-content-center">
+        <div
+          *ngIf="
+            currentUser.rol === 'superadmin' ||
+            currentUser.rol === 'admin' ||
+            currentUser.rol === 'company'
+          "
+          class="justify-content-center"
+        >
           <button
             type="button"
             class="btn btn-primary btn-sm mt-2"
             (click)="addUser()"
           >
-            <i class="la la-plus"></i> Nuevo ciclo
+            <i class="la la-plus"></i> Agregar usuario
           </button>
         </div>
       </div>
@@ -108,7 +115,7 @@
                 <span class="la la-eye"></span>
               </button>
               <ui-switch
-                *ngIf="currentUser.issuperadmin && currentUser.iscompany"
+                *ngIf="currentUser.rol === 'superadmin'"
                 class="mt-1 mb-1 mr-1"
                 triggers="hover:click:hover"
                 [autoClose]="'outside'"
