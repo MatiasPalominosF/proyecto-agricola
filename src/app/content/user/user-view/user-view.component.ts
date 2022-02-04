@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
 import { UserInterface } from 'src/app/_models/user';
+import { NotificationService } from 'src/app/_services/notification/notification.service';
 import { UserService } from 'src/app/_services/user/user.service';
 import { BreadcrumbInterface } from '../../../_models/breadcrumb';
 import { ConfirmationService } from '../../../_services/confirmation/confirmation.service';
@@ -30,8 +31,8 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   public enabled: boolean;
   constructor(
     private userService: UserService,
-    private formBuilder: FormBuilder,
     private confirmationDialogService: ConfirmationService,
+    private notifyService: NotificationService,
   ) { }
 
   /** Comments initials to init mat table */
@@ -100,9 +101,17 @@ export class UserViewComponent implements OnInit, AfterViewInit {
 
   onChange(event: any, user: UserInterface) {
     this.isLoading = true;
-    this.confirmationDialogService.confirm('Confirmación', '¿Estás seguro de desactivar el usuario?')
+
+    let str: string = '';
+
+    if (event) {
+      str = 'activar';
+    } else {
+      str = 'desactivar';
+    }
+
+    this.confirmationDialogService.confirm('Confirmación', '¿Estás seguro de ' + str + ' el usuario?')
       .then(confirmed => {
-        console.log(confirmed);
         if (!confirmed) {
           this.isLoading = false;
           this.getUsers();
@@ -110,6 +119,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
           user.isenabled = event;
           this.userService.updateUser(user).then(() => {
             this.isLoading = false;
+            this.notifyService.showSuccess(str.charAt(0).toUpperCase() + str.slice(1), "¡El usuario se editó correctamente!");
           });
         }
       }).catch((error) => {
@@ -141,7 +151,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
     this.blockUIUser.start('Cargando...');
     this.isEmpty = true;
 
-    if (this.currentUser.issuperadmin && this.currentUser.iscompany) {
+    if (this.currentUser.rol === 'superadmin') {
       this.userService.getUsersCompany().subscribe((users) => {
         if (users.length === 0) {
           this.isEmpty = true;
@@ -152,8 +162,8 @@ export class UserViewComponent implements OnInit, AfterViewInit {
         this.dataSource.data = users;
         this.blockUIUser.stop();
       });
-    } else {
-      this.userService.getAllUsers(this.currentUser.cuid).subscribe(users => {
+    } if (this.currentUser.rol === 'admin') {
+      this.userService.getAllUsers(this.currentUser.cuid, this.currentUser.uid).subscribe(users => {
         if (users.length === 0) {
           this.isEmpty = true;
           this.blockUIUser.stop();
@@ -163,6 +173,9 @@ export class UserViewComponent implements OnInit, AfterViewInit {
         this.dataSource.data = users;
         this.blockUIUser.stop();
       });
+    }
+    else {
+      console.log("Entro al else en user-view");
     }
   }
 
@@ -188,7 +201,17 @@ export class UserViewComponent implements OnInit, AfterViewInit {
     let rol: string = this.currentUser.rol;
 
     switch (rol) {
+      case 'superadmin': {
+        this.displayedColumns = ['position', 'run', 'name', 'rol', 'actions'];
+        this.isadmin = true;
+        break;
+      }
       case 'admin': {
+        this.displayedColumns = ['position', 'run', 'name', 'rol', 'actions'];
+        this.isadmin = true;
+        break;
+      }
+      case 'company': {
         this.displayedColumns = ['position', 'run', 'name', 'rol', 'actions'];
         this.isadmin = true;
         break;

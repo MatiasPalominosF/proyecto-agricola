@@ -25,7 +25,7 @@ export class UserService {
   }
 
   getUsersCompany(): Observable<UserInterface[]> {
-    return this.users = this.afs.collection<UserInterface>('users', ref => ref.where('iscompany', '==', true))
+    return this.users = this.afs.collection<UserInterface>('users', ref => ref.where('rol', '==', 'company'))
       .snapshotChanges()
       .pipe(map(changes => {
         return changes.map(action => {
@@ -36,8 +36,8 @@ export class UserService {
       }));
   }
 
-  getAllUsers(cuid: string): Observable<UserInterface[]> {
-    return this.users = this.afs.collection<UserInterface>('users', ref => ref.where('cuid', '==', `${cuid}`,).orderBy('run'))
+  getAllUsers(cuid: string, uid: string): Observable<UserInterface[]> {
+    return this.users = this.afs.collection<UserInterface>('users', ref => ref.where('uid', '!=', uid).where('cuid', '==', `${cuid}`))
       .snapshotChanges()
       .pipe(map(changes => {
         return changes.map(action => {

@@ -79,7 +79,7 @@ export class VerticalnavComponent implements OnInit {
         if (this.rol == 'worker') {
           config.vertical_menu.items.forEach(element => {
             if (element.section != 'GESTIÓN'
-              && element.title != 'Categorías'
+              && element.title != 'Categorías' && element.title != 'Usuarios'
             ) {
               elemRol.push(element);
             }

@@ -34,7 +34,7 @@ export class HarvestsViewComponent implements OnInit {
     reload: true
   };
   public headElements = ['#', 'Categoría', 'Fecha inicio', 'Fecha término', 'Acciones'];
-  private currentUser: any;
+  private currentUser: UserInterface;
   private harvests: Harvest[];
   public collectionSize: any;
   public harvestSearch: Observable<Harvest[]>;
@@ -79,23 +79,45 @@ export class HarvestsViewComponent implements OnInit {
   getFullInfoHarvest(): void {
     this.categories = [];
     this.blockUIHarvest.start("Cargando...");
-    this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
-      data.forEach(element => {
-        let object = {
-          idCategory: "",
-          nameCategory: ""
-        }
 
-        object.idCategory = element.id;
-        object.nameCategory = element.name;
-        this.categories.push(object);
+    if (this.currentUser.rol === 'company') {
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
+        data.forEach(element => {
+          let object = {
+            idCategory: "",
+            nameCategory: ""
+          }
+
+          object.idCategory = element.id;
+          object.nameCategory = element.name;
+          this.categories.push(object);
+        });
+        this.harvests = data;
+        this.collectionSize = this.harvests.length;
+        this.searchData(this.pipe);
+        this.getDataToExport();
+        this.blockUIHarvest.stop();
       });
-      this.harvests = data;
-      this.collectionSize = this.harvests.length;
-      this.searchData(this.pipe);
-      this.getDataToExport();
-      this.blockUIHarvest.stop();
-    });
+    } else {
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
+        data.forEach(element => {
+          let object = {
+            idCategory: "",
+            nameCategory: ""
+          }
+
+          object.idCategory = element.id;
+          object.nameCategory = element.name;
+          this.categories.push(object);
+        });
+        this.harvests = data;
+        this.collectionSize = this.harvests.length;
+        this.searchData(this.pipe);
+        this.getDataToExport();
+        this.blockUIHarvest.stop();
+      });
+    }
+
   }
 
   /**

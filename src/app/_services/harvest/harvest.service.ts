@@ -50,7 +50,7 @@ export class HarvestService {
   }
 
   getFullInfoHarvestWithUid(uid: string): Observable<Harvest[]> {
-    return this.harvests = this.afs.collection<Harvest>('category', ref => ref.where('uid', '==', `${uid}`).orderBy('dateEnd'))
+    return this.harvests = this.afs.collection<Harvest>('category', ref => ref.where('cuid', '==', `${uid}`).orderBy('dateEnd'))
       .snapshotChanges()
       .pipe(map(changes => {
         return changes.map(action => {
