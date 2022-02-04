@@ -27,6 +27,7 @@ import { AppConstants } from 'src/app/_helpers/app.constants';
 export class HorizontalnavComponent implements OnInit, AfterViewInit {
 
   insideTm: any;
+  rol: any;
   private _themeSettingsConfig: any;
   private _unsubscribeAll: Subject<any>;
   private _unsubscribeAllMenu: Subject<any>;
@@ -46,6 +47,7 @@ export class HorizontalnavComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.getRole();
     // Subscribe to config changes
     this._themeSettingsService.config
       .pipe(takeUntil(this._unsubscribeAll))
@@ -56,6 +58,28 @@ export class HorizontalnavComponent implements OnInit, AfterViewInit {
     this._menuSettingsService.config
       .pipe(takeUntil(this._unsubscribeAllMenu))
       .subscribe((config) => {
+        var elemRol = [];
+        if (this.rol === 'worker') {
+          config.horizontal_menu.items.forEach(element => {
+            if (element.section !== 'GESTIÓN'
+              && element.title !== 'Categorías' && element.title !== 'Usuarios'
+            ) {
+              elemRol.push(element);
+            }
+          });
+          config.horizontal_menu.items = elemRol;
+        }
+        if (this.rol === 'superadmin') {
+          config.horizontal_menu.items.forEach(element => {
+            if (element.section !== 'HISTORIAL'
+              && element.title !== 'Cosechas' && element.title !== 'Categorías'
+            ) {
+              elemRol.push(element);
+            }
+          });
+          config.horizontal_menu.items = elemRol;
+        }
+
         this._menuSettingsConfig = config;
       });
     this.setActiveRouteInNavbar();
@@ -64,6 +88,11 @@ export class HorizontalnavComponent implements OnInit, AfterViewInit {
     this._themeSettingsService.config = {
       colorTheme: theme, // semi-light, semi-dark
     };
+  }
+
+  getRole(): void {
+    var token = JSON.parse(localStorage.getItem('dataCurrentUser'));
+    this.rol = token.rol;
   }
 
   setLayout(layout) {

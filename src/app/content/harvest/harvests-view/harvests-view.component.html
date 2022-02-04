@@ -93,12 +93,7 @@
                         <td>
                           <div
                             *ngIf="element.dateEnd == null; else elseBlock"
-                            class="
-                              badge
-                              border-left-info border-right-info
-                              round
-                              badge-striped
-                            "
+                            class="badge border-left-info border-right-info round badge-striped"
                           >
                             <i class="la la-clock-o font-medium-2"></i>
                             <span>En proceso...</span>
@@ -121,12 +116,7 @@
                           <div class="d-flex justify-content-start">
                             <button
                               (click)="showDetails(element.id, element.name)"
-                              class="
-                                btn btn-xs btn-social-icon
-                                mr-1
-                                mb-1
-                                btn-instagram
-                              "
+                              class="btn btn-xs btn-social-icon mr-1 mb-1 btn-instagram"
                             >
                               <span class="la la-info"></span>
                             </button>

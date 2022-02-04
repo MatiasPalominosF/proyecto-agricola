@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { BreadcrumbInterface } from 'src/app/_models/breadcrumb';
 import { Harvest } from 'src/app/_models/harvest';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 import * as chartsData from './data';
@@ -14,7 +15,7 @@ export class ShowDataComponent implements OnInit {
   @BlockUI('barCharts') blockUIProductsInfo: NgBlockUI;
   @BlockUI('categoriesCard') blockUIcategoriesCard: NgBlockUI;
   @BlockUI('registersCard') blockUIregisterCard: NgBlockUI;
-  public breadcrumb: any;
+  public breadcrumb: BreadcrumbInterface;
 
   //Options for bar charts.
   options = {

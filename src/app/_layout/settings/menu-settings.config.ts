@@ -28,32 +28,15 @@ export const MenuSettingsConfig: MenuConfig = {
       {
         title: 'Dashboard',
         icon: 'la-home',
-        page: 'null',
-        submenu: {
+        page: '/dashboard/show-data',
+        /*submenu: {
           items: [
-            /*{
-               title: 'Sales',
-               page: '/dashboard/sales'
-             },*/
             {
               title: 'Vista 1',
               page: '/dashboard/show-data'
             },
           ]
-        }
-      },
-      { section: 'HISTORIAL', icon: 'la-ellipsis-h' },
-      {
-        title: 'Cosechas',
-        icon: 'la-support',
-        page: 'https://pixinvent.ticksy.com/',
-        isExternalLink: true
-      },
-      {
-        title: 'Usuarios',
-        icon: 'la-text-height',
-        page: 'https://modern-admin-docs.web.app/html/ltr/documentation/index.html',
-        isExternalLink: true,
+        }*/
       },
       { section: "DISEÑO", icon: 'la-ellipsis-h' },
       {
@@ -73,6 +56,23 @@ export const MenuSettingsConfig: MenuConfig = {
           ]
         }
       },
+      { section: 'HISTORIAL', icon: 'la-ellipsis-h' },
+      {
+        title: 'Cosechas',
+        icon: 'la-leaf',
+        page: '/harvest/harvests-view'
+      },
+      { section: 'GESTIÓN', icon: 'la-ellipsis-h' },
+      {
+        title: 'Categorías',
+        icon: 'la-list-ul',
+        page: '/category/categories-list'
+      },
+      {
+        title: 'Usuarios',
+        icon: 'la-user-plus',
+        page: '/user/user-view'
+      },
     ]
   },
   vertical_menu: {
@@ -90,25 +90,7 @@ export const MenuSettingsConfig: MenuConfig = {
           ]
         }*/
       },
-      { section: 'HISTORIAL', icon: 'la-ellipsis-h' },
-      {
-        title: 'Cosechas',
-        icon: 'la-leaf',
-        page: '/harvest/harvests-view'
-      },
-      { section: 'GESTIÓN', icon: 'la-ellipsis-h' },
-      {
-        title: 'Categorías',
-        icon: 'la-list-ul',
-        page: '/category/categories-list'
-      },
-      /*
-      {
-        title: 'Usuarios',
-        icon: 'la-user-plus',
-        page: '/dashboard/show-data'
-      },*/
-      /*{ section: "DISEÑO", icon: 'la-ellipsis-h' },
+      { section: "DISEÑO", icon: 'la-ellipsis-h' },
       {
         title: 'Orientación',
         icon: 'la-television',
@@ -125,10 +107,26 @@ export const MenuSettingsConfig: MenuConfig = {
             },
           ]
         }
-      },*/
+      },
+      { section: 'HISTORIAL', icon: 'la-ellipsis-h' },
+      {
+        title: 'Cosechas',
+        icon: 'la-leaf',
+        page: '/harvest/harvests-view'
+      },
+      { section: 'GESTIÓN', icon: 'la-ellipsis-h' },
+      {
+        title: 'Categorías',
+        icon: 'la-list-ul',
+        page: '/category/categories-list'
+      },
+      {
+        title: 'Usuarios',
+        icon: 'la-user-plus',
+        page: '/user/user-view'
+      },
     ]
   }
-
 };
 
 

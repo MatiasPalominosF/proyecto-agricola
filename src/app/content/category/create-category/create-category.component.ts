@@ -1,6 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Harvest } from 'src/app/_models/harvest';
+import { UserInterface } from 'src/app/_models/user';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 
 @Component({
@@ -15,6 +17,7 @@ export class CreateCategoryComponent implements OnInit {
   public submitted = false;
   private datePattern: string = '[0-9]{4}[-][0-9]{2}[-][0-9]{2}';
   @Output() passEntry: EventEmitter<any> = new EventEmitter();
+  private currentUser: any;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -24,6 +27,7 @@ export class CreateCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.title = 'Crear categoría';
+    this.getUserLogged();
 
     this.categoryForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -49,16 +53,22 @@ export class CreateCategoryComponent implements OnInit {
       return;
     }
 
-    var formatDate = this.fValue['dateStart'].year + '-' + this.fValue['dateStart'].month + '-' + this.fValue['dateStart'].day + 'T00:00:00';
-    let date: Date = new Date(formatDate);
+    let harvest: Harvest = {};
+    let date: Date = new Date(this.fValue['dateStart'].year, (this.fValue['dateStart'].month - 1), this.fValue['dateStart'].day, 0, 0, 0, 0);
     this.fValue['dateStart'] = date;
+
+    harvest = this.fValue;
+    harvest.uid = this.currentUser.uid;
 
     this.harvestService.addNewProduct(this.fValue)
     this.passEntry.emit(true);
     this.activeModal.close(true);
+  }
 
-
-
+  getUserLogged(): void {
+    if (localStorage.getItem('dataCurrentUser')) {
+      this.currentUser = JSON.parse(localStorage.getItem('dataCurrentUser'));
+    }
   }
 
 }

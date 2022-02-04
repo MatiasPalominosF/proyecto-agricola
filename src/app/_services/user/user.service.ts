@@ -15,21 +15,50 @@ export class UserService {
   private userDoc: AngularFirestoreDocument<UserInterface>;
   private user: Observable<UserInterface>;
 
-  constructor(private firestore: AngularFirestore) {
-    this.usersCollection = firestore.collection<UserInterface>('users');
+  constructor(private afs: AngularFirestore) {
+    this.usersCollection = afs.collection<UserInterface>('users');
     this.users = this.usersCollection.valueChanges();
   }
 
   getUsers() {
-    return this.firestore.collection('users').snapshotChanges(); // use only for login.
+    return this.afs.collection('users').snapshotChanges(); // use only for login.
   }
 
-  createUser(user) {
+  getUsersSuperAdmin(): Observable<UserInterface[]> {
+    return this.users = this.afs.collection<UserInterface>('users', ref => ref.where('rol', '==', 'company'))
+      .snapshotChanges()
+      .pipe(map(changes => {
+        return changes.map(action => {
+          const data = action.payload.doc.data() as UserInterface;
+          data.uid = action.payload.doc.id;
+          return data;
+        });
+      }));
+  }
+
+  getUsersAdmin(cuid: string, uid: string): Observable<UserInterface[]> {
+    return this.users = this.afs.collection<UserInterface>('users', ref => ref.where('uid', '!=', uid).where('cuid', '==', `${cuid}`))
+      .snapshotChanges()
+      .pipe(map(changes => {
+        return changes.map(action => {
+          const data = action.payload.doc.data() as UserInterface;
+          data.uid = action.payload.doc.id;
+          return data;
+        });
+      }));
+  }
+
+  createUser(user): Promise<void> {
     return firebase.firestore().collection("users").doc(user.uid).set(user);
   }
 
-  getOneUser(userId: string) {
-    this.userDoc = this.firestore.doc<UserInterface>(`users/${userId}`);
+  updateUser(user: UserInterface): Promise<void> {
+    this.userDoc = this.afs.collection<UserInterface>("users").doc(user.uid);
+    return this.userDoc.update(user);
+  }
+
+  getOneUser(userId: string): Observable<UserInterface> {
+    this.userDoc = this.afs.doc<UserInterface>(`users/${userId}`);
     return this.user = this.userDoc.snapshotChanges().pipe(map(action => {
       if (action.payload.exists === false) {
         return null;
@@ -39,6 +68,10 @@ export class UserService {
         return data;
       }
     }));
+  }
+
+  async getUserToGuard(userId: string): Promise<firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>> {
+    return await this.afs.firestore.collection('users').doc(userId).get();
   }
 
 }

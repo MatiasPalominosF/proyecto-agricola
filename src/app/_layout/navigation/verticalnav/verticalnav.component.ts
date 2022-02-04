@@ -76,10 +76,20 @@ export class VerticalnavComponent implements OnInit {
       .pipe(takeUntil(this._unsubscribeAllMenu))
       .subscribe((config) => {
         var elemRol = [];
-        if (this.rol == 'worker') {
+        if (this.rol === 'worker') {
           config.vertical_menu.items.forEach(element => {
-            if (element.section != 'GESTIÓN'
-              && element.title != 'Categorías'
+            if (element.section !== 'GESTIÓN'
+              && element.title !== 'Categorías' && element.title !== 'Usuarios'
+            ) {
+              elemRol.push(element);
+            }
+          });
+          config.vertical_menu.items = elemRol;
+        }
+        if (this.rol === 'superadmin') {
+          config.vertical_menu.items.forEach(element => {
+            if (element.section !== 'HISTORIAL'
+              && element.title !== 'Cosechas' && element.title !== 'Categorías'
             ) {
               elemRol.push(element);
             }
@@ -96,14 +106,16 @@ export class VerticalnavComponent implements OnInit {
 
   resetMainMenu() {
     const nodes = this.document.getElementById('main-menu-navigation').childNodes;
-    for (let i = 0; i < nodes.length; i++) {
-      this.resetCollapseMenu(nodes[i]);
-    }
-    for (let i = 0; i < this._menuSettingsConfig.vertical_menu.items.length; i++) {
-      this._menuSettingsConfig.vertical_menu.items[i]['isSelected'] = false;
-      this._menuSettingsConfig.vertical_menu.items[i]['hover'] = false;
-      this._menuSettingsConfig.vertical_menu.items[i]['isOpen'] = false;
-      this.resetSubmenuItems(this._menuSettingsConfig.vertical_menu.items[i]);
+    if (nodes) {
+      for (let i = 0; i < nodes.length; i++) {
+        this.resetCollapseMenu(nodes[i]);
+      }
+      for (let i = 0; i < this._menuSettingsConfig.vertical_menu.items.length; i++) {
+        this._menuSettingsConfig.vertical_menu.items[i]['isSelected'] = false;
+        this._menuSettingsConfig.vertical_menu.items[i]['hover'] = false;
+        this._menuSettingsConfig.vertical_menu.items[i]['isOpen'] = false;
+        this.resetSubmenuItems(this._menuSettingsConfig.vertical_menu.items[i]);
+      }
     }
   }
 

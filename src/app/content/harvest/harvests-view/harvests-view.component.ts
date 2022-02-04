@@ -5,7 +5,9 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { BreadcrumbInterface } from 'src/app/_models/breadcrumb';
 import { Harvest } from 'src/app/_models/harvest';
+import { UserInterface } from 'src/app/_models/user';
 import { NotificationService } from 'src/app/_services/notification/notification.service';
 import { HarvestService } from '../../../_services/harvest/harvest.service';
 import { RegistersHarvestComponent } from '../registers-harvest/registers-harvest.component';
@@ -24,7 +26,7 @@ export class HarvestsViewComponent implements OnInit {
 
   @BlockUI('harvests') blockUIHarvest: NgBlockUI;
 
-  public breadcrumb: any;
+  public breadcrumb: BreadcrumbInterface;
   public options = {
     close: false,
     expand: true,
@@ -32,7 +34,7 @@ export class HarvestsViewComponent implements OnInit {
     reload: true
   };
   public headElements = ['#', 'Categoría', 'Fecha inicio', 'Fecha término', 'Acciones'];
-  private currentUser: any;
+  private currentUser: UserInterface;
   private harvests: Harvest[];
   public collectionSize: any;
   public harvestSearch: Observable<Harvest[]>;
@@ -77,23 +79,45 @@ export class HarvestsViewComponent implements OnInit {
   getFullInfoHarvest(): void {
     this.categories = [];
     this.blockUIHarvest.start("Cargando...");
-    this.harvestService.getFullInfoHarvest().subscribe(data => {
-      data.forEach(element => {
-        let object = {
-          idCategory: "",
-          nameCategory: ""
-        }
 
-        object.idCategory = element.id;
-        object.nameCategory = element.name;
-        this.categories.push(object);
+    if (this.currentUser.rol === 'company') {
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
+        data.forEach(element => {
+          let object = {
+            idCategory: "",
+            nameCategory: ""
+          }
+
+          object.idCategory = element.id;
+          object.nameCategory = element.name;
+          this.categories.push(object);
+        });
+        this.harvests = data;
+        this.collectionSize = this.harvests.length;
+        this.searchData(this.pipe);
+        this.getDataToExport();
+        this.blockUIHarvest.stop();
       });
-      this.harvests = data;
-      this.collectionSize = this.harvests.length;
-      this.searchData(this.pipe);
-      this.getDataToExport();
-      this.blockUIHarvest.stop();
-    });
+    } else {
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
+        data.forEach(element => {
+          let object = {
+            idCategory: "",
+            nameCategory: ""
+          }
+
+          object.idCategory = element.id;
+          object.nameCategory = element.name;
+          this.categories.push(object);
+        });
+        this.harvests = data;
+        this.collectionSize = this.harvests.length;
+        this.searchData(this.pipe);
+        this.getDataToExport();
+        this.blockUIHarvest.stop();
+      });
+    }
+
   }
 
   /**
@@ -126,8 +150,8 @@ export class HarvestsViewComponent implements OnInit {
   }
 
   getUserLogged(): void {
-    if (localStorage.getItem('currentUser')) {
-      this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (localStorage.getItem('dataCurrentUser')) {
+      this.currentUser = JSON.parse(localStorage.getItem('dataCurrentUser'));
     }
   }
 

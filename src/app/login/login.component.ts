@@ -6,6 +6,7 @@ import { AuthService } from '../_services/auth.service';
 import { AlertService } from '../_services/alert.service';
 import { NotificationService } from '../_services/notification/notification.service';
 import { UserService } from '../_services/user/user.service';
+import { UserInterface } from '../_models/user';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -72,7 +73,6 @@ export class LoginComponent implements OnInit {
 
                 this.userService.getOneUser(res.user.uid).subscribe(user => {
                     this.setUserInStorage(res);
-                    this.setDataUserInfoInStorage(user);
                     localStorage.removeItem('currentLayoutStyle');
                     let returnUrl = '/dashboard/show-data';
                     if (this.returnUrl) {
@@ -86,12 +86,6 @@ export class LoginComponent implements OnInit {
                 this.loading = false;
                 this.notifyService.showError("Error", "¡Usuario o contraseña incorrecta!");
             });
-    }
-
-    setDataUserInfoInStorage(data) {
-        if (data) {
-            localStorage.setItem('dataCurrentUser', JSON.stringify(data));
-        }
     }
 
     setUserInStorage(res) {
