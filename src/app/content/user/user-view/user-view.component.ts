@@ -38,14 +38,9 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   /** Comments initials to init mat table */
   sortingCustomAccesor = (item, property) => {
     switch (property) {
-      case 'name': return item.name;
-      case 'position': {
-        console.log("property: ", property);
-        console.log("item.position: ", item);
-        return item.position
-      };
-      case 'dateinit': return item.dateinit;
-      case 'dateend': return item.dateend;
+      case 'run': return item.name;
+      case 'name': return item.dateinit;
+      case 'rol': return item.dateend;
       default: return item[property];
     }
   };
