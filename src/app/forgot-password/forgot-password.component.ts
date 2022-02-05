@@ -19,9 +19,7 @@ export class ForgotPasswordComponent implements OnInit {
         private authService: AuthService,
         private notifyService: NotificationService,
         private router: Router,
-    ) {
-
-    }
+    ) { }
 
     ngOnInit(): void {
         this.recoveryForm = this.formBuilder.group({
@@ -54,6 +52,8 @@ export class ForgotPasswordComponent implements OnInit {
             },
             (error) => {
                 this.loading = false;
+                this.submitted = false;
+                this.recoveryForm.reset();
                 this.notifyService.showError('Error al enviar el email', 'Error');
                 console.log("error", error);
             })

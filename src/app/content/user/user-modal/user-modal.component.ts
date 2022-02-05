@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-user-modal',
@@ -6,10 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./user-modal.component.css']
 })
 export class UserModalComponent implements OnInit {
+  @Input() public rol: string;
+  @Input() public opc: boolean;
 
-  constructor() { }
+  public title: string = '';
+
+  constructor(
+    public activeModal: NgbActiveModal,
+  ) { }
 
   ngOnInit(): void {
+    console.log(this.rol);
+    this.title = 'Agregar nuevo usuario';
+  }
+
+  onUserSubmit(): void {
+
   }
 
 }
