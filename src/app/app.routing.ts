@@ -7,6 +7,7 @@ import { RegisterComponent } from './register';
 import { LoginComponent } from './login';
 import { ChangelogComponent } from './changelog/changelog.component';
 import { ForgotPasswordComponent } from './forgot-password';
+import { FullLayoutComponent } from './_layout/full-layout/full-layout.component';
 
 const appRoutes: Routes = [
   // Public layout
@@ -18,6 +19,15 @@ const appRoutes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: '', component: LoginComponent },
+    ]
+  },
+  {
+    path: '',
+    component: FullLayoutComponent,
+    children: [
+      {
+        path: 'error', loadChildren: () => import('../app/content/full-pages/error/error.module').then(m => m.ErrorModule)
+      },
     ]
   },
   // Private layout

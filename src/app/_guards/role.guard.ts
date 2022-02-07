@@ -25,7 +25,7 @@ export class RoleGuard implements CanActivate {
       localStorage.removeItem('dataCurrentUser');
       return false;
     } else if (data.rol !== expectedRole1 && data.rol !== expectedRole2 && data.rol !== expectedRole3 && data.rol !== expectedRole4) {
-      console.log("Acceso no permitido");
+      this.router.navigate(['/error/not-allowed'], { queryParams: { returnUrl: state.url } });
       return false;
     }
     return true;
