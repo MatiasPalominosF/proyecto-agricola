@@ -92,7 +92,7 @@ export class ShowDataComponent implements OnInit {
         this.quantitieCategory = this.harvests.length;
         this.blockUIcategoriesCard.stop();
       });
-    } else if (this.currentUser.rol === 'admin') {
+    } else if (this.currentUser.rol === 'admin' || this.currentUser.rol === 'planner') {
       this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
         this.harvests = data;
         this.quantitieCategory = this.harvests.length;
@@ -130,7 +130,7 @@ export class ShowDataComponent implements OnInit {
         this.quantitieRegisters = data.length;
         this.blockUIregisterCard.stop();
       });
-    } else if (this.currentUser.rol === 'admin') {
+    } else if (this.currentUser.rol === 'admin' || this.currentUser.rol === 'planner') {
       this.harvestService.getFullInfoRegisterHarvestWithUid(this.currentUser.cuid, id).subscribe(data => {
 
         this.pieChartLabels = [];

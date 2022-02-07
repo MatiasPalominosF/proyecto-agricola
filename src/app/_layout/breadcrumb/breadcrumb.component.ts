@@ -53,7 +53,7 @@ export class BreadcrumbComponent implements OnInit {
         this.idCategory.emit(this.singlebasicSelected);
       });
 
-    } else if (this.currentUser.rol === 'admin') {
+    } else if (this.currentUser.rol === 'admin' || this.currentUser.rol === 'planner') {
       this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
         this.dataForSelect = data;
         this.singlebasicSelected = this.dataForSelect[0];

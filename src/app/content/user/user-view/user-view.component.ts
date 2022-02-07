@@ -179,7 +179,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
         this.dataSource.data = users;
         this.blockUIUser.stop();
       });
-    } else if (this.currentUser.rol === 'admin') {
+    } else if (this.currentUser.rol === 'admin' || this.currentUser.rol === 'planner') {
       this.userService.getUsersAdmin(this.currentUser.cuid, this.currentUser.uid).subscribe(users => {
         if (users.length === 0) {
           this.isEmpty = true;
