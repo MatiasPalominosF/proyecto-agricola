@@ -14,6 +14,7 @@ import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UiSwitchModule } from 'ngx-ui-switch';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserModalComponent } from './user-modal/user-modal.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { UserModalComponent } from './user-modal/user-modal.component';
     NgbModalModule,
     ReactiveFormsModule,
     BreadcrumbModule,
+    NgSelectModule,
     MatTableModule,
     UiSwitchModule.forRoot({
       size: 'small',

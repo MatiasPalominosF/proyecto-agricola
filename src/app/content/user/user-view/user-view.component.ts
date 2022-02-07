@@ -211,22 +211,21 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   }
 
   addUser(): void {
-    if (this.rol === 'superadmin') {
-      const modalRef = this.modalService.open(UserModalComponent, { windowClass: 'animated fadeInDown', backdrop: 'static' });
-      modalRef.componentInstance.rol = this.rol;
-      modalRef.componentInstance.opc = true;
-      modalRef.result.then((result) => {
-        if (result) {
-          this.notifyService.showSuccess("Agregar", "¡El usuario se añadió correctamente!");
-        }
-      }, (reason) => {
-        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      });
-
+    const modalRef = this.modalService.open(UserModalComponent, { windowClass: 'animated fadeInDown', backdrop: 'static' });
+    modalRef.componentInstance.rol = this.rol;
+    if (this.rol === 'company') {
+      modalRef.componentInstance.uid = this.currentUser.uid;
+    } else if (this.rol === 'admin') {
+      modalRef.componentInstance.uid = this.currentUser.cuid;
     }
-    if (this.rol === 'admin' || this.rol === 'company') {
-
-    }
+    modalRef.componentInstance.opc = true;
+    modalRef.result.then((result) => {
+      if (result) {
+        this.notifyService.showSuccess("Agregar", "¡El usuario se añadió correctamente!");
+      }
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
   }
 
   private getDismissReason(reason: any): string {
@@ -243,7 +242,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
     console.log(user);
   }
 
-  deleteUser(user: UserInterface): void {
+  showDetails(user: UserInterface): void {
     console.log(user);
   }
 
