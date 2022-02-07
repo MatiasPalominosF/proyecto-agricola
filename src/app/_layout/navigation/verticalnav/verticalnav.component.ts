@@ -79,7 +79,9 @@ export class VerticalnavComponent implements OnInit {
         if (this.rol === 'worker') {
           config.vertical_menu.items.forEach(element => {
             if (element.section !== 'GESTIÓN'
-              && element.title !== 'Categorías' && element.title !== 'Usuarios'
+              && element.title !== 'Categorías'
+              && element.title !== 'Usuarios'
+              && element.title !== 'Dashboard'
             ) {
               elemRol.push(element);
             }
@@ -89,8 +91,17 @@ export class VerticalnavComponent implements OnInit {
         if (this.rol === 'superadmin') {
           config.vertical_menu.items.forEach(element => {
             if (element.section !== 'HISTORIAL'
-              && element.title !== 'Cosechas' && element.title !== 'Categorías'
+              && element.title !== 'Cosechas'
+              && element.title !== 'Categorías'
             ) {
+              elemRol.push(element);
+            }
+          });
+          config.vertical_menu.items = elemRol;
+        }
+        if (this.rol === 'planner') {
+          config.vertical_menu.items.forEach(element => {
+            if (element.title !== 'Usuarios') {
               elemRol.push(element);
             }
           });

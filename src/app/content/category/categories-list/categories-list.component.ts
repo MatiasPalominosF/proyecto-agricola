@@ -79,7 +79,7 @@ export class CategoriesListComponent implements OnInit {
         this.searchData(this.pipe);
         this.blockUICategories.stop();
       });
-    } else if (this.currentUser.rol === 'admin') {
+    } else if (this.rol === 'admin' || this.rol === 'planner') {
       this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
         this.harvests = data;
         this.collectionSize = this.harvests.length;
@@ -148,6 +148,10 @@ export class CategoriesListComponent implements OnInit {
       }
       case 'worker': {
         this.rol = 'worker';
+        break;
+      }
+      case 'planner': {
+        this.rol = 'planner';
         break;
       }
     }

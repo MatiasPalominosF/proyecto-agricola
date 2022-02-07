@@ -81,7 +81,6 @@ export class HarvestsViewComponent implements OnInit {
     this.blockUIHarvest.start("Cargando...");
 
     if (this.currentUser.rol === 'company') {
-      console.log("company");
       this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
         data.forEach(element => {
           let object = {
@@ -99,8 +98,7 @@ export class HarvestsViewComponent implements OnInit {
         this.getDataToExport();
         this.blockUIHarvest.stop();
       });
-    } else if (this.currentUser.rol === 'admin') {
-      console.log("admin");
+    } else if (this.currentUser.rol === 'admin' || this.currentUser.rol === 'worker' || this.currentUser.rol === 'planner') {
       this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
         data.forEach(element => {
           let object = {
