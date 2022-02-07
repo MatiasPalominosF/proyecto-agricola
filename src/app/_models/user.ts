@@ -3,6 +3,7 @@ export interface UserInterface {
     cuid?: string
     isenabled?: boolean
     firstName?: string;
+    lastName?: string;
     run?: string;
     password?: string;
     email?: string;

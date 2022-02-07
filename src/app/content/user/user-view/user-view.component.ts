@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -11,6 +12,7 @@ import { NotificationService } from 'src/app/_services/notification/notification
 import { UserService } from 'src/app/_services/user/user.service';
 import { BreadcrumbInterface } from '../../../_models/breadcrumb';
 import { ConfirmationService } from '../../../_services/confirmation/confirmation.service';
+import { UserModalComponent } from '../user-modal/user-modal.component';
 
 @Component({
   selector: 'app-user-view',
@@ -29,23 +31,22 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   public currentUser: UserInterface;
   public isLoading: boolean = false;
   public enabled: boolean;
+  private rol: string;
+  private closeResult: string = '';
+
   constructor(
     private userService: UserService,
     private confirmationDialogService: ConfirmationService,
     private notifyService: NotificationService,
+    private modalService: NgbModal,
   ) { }
 
   /** Comments initials to init mat table */
   sortingCustomAccesor = (item, property) => {
     switch (property) {
-      case 'name': return item.name;
-      case 'position': {
-        console.log("property: ", property);
-        console.log("item.position: ", item);
-        return item.position
-      };
-      case 'dateinit': return item.dateinit;
-      case 'dateend': return item.dateend;
+      case 'run': return item.name;
+      case 'name': return item.dateinit;
+      case 'rol': return item.dateend;
       default: return item[property];
     }
   };
@@ -210,14 +211,38 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   }
 
   addUser(): void {
+    const modalRef = this.modalService.open(UserModalComponent, { windowClass: 'animated fadeInDown', backdrop: 'static' });
+    modalRef.componentInstance.rol = this.rol;
+    if (this.rol === 'company') {
+      modalRef.componentInstance.uid = this.currentUser.uid;
+    } else if (this.rol === 'admin') {
+      modalRef.componentInstance.uid = this.currentUser.cuid;
+    }
+    modalRef.componentInstance.opc = true;
+    modalRef.result.then((result) => {
+      if (result) {
+        this.notifyService.showSuccess("Agregar", "¡El usuario se añadió correctamente!");
+      }
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
 
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 
   editUser(user: UserInterface): void {
     console.log(user);
   }
 
-  deleteUser(user: UserInterface): void {
+  showDetails(user: UserInterface): void {
     console.log(user);
   }
 
@@ -226,18 +251,22 @@ export class UserViewComponent implements OnInit, AfterViewInit {
 
     switch (rol) {
       case 'superadmin': {
+        this.rol = 'superadmin';
         this.displayedColumns = ['position', 'run', 'name', 'rol', 'actions'];
         break;
       }
       case 'admin': {
+        this.rol = 'admin';
         this.displayedColumns = ['position', 'run', 'name', 'rol', 'actions'];
         break;
       }
       case 'company': {
+        this.rol = 'company';
         this.displayedColumns = ['position', 'run', 'name', 'rol', 'actions'];
         break;
       }
       case 'worker': {
+        this.rol = 'worker';
         this.displayedColumns = ['position', 'run', 'name', 'rol'];
         break;
       }

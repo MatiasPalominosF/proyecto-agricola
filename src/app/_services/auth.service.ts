@@ -41,6 +41,10 @@ export class AuthService {
     });
   }
 
+  recoverPassword(email: string): Promise<void> {
+    return this.afAuth.auth.sendPasswordResetEmail(email);
+  }
+
   doTwitterLogin() {
     return new Promise<any>((resolve, reject) => {
       const provider = new firebase.auth.TwitterAuthProvider();

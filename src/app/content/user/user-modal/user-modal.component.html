@@ -1,1 +1,369 @@
-<p>user-modal works!</p>
+<div class="modal-header">
+  <h4 class="form-section">
+    <div class="d-flex flex-row">
+      <div *ngIf="!opc"><i class="mr-2 feather ft-edit"></i></div>
+      <div *ngIf="opc"><i class="mr-2 icon-plus"></i></div>
+      <div>
+        {{ opc ? "Agregar usuario" : "Editar usuario" }}
+      </div>
+    </div>
+  </h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body" *blockUI="'userInfo'; message: 'Loading'">
+  <ng-container *ngIf="rol === 'superadmin'; else elseBlock">
+    <form [formGroup]="registerForm">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="firstName">Nombre *</label>
+            <div class="position-relative">
+              <input
+                type="text"
+                id="firstName"
+                class="form-control"
+                placeholder="Nombre"
+                formControlName="firstName"
+                [ngClass]="{
+                  'is-invalid': submitted && f.firstName.errors
+                }"
+              />
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.firstName.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="hasError('firstName', 'required')">
+                  El nombre es requerido
+                </div>
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="lastName">Apellido *</label>
+            <div class="position-relative">
+              <input
+                type="text"
+                id="lastName"
+                class="form-control"
+                placeholder="Apellido"
+                formControlName="lastName"
+                [ngClass]="{
+                  'is-invalid': submitted && f.lastName.errors
+                }"
+              />
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.lastName.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="hasError('lastName', 'required')">
+                  El apellido es requerido
+                </div>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="run">RUT *</label>
+            <div class="position-relative">
+              <input
+                (input)="checkRun()"
+                type="text"
+                maxlength="10"
+                id="run"
+                class="form-control"
+                placeholder="RUT"
+                formControlName="run"
+                [ngClass]="{
+                  'is-invalid': submitted && f.run.errors
+                }"
+              />
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.run.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="hasError('run', 'required')">
+                  El RUT es requerido
+                </div>
+                <div *ngIf="hasError('run', 'maxlength')">
+                  Se aceptan como máximo 10 caracteres
+                </div>
+                <div *ngIf="hasError('run', 'pattern')">
+                  Debe escribir un rut válido
+                </div>
+                <div *ngIf="hasError('run', 'verificator')">
+                  El digito verificador no corresponde al rut ingresado
+                </div>
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <div class="position-relative">
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                placeholder="Email"
+                formControlName="email"
+                [ngClass]="{
+                  'is-invalid': submitted && f.email.errors
+                }"
+              />
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.email.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="hasError('email', 'required')">
+                  El email es requerido
+                </div>
+                <div *ngIf="hasError('email', 'email')">
+                  El email no es válido
+                </div>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="password">Contraseña *</label>
+            <div class="position-relative">
+              <input
+                type="password"
+                id="password"
+                class="form-control"
+                placeholder="Contraseña"
+                formControlName="password"
+                [ngClass]="{
+                  'is-invalid': submitted && f.password.errors
+                }"
+              />
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.password.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="hasError('password', 'required')">
+                  La contraseña es requerida
+                </div>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+  <ng-template #elseBlock>
+    <form [formGroup]="registerForm">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="firstName">Nombre *</label>
+            <div class="position-relative">
+              <input
+                type="text"
+                id="firstName"
+                class="form-control"
+                placeholder="Nombre"
+                formControlName="firstName"
+                [ngClass]="{
+                  'is-invalid': submitted && f.firstName.errors
+                }"
+              />
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.firstName.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="hasError('firstName', 'required')">
+                  El nombre es requerido
+                </div>
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="lastName">Apellido *</label>
+            <div class="position-relative">
+              <input
+                type="text"
+                id="lastName"
+                class="form-control"
+                placeholder="Apellido"
+                formControlName="lastName"
+                [ngClass]="{
+                  'is-invalid': submitted && f.lastName.errors
+                }"
+              />
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.lastName.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="hasError('lastName', 'required')">
+                  El apellido es requerido
+                </div>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="run">RUT *</label>
+            <div class="position-relative">
+              <input
+                type="text"
+                id="run"
+                (input)="checkRun()"
+                class="form-control"
+                placeholder="RUT"
+                formControlName="run"
+                [ngClass]="{
+                  'is-invalid': submitted && f.run.errors
+                }"
+              />
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.run.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="hasError('run', 'required')">
+                  El RUT es requerido
+                </div>
+                <div *ngIf="hasError('run', 'maxlength')">
+                  Se aceptan como máximo 10 caracteres
+                </div>
+                <div *ngIf="hasError('run', 'pattern')">
+                  Debe escribir un rut válido
+                </div>
+                <div *ngIf="hasError('run', 'verificator')">
+                  El digito verificador no corresponde al rut ingresado
+                </div>
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="rol">Cargo *</label>
+            <div class="position-relative">
+              <ng-select
+                id="rol"
+                formControlName="rol"
+                [items]="positions"
+                bindLabel="name"
+                placeholder="Seleccione un cargo"
+                bindValue="id"
+                required
+                [ngClass]="{
+                  'is-invalid': submitted && f.rol.errors
+                }"
+              >
+              </ng-select>
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.rol.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="hasError('rol', 'required')">
+                  El cargo es requerido
+                </div>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <div class="position-relative">
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                placeholder="Email"
+                formControlName="email"
+                [ngClass]="{
+                  'is-invalid': submitted && f.email.errors
+                }"
+              />
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.email.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="hasError('email', 'required')">
+                  El email es requerido
+                </div>
+                <div *ngIf="hasError('email', 'email')">
+                  El email no es válido
+                </div>
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="password">Contraseña *</label>
+            <div class="position-relative">
+              <input
+                type="password"
+                id="password"
+                class="form-control"
+                placeholder="Contraseña"
+                formControlName="password"
+                [ngClass]="{
+                  'is-invalid': submitted && f.password.errors
+                }"
+              />
+              <small
+                class="form-text text-muted danger"
+                *ngIf="submitted && f.password.errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="hasError('password', 'required')">
+                  La contraseña es requerida
+                </div>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn grey btn-outline-secondary"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    Cerrar
+  </button>
+  <button type="button" (click)="onUserSubmit()" class="btn btn-outline-primary">
+    Aceptar
+  </button>
+</div>

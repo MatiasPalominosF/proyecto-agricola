@@ -5,6 +5,7 @@ import { AuthGuard } from './_guards/auth.guard';
 import { RegisterComponent } from './register';
 import { LoginComponent } from './login';
 import { ChangelogComponent } from './changelog/changelog.component';
+import { ForgotPasswordComponent } from './forgot-password';
 
 const appRoutes: Routes = [
   // Public layout
@@ -14,6 +15,7 @@ const appRoutes: Routes = [
     children: [
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: '', component: LoginComponent },
     ]
   },

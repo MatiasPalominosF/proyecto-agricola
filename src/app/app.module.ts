@@ -69,6 +69,7 @@ import { ConfirmationService } from './_services/confirmation/confirmation.servi
 import { NgbDateCustomParserFormatter } from '../app/_helpers/dateCustomFormatter';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getSpanishPaginatorIntl } from './spanish-paginator';
+import { ForgotPasswordComponent } from './forgot-password';
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -119,6 +120,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     RegisterComponent,
     SocialSigninComponent,
     LoginComponent,
+    ForgotPasswordComponent,
     ChangelogComponent,
     VerticalnavComponent,
     HorizontalnavComponent,
