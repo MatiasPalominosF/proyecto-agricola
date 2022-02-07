@@ -116,8 +116,9 @@ export class VerticalnavComponent implements OnInit {
   }
 
   resetMainMenu() {
-    const nodes = this.document.getElementById('main-menu-navigation').childNodes;
-    if (nodes) {
+    let element = this.document.getElementById('main-menu-navigation');
+    if (typeof element !== 'undefined' && element !== null) {
+      const nodes = element.childNodes;
       for (let i = 0; i < nodes.length; i++) {
         this.resetCollapseMenu(nodes[i]);
       }
