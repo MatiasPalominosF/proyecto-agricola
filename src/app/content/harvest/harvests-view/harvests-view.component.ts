@@ -40,7 +40,7 @@ export class HarvestsViewComponent implements OnInit {
   public harvestSearch: Observable<Harvest[]>;
   public filter = new FormControl('');
   public pipe: any;
-  public from = new Date('December 25, 1995 13:30:00');;
+  public from = new Date(1920, 0, 1, 0, 0, 0);;
   public to = new Date();
   public page = 1;
   public pageSize = 4;
@@ -81,6 +81,7 @@ export class HarvestsViewComponent implements OnInit {
     this.blockUIHarvest.start("Cargando...");
 
     if (this.currentUser.rol === 'company') {
+      console.log("company");
       this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
         data.forEach(element => {
           let object = {
@@ -98,7 +99,8 @@ export class HarvestsViewComponent implements OnInit {
         this.getDataToExport();
         this.blockUIHarvest.stop();
       });
-    } else {
+    } else if (this.currentUser.rol === 'admin') {
+      console.log("admin");
       this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
         data.forEach(element => {
           let object = {
@@ -117,7 +119,6 @@ export class HarvestsViewComponent implements OnInit {
         this.blockUIHarvest.stop();
       });
     }
-
   }
 
   /**

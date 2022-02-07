@@ -1,6 +1,6 @@
 export interface Harvest {
     id?: string;
-    uid?: string;
+    cuid?: string;
     name?: string;
     dateStart?: any;
     dateEnd?: any;

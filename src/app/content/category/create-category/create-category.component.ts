@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Harvest } from 'src/app/_models/harvest';
@@ -11,13 +11,14 @@ import { HarvestService } from 'src/app/_services/harvest/harvest.service';
   styleUrls: ['./create-category.component.css']
 })
 export class CreateCategoryComponent implements OnInit {
+  @Input() public uid: string;
 
   public title: string;
   public categoryForm: FormGroup;
   public submitted = false;
   private datePattern: string = '[0-9]{4}[-][0-9]{2}[-][0-9]{2}';
   @Output() passEntry: EventEmitter<any> = new EventEmitter();
-  private currentUser: any;
+  private currentUser: UserInterface;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -58,9 +59,12 @@ export class CreateCategoryComponent implements OnInit {
     this.fValue['dateStart'] = date;
 
     harvest = this.fValue;
-    harvest.uid = this.currentUser.uid;
-
-    this.harvestService.addNewProduct(this.fValue)
+    if (this.currentUser.rol === 'admin') {
+      harvest.cuid = this.currentUser.cuid;
+    } else if (this.currentUser.rol === 'company') {
+      harvest.cuid = this.currentUser.uid;
+    }
+    this.harvestService.addNewProduct(harvest);
     this.passEntry.emit(true);
     this.activeModal.close(true);
   }
