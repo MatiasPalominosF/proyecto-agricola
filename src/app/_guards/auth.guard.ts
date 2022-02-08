@@ -49,7 +49,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
                     // localStorage.removeItem('currentUser');
                     // localStorage.removeItem('dataCurrentUser');
                     // not logged in so redirect to login page with the return url
-                    this.router.navigate(['/error/not-allowed'], { queryParams: { returnUrl: state.url } });
+                    this.router.navigate(['/error/user-disabled'], { queryParams: { returnUrl: state.url } });
 
                     return false;
 
