@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { UserInterface } from 'src/app/_models/user';
 
@@ -8,8 +9,8 @@ import { UserInterface } from 'src/app/_models/user';
   styleUrls: ['./disabled-view.component.css']
 })
 export class DisabledViewComponent implements OnInit {
-  public emailString: string;
-  public wtspString: string;
+  public emailString: SafeUrl;
+  public wtspString: SafeUrl;
   public url: string;
   private currentUser: UserInterface;
   public isCompany: boolean;
@@ -17,6 +18,7 @@ export class DisabledViewComponent implements OnInit {
   private mensaje: string;
   constructor(
     private deviceService: DeviceDetectorService,
+    private sanitizer: DomSanitizer,
   ) { }
 
   ngOnInit(): void {
@@ -31,9 +33,10 @@ export class DisabledViewComponent implements OnInit {
     if (this.currentUser) {
       this.getUrl();
       this.getUrlWtsp();
-      this.emailString = `mailto:palominos90@gmail.com?Subject=Usuario ${this.currentUser.firstName} (rut:${this.currentUser.run}) desactivado`;
+
+      this.emailString = this.sanitize(`mailto:palominos90@gmail.com?Subject=Usuario ${this.currentUser.firstName} (rut:${this.currentUser.run}) desactivado`);
     } else {
-      this.emailString = "mailto:palominos90@gmail.com?Subject=Usuario desactivado";
+      this.emailString = this.sanitize("mailto:palominos90@gmail.com?Subject=Usuario desactivado");
     }
   }
 
@@ -46,7 +49,11 @@ export class DisabledViewComponent implements OnInit {
     }
   }
 
-  getUrlWtsp() {
+  sanitize(url: string) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }
+
+  getUrlWtsp(): void {
     if (this.isDesktop) {
       this.urlwtsp = "https://web.whatsapp.com/";
     } else if (this.isMobile || this.isTablet) {
@@ -54,7 +61,8 @@ export class DisabledViewComponent implements OnInit {
     }
 
     this.mensaje = `send?phone=56989189474&text=*Usuario ${this.currentUser.firstName} (rut: ${this.currentUser.run}) desactivado*%0A`;
-    this.wtspString = this.urlwtsp + this.mensaje;
+
+    this.wtspString = this.sanitize(this.urlwtsp + this.mensaje);
   }
 
   get isMobile(): boolean {

@@ -24,7 +24,13 @@ export class FullLayoutComponent implements OnInit {
     this.renderer.addClass(document.body, 'blank-page');
     this.renderer.addClass(document.body, 'pace-done');
 
-    if ((this.router.url.indexOf('WithNavbar') >= 0) || (this.router.url.indexOf('Advanced') >= 0)) {
+    if (this.router.url.indexOf('user-disabled') >= 0) {
+      this.showFooter = false;
+      this.showNavbar = false;
+      this.renderer.addClass(document.body, 'bg-full-screen-image');
+      this.renderer.removeClass(document.body, 'fixed-navbar');
+    }
+    else if ((this.router.url.indexOf('WithNavbar') >= 0) || (this.router.url.indexOf('Advanced') >= 0)) {
       this.showFooter = true;
       this.showNavbar = true;
       this.renderer.addClass(document.body, 'bg-cyan');

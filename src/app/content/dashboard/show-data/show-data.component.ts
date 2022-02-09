@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { take } from 'rxjs/operators';
 import { BreadcrumbInterface } from 'src/app/_models/breadcrumb';
 import { Harvest } from 'src/app/_models/harvest';
 import { UserInterface } from 'src/app/_models/user';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
+import { UserService } from 'src/app/_services/user/user.service';
 import * as chartsData from './data';
 
 @Component({
@@ -47,12 +49,16 @@ export class ShowDataComponent implements OnInit {
   /**/
 
   private harvests: Harvest[];
-  public quantitieCategory: number;
-  public quantitieRegisters: number;
+  public quantitieCategory: number = 0;
+  public quantitieRegisters: number = 0;
   private currentUser: UserInterface;
+  public quantityCompanies: number = 0;
+  public quantitieCompaniesEnabled: number = 0;
+  public quantitieCompaniesDisabled: number = 0;
 
   constructor(
     private harvestService: HarvestService,
+    private userService: UserService,
   ) { }
 
   ngOnInit(): void {
@@ -87,22 +93,49 @@ export class ShowDataComponent implements OnInit {
     this.blockUIcategoriesCard.start("Cargando...");
 
     if (this.currentUser.rol === 'company') {
-      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
-        this.harvests = data;
-        this.quantitieCategory = this.harvests.length;
-        this.blockUIcategoriesCard.stop();
-      });
+      this.getInfoCompany();
     } else if (this.currentUser.rol === 'admin' || this.currentUser.rol === 'planner') {
-      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
-        this.harvests = data;
-        this.quantitieCategory = this.harvests.length;
-        this.blockUIcategoriesCard.stop();
-      });
+      this.getInfoAdmins();
+    } else if (this.currentUser.rol === 'superadmin') {
+      this.getInfoSuperAdmin();
     }
   }
 
-  reloadBarCharts(): void {
+  getInfoSuperAdmin() {
+    let users: UserInterface[] = [];
+    this.userService.getUsersSuperAdmin().pipe(take(1)).subscribe(
+      (data) => {
+        users = data;
+        console.log();
+      }
+    ).add(() => {
+      this.quantityCompanies = users.length;
+      users.forEach(user => {
+        if (user.isenabled) {
+          this.quantitieCompaniesEnabled += 1;
+        } else {
+          this.quantitieCompaniesDisabled += 1;
+        }
+      })
+      this.blockUIregisterCard.stop();
+      this.blockUIcategoriesCard.stop();
+    });
+  }
 
+  getInfoCompany() {
+    this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
+      this.harvests = data;
+      this.quantitieCategory = this.harvests.length;
+      this.blockUIcategoriesCard.stop();
+    });
+  }
+
+  getInfoAdmins() {
+    this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
+      this.harvests = data;
+      this.quantitieCategory = this.harvests.length;
+      this.blockUIcategoriesCard.stop();
+    });
   }
 
   setValuesInDashboard(harvest: Harvest): void {
