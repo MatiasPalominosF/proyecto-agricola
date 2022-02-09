@@ -44,10 +44,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
                                 return false;
                         }
                     }
-                    localStorage.removeItem('currentUser');
-                    localStorage.removeItem('dataCurrentUser');
+
+
+                    // localStorage.removeItem('currentUser');
+                    // localStorage.removeItem('dataCurrentUser');
                     // not logged in so redirect to login page with the return url
-                    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+                    this.router.navigate(['/error/user-disabled'], { queryParams: { returnUrl: state.url } });
 
                     return false;
 
@@ -55,6 +57,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
             } catch (error) {
                 console.log(error);
             }
+        } else {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('dataCurrentUser');
+            // not logged in so redirect to login page with the return url
+            this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+            return false;
         }
     }
 

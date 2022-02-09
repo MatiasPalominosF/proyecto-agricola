@@ -24,7 +24,13 @@ export class FullLayoutComponent implements OnInit {
     this.renderer.addClass(document.body, 'blank-page');
     this.renderer.addClass(document.body, 'pace-done');
 
-    if ((this.router.url.indexOf('WithNavbar') >= 0) || (this.router.url.indexOf('Advanced') >= 0)) {
+    if (this.router.url.indexOf('user-disabled') >= 0) {
+      this.showFooter = false;
+      this.showNavbar = false;
+      this.renderer.addClass(document.body, 'bg-full-screen-image');
+      this.renderer.removeClass(document.body, 'fixed-navbar');
+    }
+    else if ((this.router.url.indexOf('WithNavbar') >= 0) || (this.router.url.indexOf('Advanced') >= 0)) {
       this.showFooter = true;
       this.showNavbar = true;
       this.renderer.addClass(document.body, 'bg-cyan');
@@ -70,31 +76,35 @@ export class FullLayoutComponent implements OnInit {
       this.showNavbar = false;
       this.renderer.removeClass(document.body, 'fixed-navbar');
       this.renderer.addClass(document.body, 'comingsoonFlat');
-    } else if (this.router.url.indexOf('error400') >= 0 && this.router.url.indexOf('error400Withnavbar') <= 0 ) {
+    } else if (this.router.url.indexOf('error400') >= 0 && this.router.url.indexOf('error400Withnavbar') <= 0) {
       this.showFooter = false;
       this.showNavbar = false;
       this.renderer.removeClass(document.body, 'fixed-navbar');
-    } else if (this.router.url.indexOf('error401') >= 0 && this.router.url.indexOf('error401Withnavbar') <= 0 ) {
+    } else if (this.router.url.indexOf('error401') >= 0 && this.router.url.indexOf('error401Withnavbar') <= 0) {
       this.showFooter = false;
       this.showNavbar = false;
       this.renderer.removeClass(document.body, 'fixed-navbar');
-    } else if (this.router.url.indexOf('error403') >= 0 && this.router.url.indexOf('error403Withnavbar') <= 0 ) {
+    } else if (this.router.url.indexOf('error403') >= 0 && this.router.url.indexOf('error403Withnavbar') <= 0) {
       this.showFooter = false;
       this.showNavbar = false;
       this.renderer.removeClass(document.body, 'fixed-navbar');
-    } else if (this.router.url.indexOf('error404') >= 0 && this.router.url.indexOf('error404Withnavbar') <= 0 ) {
+    } else if (this.router.url.indexOf('error404') >= 0 && this.router.url.indexOf('error404Withnavbar') <= 0) {
       this.showFooter = false;
       this.showNavbar = false;
       this.renderer.removeClass(document.body, 'fixed-navbar');
-    } else if (this.router.url.indexOf('error500') >= 0 && this.router.url.indexOf('error500Withnavbar') <= 0 ) {
+    } else if (this.router.url.indexOf('not-allowed') >= 0) {
       this.showFooter = false;
       this.showNavbar = false;
       this.renderer.removeClass(document.body, 'fixed-navbar');
-    } else if (this.router.url.indexOf('maintenance') >= 0  || this.router.url.indexOf('recoverPassword') >= 0) {
+    } else if (this.router.url.indexOf('error500') >= 0 && this.router.url.indexOf('error500Withnavbar') <= 0) {
       this.showFooter = false;
       this.showNavbar = false;
       this.renderer.removeClass(document.body, 'fixed-navbar');
-    } else if (this.router.url.indexOf('unlockUser') >= 0 ) {
+    } else if (this.router.url.indexOf('maintenance') >= 0 || this.router.url.indexOf('recoverPassword') >= 0) {
+      this.showFooter = false;
+      this.showNavbar = false;
+      this.renderer.removeClass(document.body, 'fixed-navbar');
+    } else if (this.router.url.indexOf('unlockUser') >= 0) {
       this.showFooter = false;
       this.showNavbar = false;
       this.renderer.removeClass(document.body, 'fixed-navbar');

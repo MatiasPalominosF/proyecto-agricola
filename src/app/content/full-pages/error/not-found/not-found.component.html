@@ -1,0 +1,55 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <div class="content-header row mb-1"></div>
+    <div class="content-body">
+      <section class="flexbox-container">
+        <div class="col-12 d-flex align-items-center justify-content-center">
+          <div class="col-lg-4 col-md-8 col-10 p-0">
+            <div class="card-header bg-transparent border-0">
+              <h2 class="error-code text-center mb-2">404</h2>
+              <h3 class="text-uppercase text-center">Página no encontrada</h3>
+            </div>
+            <div class="card-content">
+              <div class="d-flex justify-content-center">
+                <div class="row py-2">
+                  <div class="col-12 col-sm-12 col-md-12 mb-1">
+                    <a
+                      *ngIf="
+                        currentUser.rol === 'admin' ||
+                        currentUser.rol === 'superadmin' ||
+                        currentUser.rol === 'company' ||
+                        currentUser.rol === 'planner'
+                      "
+                      [routerLink]="['/dashboard/show-data']"
+                      class="btn btn-primary btn-block"
+                      ><i class="feather ft-home"></i> Home</a
+                    >
+                    <a
+                      *ngIf="currentUser.rol === 'worker'"
+                      [routerLink]="['/harvest/harvests-view']"
+                      class="btn btn-primary btn-block"
+                      ><i class="feather ft-home"></i> Home</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer bg-transparent">
+              <div class="row">
+                <p class="text-muted text-center col-12 pb-1">
+                  © <span class="year"></span>
+                  <a target="_blank" href="https://socialtalk.cl/"
+                    >Socialtalk </a
+                  >Programado por
+                  <a href="https://github.com/MatiasPalominosF" target="_blank"
+                    >Matías Palominos F.</a
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

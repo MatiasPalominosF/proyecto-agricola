@@ -7,17 +7,21 @@ import { AlertService } from '../_services/alert.service';
 import { NotificationService } from '../_services/notification/notification.service';
 import { UserService } from '../_services/user/user.service';
 import { UserInterface } from '../_models/user';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
     templateUrl: 'login.component.html',
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+    
     loginForm: FormGroup;
     loading = false;
     submitted = false;
     returnUrl: string;
-
+    private rol: string;
+    
+    
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -41,6 +45,9 @@ export class LoginComponent implements OnInit {
 
         if (localStorage.getItem('remember')) {
             localStorage.removeItem('currentLayoutStyle');
+            if (localStorage.getItem('dataCurrentUser')) {
+                this.rol = JSON.parse(localStorage.getItem('dataCurrentUser')).rol;
+            }
             let returnUrl = this.onLoginRedirect();
             this.router.navigate([returnUrl]);
         } else if (localStorage.getItem('currentUser')) {
@@ -71,12 +78,20 @@ export class LoginComponent implements OnInit {
                     localStorage.removeItem('remember');
                 }
 
+                let returnUrl = '';
                 this.userService.getOneUser(res.user.uid).subscribe(user => {
                     this.setUserInStorage(res);
                     localStorage.removeItem('currentLayoutStyle');
-                    let returnUrl = '/dashboard/show-data';
-                    if (this.returnUrl) {
-                        returnUrl = this.returnUrl;
+                    if (user.rol === 'worker') {
+                        returnUrl = '/harvest/harvests-view';
+                        if (this.returnUrl) {
+                            returnUrl = this.returnUrl;
+                        }
+                    } else {
+                        returnUrl = '/dashboard/show-data';
+                        if (this.returnUrl) {
+                            returnUrl = this.returnUrl;
+                        }
                     }
                     this.router.navigate([returnUrl]);
                 });
@@ -97,6 +112,11 @@ export class LoginComponent implements OnInit {
     }
 
     onLoginRedirect() {
-        return '/dashboard/show-data';
+        if (this.rol === 'worker') {
+            return '/harvest/harvests-view';
+        } else {
+            return '/dashboard/show-data';
+        }
+
     }
 }

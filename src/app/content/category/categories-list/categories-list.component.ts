@@ -22,7 +22,7 @@ export class CategoriesListComponent implements OnInit {
   @BlockUI('categoriesCard') blockUICategories: NgBlockUI;
 
   public breadcrumb: BreadcrumbInterface;
-  private currentUser: any;
+  private currentUser: UserInterface;
   public options = {
     close: false,
     expand: true,
@@ -32,6 +32,7 @@ export class CategoriesListComponent implements OnInit {
   public headElements = ['#', 'Categoría', 'Fecha inicio', 'Fecha término', 'Acciones'];
   private harvests: Harvest[];
   public collectionSize: any;
+  private rol: string;
   public pipe: any;
   public page = 1;
   public pageSize = 4;
@@ -65,17 +66,28 @@ export class CategoriesListComponent implements OnInit {
       'options': false
     };
     this.getUserLogged();
+    this.setRol();
     this.getFullInfoHarvest();
   }
 
   getFullInfoHarvest(): void {
     this.blockUICategories.start("Cargando...");
-    this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
-      this.harvests = data;
-      this.collectionSize = this.harvests.length;
-      this.searchData(this.pipe);
-      this.blockUICategories.stop();
-    });
+    if (this.rol === 'company') {
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
+        this.harvests = data;
+        this.collectionSize = this.harvests.length;
+        this.searchData(this.pipe);
+        this.blockUICategories.stop();
+      });
+    } else if (this.rol === 'admin' || this.rol === 'planner') {
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
+        this.harvests = data;
+        this.collectionSize = this.harvests.length;
+        this.searchData(this.pipe);
+        this.blockUICategories.stop();
+      });
+    }
+
   }
 
   /**
@@ -103,6 +115,11 @@ export class CategoriesListComponent implements OnInit {
 
   createCategory(): void {
     const modalRef = this.modalService.open(CreateCategoryComponent, { windowClass: 'animated fadeInDown', backdrop: 'static' });
+    if (this.rol === 'company') {
+      modalRef.componentInstance.uid = this.currentUser.uid;
+    } else if (this.rol === 'admin') {
+      modalRef.componentInstance.uid = this.currentUser.cuid;
+    }
     modalRef.result.then((result) => {
       if (result) {
         this.notifyService.showSuccess("Agregar", "¡La categoría se añadió correctamente!");
@@ -111,6 +128,34 @@ export class CategoriesListComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       console.log(this.closeResult);
     });
+  }
+
+  setRol() {
+    let rol: string = this.currentUser.rol;
+
+    switch (rol) {
+      case 'superadmin': {
+        this.rol = 'superadmin';
+        break;
+      }
+      case 'admin': {
+        this.rol = 'admin';
+        break;
+      }
+      case 'company': {
+        this.rol = 'company';
+        break;
+      }
+      case 'worker': {
+        this.rol = 'worker';
+        break;
+      }
+      case 'planner': {
+        this.rol = 'planner';
+        break;
+      }
+    }
+
   }
 
   delete(id: string): void {

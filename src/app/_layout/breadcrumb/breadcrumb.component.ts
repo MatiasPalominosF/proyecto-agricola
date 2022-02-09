@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { BreadcrumbInterface } from 'src/app/_models/breadcrumb';
 import { Harvest } from 'src/app/_models/harvest';
+import { UserInterface } from 'src/app/_models/user';
 import { HarvestService } from 'src/app/_services/harvest/harvest.service';
 
 @Component({
@@ -14,6 +15,8 @@ export class BreadcrumbComponent implements OnInit {
   public dataForSelect: Array<Harvest> = [];
   public dataForSelect2: Array<Harvest> = [];
   public singlebasicSelected: Harvest = {};
+  private currentUser: UserInterface;
+
   @BlockUI('selectBlockUi') blockUISelect: NgBlockUI;
   constructor(
     private harvestService: HarvestService,
@@ -25,9 +28,17 @@ export class BreadcrumbComponent implements OnInit {
   ngOnInit() {
     this.processBreadCrumbLinks();
 
+    this.getUserLogged();
     this.getFullInfoHarvest();
     //this.getFullInHarvest();
   }
+
+  getUserLogged() {
+    if (localStorage.getItem('dataCurrentUser')) {
+      this.currentUser = JSON.parse(localStorage.getItem('dataCurrentUser'));
+    }
+  }
+
   private processBreadCrumbLinks() {
   }
 
@@ -35,11 +46,20 @@ export class BreadcrumbComponent implements OnInit {
    * Utilizar si se necesita que exista sincronización de datos en tiempo real.
    */
   getFullInfoHarvest(): void {
-    this.harvestService.getFullInfoHarvest().subscribe(data => {
-      this.dataForSelect = data;
-      this.singlebasicSelected = this.dataForSelect[0];
-      this.idCategory.emit(this.singlebasicSelected);
-    });
+    if (this.currentUser.rol === 'company') {
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
+        this.dataForSelect = data;
+        this.singlebasicSelected = this.dataForSelect[0];
+        this.idCategory.emit(this.singlebasicSelected);
+      });
+
+    } else if (this.currentUser.rol === 'admin' || this.currentUser.rol === 'planner') {
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
+        this.dataForSelect = data;
+        this.singlebasicSelected = this.dataForSelect[0];
+        this.idCategory.emit(this.singlebasicSelected);
+      });
+    }
   }
 
 

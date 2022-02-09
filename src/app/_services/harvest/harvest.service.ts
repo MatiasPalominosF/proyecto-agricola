@@ -77,6 +77,18 @@ export class HarvestService {
       }));
   }
 
+  getFullInfoRegisterHarvestWithUid(uid: string, id: string): Observable<RegisterHarvest[]> {
+    return this.registerHarvests = this.afs.collection('category', ref => ref.where('cuid', '==', `${uid}`)).doc(`${id}`).collection<RegisterHarvest>('registers')
+      .snapshotChanges()
+      .pipe(map(changes => {
+        return changes.map(action => {
+          const data = action.payload.doc.data() as RegisterHarvest;
+          data.id = action.payload.doc.id;
+          return data;
+        });
+      }));
+  }
+
 
   getFullInfoRegisterHarvestCondition2(idCategory: string, idUser: string, dateInit: Date, dateEnd: Date) {
     return this.afs.firestore.collection('category').doc(`${idCategory}`).collection('registers').doc(`${idUser}`)

@@ -19,7 +19,15 @@
       </div>
     </div>
   </div>
-  <div *ngIf="breadcrumb.options" class="content-header-right col-md-6 col-12">
+  <div
+    *ngIf="
+      breadcrumb.options &&
+      (currentUser.rol == 'admin' ||
+        currentUser.rol == 'planner' ||
+        currentUser.rol == 'company')
+    "
+    class="content-header-right col-md-6 col-12"
+  >
     <div class="d-flex justify-content-end">
       <div class="col-md-6" *blockUI="'selectBlockUi'; message: 'Loading'">
         <ng-select

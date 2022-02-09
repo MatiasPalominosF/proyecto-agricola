@@ -9,14 +9,21 @@
       ></app-breadcrumb>
     </div>
     <div class="content-body">
-      <!-- Hospital Info cards -->
+      <!-- Harvest Info cards -->
       <div class="row">
         <div class="col-xl-4 col-lg-6 col-md-6 col-12">
           <div
             class="card pull-up"
             *blockUI="'categoriesCard'; message: 'Loading'"
           >
-            <div class="card-content">
+            <div
+              *ngIf="
+                currentUser.rol === 'admin' ||
+                currentUser.rol === 'company' ||
+                currentUser.rol === 'planner'
+              "
+              class="card-content"
+            >
               <div class="card-body">
                 <div class="media d-flex">
                   <div class="align-self-center">
@@ -33,6 +40,23 @@
                 </div>
               </div>
             </div>
+            <div *ngIf="currentUser.rol === 'superadmin'" class="card-content">
+              <div class="card-body">
+                <div class="media d-flex">
+                  <div class="align-self-center">
+                    <i class="la la-folder-open-o font-large-2 success"></i>
+                  </div>
+                  <div class="media-body text-right">
+                    <h5 class="text-muted text-bold-500">
+                      Empresas registradas
+                    </h5>
+                    <h3 class="text-bold-600">
+                      {{ quantityCompanies | number }}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-xl-4 col-lg-6 col-md-6 col-12">
@@ -40,7 +64,14 @@
             class="card pull-up"
             *blockUI="'registersCard'; message: 'Loading'"
           >
-            <div class="card-content">
+            <div
+              *ngIf="
+                currentUser.rol === 'admin' ||
+                currentUser.rol === 'company' ||
+                currentUser.rol === 'planner'
+              "
+              class="card-content"
+            >
               <div class="card-body">
                 <div class="media d-flex">
                   <div class="align-self-center">
@@ -57,19 +88,38 @@
                 </div>
               </div>
             </div>
+            <div *ngIf="currentUser.rol === 'superadmin'" class="card-content">
+              <div class="card-body">
+                <div class="media d-flex">
+                  <div class="align-self-center">
+                    <i class="la la-server font-large-2 warning"></i>
+                  </div>
+                  <div class="media-body text-right">
+                    <h5 class="text-muted text-bold-500">Usuarios activos</h5>
+                    <h3 class="text-bold-600">
+                      {{ quantitieCompaniesEnabled | number }}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-xl-4 col-lg-6 col-md-6 col-12">
           <div class="card pull-up">
-            <div class="card-content">
+            <div *ngIf="currentUser.rol === 'superadmin'" class="card-content">
               <div class="card-body">
                 <div class="media d-flex">
                   <div class="align-self-center">
                     <i class="la la-pencil-square-o font-large-2 info"></i>
                   </div>
                   <div class="media-body text-right">
-                    <h5 class="text-muted text-bold-500">Registros totales</h5>
-                    <h3 class="text-bold-600">3.5K</h3>
+                    <h5 class="text-muted text-bold-500">
+                      Usuarios desactivados
+                    </h5>
+                    <h3 class="text-bold-600">
+                      {{ quantitieCompaniesDisabled }}
+                    </h3>
                   </div>
                 </div>
               </div>
@@ -77,10 +127,20 @@
           </div>
         </div>
       </div>
-      <!-- Hospital Info cards Ends -->
+      <!-- Harvest Info cards Ends -->
       <!-- Pie Chart -->
-      <section id="chartjs-pie-charts" *blockUI="'registersCard'; message: 'Loading'">
-        <div class="row">
+      <section
+        id="chartjs-pie-charts"
+        *blockUI="'registersCard'; message: 'Loading'"
+      >
+        <div
+          *ngIf="
+            currentUser.rol === 'admin' ||
+            currentUser.rol === 'company' ||
+            currentUser.rol === 'planner'
+          "
+          class="row"
+        >
           <div class="col-12">
             <div class="card">
               <div class="card-content collapse show">
@@ -89,9 +149,9 @@
                   <div class="piechart height-400">
                     <canvas
                       baseChart
-                      [data]="pieChartData2"
+                      [data]="pieChartData"
                       [options]="pieChartOptions"
-                      [labels]="pieChartLabels2"
+                      [labels]="pieChartLabels"
                       [chartType]="pieChartType"
                       [colors]="pieChartColors"
                     ></canvas>
