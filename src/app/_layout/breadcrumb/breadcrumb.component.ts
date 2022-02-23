@@ -15,7 +15,7 @@ export class BreadcrumbComponent implements OnInit {
   public dataForSelect: Array<Harvest> = [];
   public dataForSelect2: Array<Harvest> = [];
   public singlebasicSelected: Harvest = {};
-  private currentUser: UserInterface;
+  public currentUser: UserInterface;
 
   @BlockUI('selectBlockUi') blockUISelect: NgBlockUI;
   constructor(

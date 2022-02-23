@@ -51,7 +51,7 @@ export class ShowDataComponent implements OnInit {
   private harvests: Harvest[];
   public quantitieCategory: number = 0;
   public quantitieRegisters: number = 0;
-  private currentUser: UserInterface;
+  public currentUser: UserInterface;
   public quantityCompanies: number = 0;
   public quantitieCompaniesEnabled: number = 0;
   public quantitieCompaniesDisabled: number = 0;
