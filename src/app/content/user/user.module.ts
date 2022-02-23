@@ -28,13 +28,13 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ReactiveFormsModule,
     BreadcrumbModule,
     NgSelectModule,
-    MatTableModule,
     UiSwitchModule.forRoot({
       size: 'small',
       checkedLabel: 'Sí',
       uncheckedLabel: 'No'
     }),
     NgbModule,
+    MatTableModule,
     MatSortModule,
     MatPaginatorModule,
     MatFormFieldModule,

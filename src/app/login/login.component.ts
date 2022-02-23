@@ -14,14 +14,11 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-    
     loginForm: FormGroup;
     loading = false;
     submitted = false;
     returnUrl: string;
     private rol: string;
-    
-    
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -51,6 +48,7 @@ export class LoginComponent implements OnInit {
             let returnUrl = this.onLoginRedirect();
             this.router.navigate([returnUrl]);
         } else if (localStorage.getItem('currentUser')) {
+            this.notifyService.showWarning('Existe una sesión activa, se procederá a cerrar la sesión...', 'Info');
             this.authService.doLogout();
         }
     }
