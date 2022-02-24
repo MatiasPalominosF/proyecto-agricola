@@ -106,7 +106,6 @@ export class ShowDataComponent implements OnInit {
     this.userService.getUsersSuperAdmin().pipe(take(1)).subscribe(
       (data) => {
         users = data;
-        console.log();
       }
     ).add(() => {
       this.quantityCompanies = users.length;

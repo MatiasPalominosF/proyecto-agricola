@@ -253,7 +253,7 @@ export class RegistersHarvestComponent implements OnInit, AfterViewInit {
       }
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      console.log(this.closeResult);
+     
     });
   }
 

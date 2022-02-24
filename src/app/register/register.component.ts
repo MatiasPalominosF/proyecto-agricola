@@ -88,7 +88,7 @@ export class RegisterComponent implements OnInit {
                 //this.alertService.success('Registro correcto', true);
                 if (this.users.length === 0) {
                     this.userService.createUser(this.user).then(user => {
-                        console.log(user);
+                        
                     });
                 } else if (this.users.length !== 0) {
                     for (let i = 0; i < this.users.length; i++) {
