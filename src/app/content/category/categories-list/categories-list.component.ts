@@ -35,7 +35,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
   //End settings MatTable
 
   public breadcrumb: BreadcrumbInterface;
-  private currentUser: UserInterface;
+  public currentUser: UserInterface;
   private rol: string;
   private closeResult = '';
 
