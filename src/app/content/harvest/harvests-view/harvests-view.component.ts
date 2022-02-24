@@ -88,7 +88,6 @@ export class HarvestsViewComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = this.sortingCustomAccesor;
 
-    //this.filterDate();
     /* configure filter */
     this.dataSource.filterPredicate = this.filterCustomAccessor();
   }
