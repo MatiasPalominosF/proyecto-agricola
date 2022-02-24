@@ -135,9 +135,13 @@ export class HarvestsViewComponent implements OnInit, AfterViewInit {
 
   /**
   * 
+  * This function is used when I need filter by search or when I need filter
+  * by date. Parameter data is information from BD and filter is a object with properties
+  * charged in two functions: applyFilter and applyFilterDate.
+  * 
   * @returns Custom accessor function
   */
-  filterCustomAccessor() {
+  filterCustomAccessor(): (data: Harvest, filter: string) => boolean {
     const myFilterPredicate = (data: Harvest, filter: string): boolean => {
       let valueFilter = JSON.parse(filter);
       if (valueFilter.name != null) {
