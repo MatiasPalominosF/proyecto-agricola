@@ -26,7 +26,6 @@ export class RegistersUsersComponent implements OnInit {
   private registersUsers: RegisterUser[];
   public title: string;
   private currentUser: any;
-  items = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -51,7 +50,6 @@ export class RegistersUsersComponent implements OnInit {
   getFullInfoRegisterUser() {
     this.blockUIHarvest.start("Cargando...");
     this.harvestService.getFullInfoRegisterUser(this.category, this.id).subscribe(data => {
-      //console.log(data);
       this.registersUsers = data;
       this.categoryName = this.name;
       this.rol = this.currentUser.rol;
@@ -73,7 +71,6 @@ export class RegistersUsersComponent implements OnInit {
       }
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      console.log(this.closeResult);
     });
   }
 
@@ -92,11 +89,9 @@ export class RegistersUsersComponent implements OnInit {
     this.acumulate -= weight;
     this.harvestService.updateFieldInRegisterUsers(this.category, this.id, this.acumulate);
     // idCategory, idUser y se actualiza el acumulado
-
   }
 
   delete(id: string, weight: number): void {
-
     this.confirmationDialogService.confirm('Confirmación', '¿Estás seguro de eliminar el registro?').then(confirmed => {
       if (!confirmed) {
       } else {
@@ -109,8 +104,5 @@ export class RegistersUsersComponent implements OnInit {
     }).catch(() => {
       console.log("Not ok");
     });
-
-
   }
-
 }

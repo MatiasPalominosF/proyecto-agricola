@@ -1,6 +1,6 @@
 import { DatePipe, DecimalPipe, formatDate } from '@angular/common';
-import { Component, Input, OnInit, PipeTransform } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { AfterViewInit, Component, Input, OnInit, PipeTransform, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ModalDismissReasons, NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
@@ -12,6 +12,9 @@ import { TableExcelService } from '../../../_services/table-excel/table-excel.se
 import { Harvest } from 'src/app/_models/harvest';
 import { DataCategory } from '../harvests-view/harvests-view.component';
 import { RegisterUser } from 'src/app/_models/register-user';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 export interface DataToExcel {
   idCategoria?: string;
@@ -27,36 +30,34 @@ export interface DataToExcel {
   templateUrl: './registers-harvest.component.html',
   styleUrls: ['./registers-harvest.component.css']
 })
-export class RegistersHarvestComponent implements OnInit {
+export class RegistersHarvestComponent implements OnInit, AfterViewInit {
   @Input() public id: string;
   @Input() public name: string;
   @Input() public categories: Array<DataCategory>;
   @Input() public harvests: Harvest[];
   @BlockUI('registerHarvest') blockUIHarvest: NgBlockUI;
   @BlockUI('buttonExcel') buttonExcelBlock: NgBlockUI;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
+  //Settings MatTable
 
+  public displayedColumns: string[] = [];
+  public dataSource: MatTableDataSource<RegisterHarvest> = new MatTableDataSource<RegisterHarvest>();
+  public isEmpty: boolean = false;
 
+  //End settings MatTable
+
+  public filterForm: FormGroup;
   public title: string;
-  public options = {
-    close: false,
-    expand: true,
-    minimize: true,
-    reload: true
-  };
-  public headElements = ['Run', 'Nombre', 'Peso acumulado (Kg)', 'Fecha término', 'Acciones'];
+
   private registerHarvests: RegisterHarvest[];
-  public collectionSize: any;
-  public page = 1;
-  public pageSize = 4;
-  public pipe: any;
-  public harvestSearch: Observable<RegisterHarvest[]>;
-  public filter = new FormControl('');
+  public pipe: DatePipe;
+
   private dataToExport: Array<RegisterHarvest> = [];
   private dataToExport2: Array<DataToExcel>;
   private dataToExcel: Array<DataToExcel> = [];
-  public from = new Date('December 25, 1995 13:30:00');;
-  public to = new Date();
+
   private closeResult = '';
   private registersUsers: any[] = [];
 
@@ -68,10 +69,104 @@ export class RegistersHarvestComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.title = "Registros de las cosechas - " + this.name;;
+    this.title = "Registros de las cosechas - " + this.name;
+
+    this.displayedColumns = ['position', 'id', 'name', 'acumulate', 'lastDate', 'actions'];
+    this.filterForm = new FormGroup({
+      fromDate: new FormControl(),
+      toDate: new FormControl(),
+    });
+
     this.getFullInfoRegisterHarvest();
 
   }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = this.sortingCustomAccesor;
+
+    /* configure filter */
+    this.dataSource.filterPredicate = this.filterCustomAccessor();
+  }
+
+  get fromDate() {
+    return this.filterForm.get('fromDate').value;
+  }
+  get toDate() {
+    return this.filterForm.get('toDate').value;
+  }
+
+  //Functions to MatTable
+  applyFilterDate() {
+    let filteredValues = {
+      dateStart: null,
+      dateEnd: null,
+    }
+    filteredValues['dateStart'] = this.fromDate;
+    filteredValues['dateEnd'] = this.toDate;
+    this.dataSource.filter = JSON.stringify(filteredValues);
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    let filteredValues = {
+      name: '',
+      id: '',
+      acumulate: ''
+    };
+
+    filteredValues['name'] = filterValue;
+    filteredValues['id'] = filterValue;
+    filteredValues['acumulate'] = filterValue;
+    this.dataSource.filter = JSON.stringify(filteredValues);
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  sortingCustomAccesor = (item: RegisterHarvest, property) => {
+    switch (property) {
+      case 'id': return item.id;
+      case 'name': return item.name;
+      case 'acumulate': return item.acumulate;
+      case 'lastDate': return item.lastDate;
+      default: return item[property];
+    }
+  };
+
+  /**
+  * 
+  * This function is used when I need filter by search or when I need filter
+  * by date. Parameter data is information from BD and filter is a object with properties
+  * charged in two functions: applyFilter and applyFilterDate.
+  * 
+  * @returns Custom accessor function
+  */
+  filterCustomAccessor(): (data: RegisterHarvest, filter: string) => boolean {
+    const myFilterPredicate = (data: RegisterHarvest, filter: string): boolean => {
+      let valueFilter = JSON.parse(filter);
+      if (valueFilter.name != null) {
+        // Para compara numbers usar: data.position.toString().trim().indexOf(searchString.position) !== -1
+        return data.name.toString().trim().toLowerCase().indexOf(valueFilter.name.toString().trim().toLowerCase()) !== -1 ||
+          data.id.toString().trim().toLowerCase().indexOf(valueFilter.id.toString().trim().toLowerCase()) !== -1 ||
+          data.acumulate.toString().trim().indexOf(valueFilter.acumulate) !== -1;
+      } else if (valueFilter.dateStart != null) {
+        if (valueFilter.dateEnd == null) {
+          return data.lastDate.toDate() >= new Date(valueFilter.dateStart) && data.lastDate.toDate() <= new Date();
+        } else {
+          return data.lastDate.toDate() >= new Date(valueFilter.dateStart) && data.lastDate.toDate() <= new Date(valueFilter.dateEnd);
+        }
+      } else {
+        return true;
+      }
+    }
+    return myFilterPredicate;
+  }
+
+  //End function MatTable
+
 
   exportToExcel() {
     this.dataToExport2 = [];
@@ -100,9 +195,6 @@ export class RegistersHarvestComponent implements OnInit {
 
     this.tableexcelService.exportAsExcelFile(this.dataToExport2, 'Proyecto agrícola - Registro de cosechas');
   }
-
-
-
 
   async getDataToExcel() {
     this.dataToExcel = [];
@@ -178,52 +270,26 @@ export class RegistersHarvestComponent implements OnInit {
   getFullInfoRegisterHarvest(): void {
     this.blockUIHarvest.start("Cargando...");
     this.buttonExcelBlock.start("Cargando...");
-    this.harvestService.getFullInfoRegisterHarvest(this.id).subscribe(data => {
+    this.harvestService.getFullInfoRegisterHarvest(this.id).subscribe(registerharvests => {
       /*data.forEach(element => {
         console.log(element.lastDate.toDate().toLocaleDateString('es-CL', { weekday: 'long' }));
       });*/ ///SE OBTIENE EL DÍA DE LA SEMANA CON ESTO....
-      this.registerHarvests = data;
-      this.collectionSize = this.registerHarvests.length;
-      this.searchData(this.pipe);
-      this.getDataToExport();
+
+      if (registerharvests.length === 0) {
+        this.isEmpty = true;
+        this.blockUIHarvest.stop();
+        this.isEmpty = false;
+        return;
+      }
+      this.dataSource.data = registerharvests;
+      this.registerHarvests = registerharvests;
+      this.getDataToExport(registerharvests);
       this.blockUIHarvest.stop();
     });
   }
 
-  /**
-    *
-    * '@param' pipe
-    */
-  searchData(pipe: DecimalPipe) {
-    this.harvestSearch = this.filter.valueChanges.pipe(
-      startWith(''),
-      map(text => this.search(text, pipe))
-    );
+  getDataToExport(registers: RegisterHarvest[]): void {
+    this.dataToExport = registers;
+    this.getDataToExcel();
   }
-
-  /**
-   * Search table
-   * '@param' text
-   * '@param' pipe
-   */
-  search(text: string, pipe: PipeTransform) {
-    return this.registerHarvests.filter(response => {
-      const term = text.toLowerCase();
-      return response.name.toLowerCase().includes(term) ||
-        response.id.toLowerCase().includes(term)
-    });
-  }
-
-  getDataToExport(): void {
-    this.harvestSearch.subscribe(data => {
-      this.dataToExport = data;
-      this.getDataToExcel();
-    });
-  }
-
-
-  reload(event: any): void {
-    this.getFullInfoRegisterHarvest();
-  }
-
 }

@@ -5,8 +5,7 @@
   max-width: 90%;
   width: 90%;
 }
-
-/*CSS to responsive table*/
+/*Responsive mat table*/
 .mat-table,
 .mat-row,
 .mat-header-row,
@@ -91,4 +90,4 @@ mat-header-cell:last-child {
     margin-top: 4%;
   }
 }
-/*End CSS to responsive table*/
+/*End responsive mat table*/
