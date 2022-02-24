@@ -11,17 +11,19 @@
             <input
               matInput
               (keyup)="applyFilter($event)"
-              placeholder="Ej. Juan"
+              placeholder="Ej. Sandías"
               #input
             />
           </mat-form-field>
         </div>
         <div class="col-md-4">
           <mat-form-field appearance="legacy">
+            <mat-label>Desde</mat-label>
             <input
               matInput
+              autocomplete="off"
               [matDatepicker]="fromDate"
-              placeholder="Desde"
+              placeholder="dd-mm-yyyy"
               formControlName="fromDate"
             />
             <mat-datepicker-toggle
@@ -33,10 +35,12 @@
         </div>
         <div class="col-md-4">
           <mat-form-field appearance="legacy">
+            <mat-label>Hasta</mat-label>
             <input
               matInput
+              autocomplete="off"
               [matDatepicker]="toDate"
-              placeholder="Hasta"
+              placeholder="dd-mm-yyyy"
               formControlName="toDate"
             />
             <mat-datepicker-toggle
@@ -120,9 +124,13 @@
             <div class="d-flex justify-content-end">
               <button
                 (click)="showDetails(row.id, row.name)"
-                class="btn btn-xs btn-social-icon mr-1 mb-1 btn-instagram"
+                triggers="hover:click:hover"
+                [autoClose]="'outside'"
+                placement="left"
+                ngbTooltip="Ver registros"
+                class="btn btn-social-icon btn-xs mt-1 mb-1 mr-1 btn-outline-soundcloud"
               >
-                <span class="la la-info"></span>
+                <span class="la la-eye"></span>
               </button>
             </div>
           </mat-cell>
