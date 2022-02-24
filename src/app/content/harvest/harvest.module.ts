@@ -12,6 +12,13 @@ import { PipeModule } from '../../_pipe/pipe.module';
 import { RegistersHarvestComponent } from './registers-harvest/registers-harvest.component';
 import { RegistersUsersComponent } from './registers-users/registers-users.component';
 import { HarvestEditComponent } from './harvest-edit/harvest-edit.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -25,6 +32,13 @@ import { HarvestEditComponent } from './harvest-edit/harvest-edit.component';
     BreadcrumbModule,
     CardModule,
     NgbModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
     NgbModalModule,
     FormsModule,
     ReactiveFormsModule,

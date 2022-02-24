@@ -1,4 +1,4 @@
-﻿import { NgModule } from '@angular/core';
+﻿import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -70,7 +70,10 @@ import { NgbDateCustomParserFormatter } from '../app/_helpers/dateCustomFormatte
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getSpanishPaginatorIntl } from './spanish-paginator';
 import { ForgotPasswordComponent } from './forgot-password';
+import { registerLocaleData } from '@angular/common';
+import localeEsCl from "@angular/common/locales/es-CL";
 
+registerLocaleData(localeEsCl);
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -137,6 +140,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AuthService,
     NotificationService,
     ConfirmationService,
+    {
+      provide: LOCALE_ID,
+      useValue: "es-CL"
+    },
     {
       provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl()
     },

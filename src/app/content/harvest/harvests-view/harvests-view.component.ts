@@ -1,6 +1,9 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { Component, OnInit, PipeTransform } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { AfterViewInit, Component, OnInit, PipeTransform, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
@@ -22,31 +25,28 @@ export interface DataCategory {
   templateUrl: './harvests-view.component.html',
   styleUrls: ['./harvests-view.component.css']
 })
-export class HarvestsViewComponent implements OnInit {
+export class HarvestsViewComponent implements OnInit, AfterViewInit {
 
   @BlockUI('harvests') blockUIHarvest: NgBlockUI;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  //Settings MatTable
+
+  public displayedColumns: string[] = [];
+  public dataSource: MatTableDataSource<Harvest> = new MatTableDataSource<Harvest>();
+  public isEmpty: boolean = false;
+
+  //End settings MatTable
+
+  public filterForm: FormGroup;
 
   public breadcrumb: BreadcrumbInterface;
-  public options = {
-    close: false,
-    expand: true,
-    minimize: true,
-    reload: true
-  };
-  public headElements = ['#', 'Categoría', 'Fecha inicio', 'Fecha término', 'Acciones'];
+
   private currentUser: UserInterface;
   private harvests: Harvest[];
-  public collectionSize: any;
-  public harvestSearch: Observable<Harvest[]>;
-  public filter = new FormControl('');
-  public pipe: any;
-  public from = new Date(1920, 0, 1, 0, 0, 0);;
-  public to = new Date();
-  public page = 1;
-  public pageSize = 4;
-  private dataToExport = [];
+  public pipe: DatePipe;
   private closeResult = '';
-  public prueba = false;
   private categories: Array<DataCategory>;
 
   constructor(
@@ -72,17 +72,100 @@ export class HarvestsViewComponent implements OnInit {
       ],
       'options': false
     };
+
+    this.displayedColumns = ['position', 'name', 'dateStart', 'dateEnd', 'actions'];
+    this.filterForm = new FormGroup({
+      fromDate: new FormControl(),
+      toDate: new FormControl(),
+    });
+
     this.getUserLogged();
     this.getFullInfoHarvest();
   }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = this.sortingCustomAccesor;
+
+    //this.filterDate();
+    /* configure filter */
+    this.dataSource.filterPredicate = this.filterCustomAccessor();
+  }
+
+  get fromDate() {
+    return this.filterForm.get('fromDate').value;
+  }
+  get toDate() {
+    return this.filterForm.get('toDate').value;
+  }
+
+  //Functions to MatTable
+  applyFilterDate() {
+    let filteredValues = {
+      dateStart: null,
+      dateEnd: null,
+    }
+    filteredValues['dateStart'] = this.fromDate;
+    filteredValues['dateEnd'] = this.toDate;
+    this.dataSource.filter = JSON.stringify(filteredValues);
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    let filteredValues = {
+      name: '',
+    };
+
+    filteredValues['name'] = filterValue;
+    this.dataSource.filter = JSON.stringify(filteredValues);
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  sortingCustomAccesor = (item: Harvest, property) => {
+    switch (property) {
+      case 'name': return item.name;
+      case 'dateStart': return item.dateStart;
+      case 'dateEnd': return item.dateEnd;
+      default: return item[property];
+    }
+  };
+
+  /**
+  * 
+  * @returns Custom accessor function
+  */
+  filterCustomAccessor() {
+    const myFilterPredicate = (data: Harvest, filter: string): boolean => {
+      let valueFilter = JSON.parse(filter);
+      if (valueFilter.name != null) {
+        // Para compara numbers usar: data.position.toString().trim().indexOf(searchString.position) !== -1
+        return data.name.toString().trim().toLowerCase().indexOf(valueFilter.name.toString().trim().toLowerCase()) !== -1;
+      } else if (valueFilter.dateStart != null) {
+        if (valueFilter.dateEnd == null) {
+          return data.dateStart.toDate() >= new Date(valueFilter.dateStart) && data.dateStart.toDate() <= new Date();
+        } else {
+          return data.dateStart.toDate() >= new Date(valueFilter.dateStart) && data.dateStart.toDate() <= new Date(valueFilter.dateEnd);
+        }
+      } else {
+        return true;
+      }
+    }
+    return myFilterPredicate;
+  }
+
+  //End function MatTable
 
   getFullInfoHarvest(): void {
     this.categories = [];
     this.blockUIHarvest.start("Cargando...");
 
     if (this.currentUser.rol === 'company') {
-      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
-        data.forEach(element => {
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(harvests => {
+        harvests.forEach(element => {
           let object = {
             idCategory: "",
             nameCategory: ""
@@ -92,15 +175,20 @@ export class HarvestsViewComponent implements OnInit {
           object.nameCategory = element.name;
           this.categories.push(object);
         });
-        this.harvests = data;
-        this.collectionSize = this.harvests.length;
-        this.searchData(this.pipe);
-        this.getDataToExport();
+
+        if (harvests.length === 0) {
+          this.isEmpty = true;
+          this.blockUIHarvest.stop();
+          this.isEmpty = false;
+          return;
+        }
+        this.dataSource.data = harvests;
+        this.harvests = harvests;
         this.blockUIHarvest.stop();
       });
     } else if (this.currentUser.rol === 'admin' || this.currentUser.rol === 'worker' || this.currentUser.rol === 'planner') {
-      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
-        data.forEach(element => {
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(harvests => {
+        harvests.forEach(element => {
           let object = {
             idCategory: "",
             nameCategory: ""
@@ -110,42 +198,18 @@ export class HarvestsViewComponent implements OnInit {
           object.nameCategory = element.name;
           this.categories.push(object);
         });
-        this.harvests = data;
-        this.collectionSize = this.harvests.length;
-        this.searchData(this.pipe);
-        this.getDataToExport();
+
+        if (harvests.length === 0) {
+          this.isEmpty = true;
+          this.blockUIHarvest.stop();
+          this.isEmpty = false;
+          return;
+        }
+        this.dataSource.data = harvests;
+        this.harvests = harvests;
         this.blockUIHarvest.stop();
       });
     }
-  }
-
-  /**
-  *
-  * '@param' pipe
-  */
-  searchData(pipe: DecimalPipe) {
-    this.harvestSearch = this.filter.valueChanges.pipe(
-      startWith(''),
-      map(text => this.search(text, pipe))
-    );
-  }
-
-  /**
-   * Search table
-   * '@param' text
-   * '@param' pipe
-   */
-  search(text: string, pipe: PipeTransform) {
-    return this.harvests.filter(response => {
-      const term = text.toLowerCase();
-      return response.name.toLowerCase().includes(term)
-    });
-  }
-
-  getDataToExport(): void {
-    this.harvestSearch.subscribe(data => {
-      this.dataToExport = data;
-    });
   }
 
   getUserLogged(): void {
@@ -166,7 +230,6 @@ export class HarvestsViewComponent implements OnInit {
       }
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      console.log(this.closeResult);
     });
   }
 
@@ -180,14 +243,7 @@ export class HarvestsViewComponent implements OnInit {
     }
   }
 
-  reload(event: any): void {
-    console.log("que hay: ", this.dataToExport);
-
-    this.blockUIHarvest.start('Cargando...');
-
-    setTimeout(() => {
-      this.blockUIHarvest.stop();
-    }, 2500);
-  }
-
+  public hasError = (controlName: string, errorName: string) => {
+    return this.filterForm.get(controlName).hasError(errorName);
+  };
 }
