@@ -128,25 +128,9 @@ export class UserViewComponent implements OnInit, AfterViewInit {
           this.getUsers();
         } else {
           user.isenabled = event;
-          let users: Array<UserInterface> = [];
-          this.userService.updateUser(user).then(() => {
-            this.userService.getUsersAdmin(user.uid, user.uid).pipe(take(1)).toPromise().then((data) => {
-              users = data;
-            }).finally(() => {
-              var bar = new Promise<void>((resolve, reject) => {
-                users.forEach(async (item, index, array) => {
-                  item.isenabled = event;
-                  await this.userService.updateUser(item);
-                  if (index === array.length - 1) resolve();
-                });
-              });
-
-              bar.then(() => {
-                this.isLoading = false;
-                this.notifyService.showSuccess(str.charAt(0).toUpperCase() + str.slice(1), "¡El usuario se editó correctamente!");
-              })
-            });
-
+          this.userService.updateUser(user).then().finally(() => {
+            this.isLoading = false;
+            this.notifyService.showSuccess(str.charAt(0).toUpperCase() + str.slice(1), "¡El usuario se editó correctamente!");
           });
         }
       }).catch((error) => {
@@ -185,7 +169,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
           this.blockUIUser.stop();
           this.isEmpty = false;
           return;
-        }
+        };
         this.dataSource.data = users;
         this.blockUIUser.stop();
       });
