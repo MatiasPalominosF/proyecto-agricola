@@ -26,6 +26,7 @@ export class UserModalComponent implements OnInit {
   @BlockUI('userInfo') blockUIuser: NgBlockUI;
 
   public registerForm: FormGroup;
+  public rolForm: string;
   public loading = false;
   public submitted = false;
   private user: UserInterface = {};
@@ -52,8 +53,8 @@ export class UserModalComponent implements OnInit {
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
         run: ['', [Validators.required, Validators.maxLength(12), Validators.pattern(/^[0-9]+-[0-9kK]{1}|(((\d{2})|(\d{1})).\d{3}\.\d{3}-)([0-9kK]){1}$/), this.checkVerificatorDigit]],
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
+        email: [''],
+        password: [''],
         rol: [null, Validators.required]
       });
 
@@ -102,6 +103,24 @@ export class UserModalComponent implements OnInit {
 
   get fValue() {
     return this.registerForm.value;
+  }
+
+  changeRol(rol: string) {
+    this.clearForm();
+    this.rolForm = rol;
+
+    if (this.rolForm === 'admin' || this.rolForm === 'worker' || this.rolForm === 'planner') {
+      this.f['email'].setValidators([Validators.required, Validators.email]);
+      this.f['password'].setValidators([Validators.required, Validators.minLength(6)]);
+    }
+  }
+
+  clearForm() {
+    this.f['firstName'].setValue('');
+    this.f['lastName'].setValue('');
+    this.f['run'].setValue('');
+    this.f['email'].setValue('');
+    this.f['password'].setValue('');
   }
 
   checkRun() {
@@ -169,69 +188,106 @@ export class UserModalComponent implements OnInit {
 
     this.blockUIuser.start("Guardando...");
 
-    this.authService.doRegister(this.registerForm.value)
-      .then(res => {
-        this.loading = false;
-
-        if (this.rol === 'superadmin') {
-          this.user = {
-            firstName: this.fValue.firstName,
-            lastName: this.fValue.lastName,
-            run: this.fValue.run,
-            email: this.fValue.email,
-            password: this.fValue.password,
-            uid: res.user.uid,
-            isenabled: true,
-            rol: 'company'
-          };
-        } else if (this.rol === 'admin' || this.rol === 'company') {
-          this.user = {
-            firstName: this.fValue.firstName,
-            lastName: this.fValue.lastName,
-            run: this.fValue.run,
-            email: this.fValue.email,
-            password: this.fValue.password,
-            uid: res.user.uid,
-            isenabled: true,
-            rol: this.fValue.rol,
-            cuid: this.uid
-          };
-        }
-        const currentUser = firebase.auth().currentUser;
-        currentUser.updateProfile({
-          displayName: this.user.firstName
-        }).then(user => { }, err => {
-          console.log("Error en user-modal", err);
+    if (this.rolForm === 'harvester') {
+      this.user = {
+        firstName: this.fValue.firstName,
+        lastName: this.fValue.lastName,
+        run: this.fValue.run,
+        uid: this.fValue.run,
+        isenabled: true,
+        rol: this.fValue.rol,
+        cuid: this.uid
+      };
+      this.userService.createUser(this.user).then(
+        () => {
+          this.blockUIuser.stop();
+          this.passEntry.emit(true);
+          this.activeModal.close(true);
+        },
+        err => {
+          console.log(err);
+          this.blockUIuser.stop();
+          this.notifyService.showError("Error", err.message);
+          //this.alertService.error(err.message);
         });
+    } else {
+      this.authService.doRegister(this.registerForm.value)
+        .then(res => {
+          this.loading = false;
 
-        this.blockUIuser.stop();
-        this.passEntry.emit(true);
-        this.activeModal.close(true);
-
-        if (this.users.length === 0) {
-          this.userService.createUser(this.user).then(user => {
-
-          });
-        } else if (this.users.length !== 0) {
-          for (let i = 0; i < this.users.length; i++) {
-            if (this.users[i].uid !== res.user.uid) {
-              this.userService.createUser(this.user).then(user => {
-              });
-              break;
-            } else {
-              console.log('error');
+          if (this.rol === 'superadmin') {
+            this.user = {
+              firstName: this.fValue.firstName,
+              lastName: this.fValue.lastName,
+              run: this.fValue.run,
+              email: this.fValue.email,
+              password: this.fValue.password,
+              uid: res.user.uid,
+              isenabled: true,
+              rol: 'company'
+            };
+          } else if (this.rol === 'admin' || this.rol === 'company') {
+            if (this.rolForm === 'admin' || this.rolForm === 'worker' || this.rolForm === 'planner') {
+              this.user = {
+                firstName: this.fValue.firstName,
+                lastName: this.fValue.lastName,
+                run: this.fValue.run,
+                email: this.fValue.email,
+                password: this.fValue.password,
+                uid: res.user.uid,
+                isenabled: true,
+                rol: this.fValue.rol,
+                cuid: this.uid
+              };
+            } else if (this.rolForm === 'harvester') {
+              this.user = {
+                firstName: this.fValue.firstName,
+                lastName: this.fValue.lastName,
+                run: this.fValue.run,
+                uid: res.user.uid,
+                isenabled: true,
+                rol: this.fValue.rol,
+                cuid: this.uid
+              };
             }
+
           }
-        } else {
-          console.log('error');
-        }
-        //this.router.navigate(['/login']);
-      }, err => {
-        console.log(err);
-        this.blockUIuser.stop();
-        this.notifyService.showError("Error", err.message);
-        //this.alertService.error(err.message);
-      });
+          const currentUser = firebase.auth().currentUser;
+          currentUser.updateProfile({
+            displayName: this.user.firstName
+          }).then(user => { }, err => {
+            console.log("Error en user-modal", err);
+          });
+
+          this.blockUIuser.stop();
+          this.passEntry.emit(true);
+          this.activeModal.close(true);
+
+          if (this.users.length === 0) {
+            this.userService.createUser(this.user).then(user => {
+
+            });
+          } else if (this.users.length !== 0) {
+            for (let i = 0; i < this.users.length; i++) {
+              if (this.users[i].uid !== res.user.uid) {
+                this.userService.createUser(this.user).then(user => {
+                });
+                break;
+              } else {
+                console.log('error');
+              }
+            }
+          } else {
+            console.log('error');
+          }
+          //this.router.navigate(['/login']);
+        }, err => {
+          console.log(err);
+          this.blockUIuser.stop();
+          this.notifyService.showError("Error", err.message);
+          //this.alertService.error(err.message);
+        });
+    }
   }
 
   public hasError = (controlName: string, errorName: string) => {
