@@ -4,154 +4,164 @@
       <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
     </div>
     <div class="content-body">
-      <section id="horizontal-form-layouts">
-        <div class="row">
-          <div class="col-md-12">
-            <m-card [options]="options" (reloadFunction)="reload($event)">
-              <ng-container mCardHeaderTitle>
-                Categorías de las cosechas
-              </ng-container>
-              <ng-container mCardBody>
-                <div class="d-flex justify-content-around">
-                  <form>
-                    <div class="form-group form-inline">
-                      Buscar:
-                      <input
-                        class="form-control ml-2"
-                        [formControl]="filter"
-                        type="text"
-                      />
-                    </div>
-                  </form>
-                  <div class="form-group form-inline">
-                    Desde:
-                    <input
-                      class="form-control ml-2"
-                      type="date"
-                      placeholder="yyyy-mm-dd"
-                      [(ngModel)]="from"
-                      name="from"
-                    />
-                  </div>
-                  <div class="form-group form-inline">
-                    Hasta:
-                    <input
-                      class="form-control ml-2"
-                      type="date"
-                      placeholder="yyyy-mm-dd"
-                      [(ngModel)]="to"
-                      name="to"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="table-responsive card-body"
-                  *blockUI="'harvests'; message: 'Loading'"
-                >
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th *ngFor="let head of headElements" scope="col">
-                          {{ head }}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        mdbTableCol
-                        *ngFor="
-                          let element of harvestSearch
-                            | async
-                            | filterDate: from:to
-                            | slice
-                              : (page - 1) * pageSize
-                              : (page - 1) * pageSize + pageSize;
-                          index as i
-                        "
-                      >
-                        <th scope="row">{{ i + 1 }}</th>
-                        <td>
-                          <ngb-highlight
-                            [result]="element.name"
-                            [term]="filter.value"
-                          >
-                          </ngb-highlight>
-                        </td>
-                        <td>
-                          <ngb-highlight
-                            [result]="
-                              element.dateStart.toDate()
-                                | date: 'dd/MM/yyyy HH:mm'
-                            "
-                            [term]="
-                              element.dateStart.toDate()
-                                | date: 'dd/MM/yyyy HH:mm'
-                            "
-                          >
-                          </ngb-highlight>
-                        </td>
-                        <td>
-                          <div
-                            *ngIf="element.dateEnd == null; else elseBlock"
-                            class="badge border-left-info border-right-info round badge-striped"
-                          >
-                            <i class="la la-clock-o font-medium-2"></i>
-                            <span>En proceso...</span>
-                          </div>
-                          <ng-template #elseBlock
-                            ><ngb-highlight
-                              [result]="
-                                element.dateEnd.toDate()
-                                  | date: 'dd/MM/yyyy HH:mm'
-                              "
-                              [term]="
-                                element.dateEnd.toDate()
-                                  | date: 'dd/MM/yyyy HH:mm'
-                              "
-                            >
-                            </ngb-highlight
-                          ></ng-template>
-                        </td>
-                        <td>
-                          <div class="d-flex justify-content-start">
-                            <button
-                              (click)="showDetails(element.id, element.name)"
-                              class="btn btn-xs btn-social-icon mr-1 mb-1 btn-instagram"
-                            >
-                              <span class="la la-info"></span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div class="d-flex justify-content-between p-2">
-                    <ngb-pagination
-                      [collectionSize]="collectionSize"
-                      [(page)]="page"
-                      [pageSize]="pageSize"
-                    >
-                    </ngb-pagination>
-
-                    <select
-                      class="custom-select"
-                      style="width: auto"
-                      [(ngModel)]="pageSize"
-                    >
-                      <option [ngValue]="collectionSize">
-                        Mostrar todos los ítems
-                      </option>
-                      <option [ngValue]="2">2 ítems por página</option>
-                      <option [ngValue]="4">4 ítems por página</option>
-                      <option [ngValue]="6">6 ítems por página</option>
-                    </select>
-                  </div>
-                </div>
-              </ng-container>
-            </m-card>
-          </div>
+      <div [formGroup]="filterForm" class="row justify-content-between">
+        <div class="col-md-3">
+          <mat-form-field appearance="legacy">
+            <mat-label>Buscar</mat-label>
+            <input
+              matInput
+              (keyup)="applyFilter($event)"
+              placeholder="Ej. Sandías"
+              #input
+            />
+          </mat-form-field>
         </div>
-      </section>
+        <div class="col-md-4">
+          <mat-form-field appearance="legacy">
+            <mat-label>Desde</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              [matDatepicker]="fromDate"
+              placeholder="dd-mm-yyyy"
+              formControlName="fromDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="fromDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #fromDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field appearance="legacy">
+            <mat-label>Hasta</mat-label>
+            <input
+              matInput
+              autocomplete="off"
+              [matDatepicker]="toDate"
+              placeholder="dd-mm-yyyy"
+              formControlName="toDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="toDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #toDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-1 col-sm-1">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm mt-1 mb-2"
+            (click)="applyFilterDate()"
+          >
+            Filtrar
+          </button>
+        </div>
+      </div>
+      <mat-table
+        #table
+        class="mat-elevation-z8"
+        [dataSource]="dataSource"
+        matSort
+        matSortActive="dateEnd"
+        matSortDirection="asc"
+        class="mat-cell"
+        *blockUI="'categoriesCard'; message: 'Loading'"
+      >
+        <!-- position Definition -->
+        <ng-container matColumnDef="position">
+          <mat-header-cell *matHeaderCellDef> N&#176; </mat-header-cell>
+          <mat-cell *matCellDef="let row; let i = index" data-label="N&#176;">
+            {{ paginator.pageIndex * paginator.pageSize + i + 1 }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- run Definition -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Categoría
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="Categoría">
+            {{ row.name }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- name Definition -->
+        <ng-container matColumnDef="dateStart">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Fecha inicio
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="Fecha inicio">
+            {{ row.dateStart.toDate() | date: "dd/MM/yyyy HH:mm" }}
+          </mat-cell>
+        </ng-container>
+
+        <!-- rol Definition -->
+        <ng-container matColumnDef="dateEnd">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Fecha término
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="Fecha término">
+            <div
+              *ngIf="row.dateEnd == null; else elseBlock"
+              class="badge border-left-info border-right-info round badge-striped"
+            >
+              <i class="la la-clock-o font-medium-2"></i>
+              <span>En proceso...</span>
+            </div>
+            <ng-template #elseBlock>
+              {{ row.dateEnd.toDate() | date: "dd/MM/yyyy HH:mm" }}
+            </ng-template>
+          </mat-cell>
+        </ng-container>
+
+        <!-- actions Definition -->
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+          <mat-cell *matCellDef="let row" data-label="Acciones">
+            <div class="d-flex justify-content-end">
+              <button
+                (click)="showDetails(row.id, row.name)"
+                triggers="hover:click:hover"
+                [autoClose]="'outside'"
+                placement="left"
+                ngbTooltip="Ver registros"
+                class="btn btn-social-icon btn-xs mt-1 mb-1 mr-1 btn-outline-soundcloud"
+              >
+                <span class="la la-eye"></span>
+              </button>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Header and Row Declarations -->
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row
+          *matRowDef="let row; columns: displayedColumns; let i = index"
+        ></mat-row>
+
+        <!-- Row shown when there is no matching data. -->
+
+        <tr class="mat-row" *matNoDataRow>
+          <td *ngIf="!isEmpty" class="mat-cell" colspan="4">
+            <br />
+            No hay coincidencias para "{{ input.value }}"
+          </td>
+          <td *ngIf="isEmpty" class="mat-cell" colspan="4">
+            <br />
+            No hay datos para mostrar
+          </td>
+        </tr>
+      </mat-table>
+      <!-- Pagination-->
+      <mat-paginator
+        #paginator
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 15, 50, 100]"
+      >
+      </mat-paginator>
     </div>
   </div>
 </div>

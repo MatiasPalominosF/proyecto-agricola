@@ -42,11 +42,11 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   ) { }
 
   /** Comments initials to init mat table */
-  sortingCustomAccesor = (item, property) => {
+  sortingCustomAccesor = (item: UserInterface, property) => {
     switch (property) {
-      case 'run': return item.name;
-      case 'name': return item.dateinit;
-      case 'rol': return item.dateend;
+      case 'run': return item.run;
+      case 'name': return item.firstName;
+      case 'rol': return item.rol;
       default: return item[property];
     }
   };
@@ -58,11 +58,21 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   filterCustomAccessor() {
     const myFilterPredicate = (data: UserInterface, filter: string): boolean => {
       let searchString = JSON.parse(filter);
+      let rol: string = '';
+      if (data.rol === 'worker') {
+        rol = 'trabajador';
+      } else if (data.rol === 'admin') {
+        rol = 'administrador';
+      } else if (data.rol === 'planner') {
+        rol = 'planillero';
+      } else {
+        rol = 'Cosechador';
+      }
 
       // Para compara numbers usar: data.position.toString().trim().indexOf(searchString.position) !== -1
       return data.firstName.toString().trim().toLowerCase().indexOf(searchString.name.toLowerCase()) !== -1 ||
         data.run.toString().trim().toLowerCase().indexOf(searchString.run.toLowerCase()) !== -1 ||
-        data.rol.toString().trim().toLowerCase().indexOf(searchString.rol.toLowerCase()) !== -1;
+        rol.toString().trim().toLowerCase().indexOf(searchString.rol.toLowerCase()) !== -1;
     }
     return myFilterPredicate;
   }

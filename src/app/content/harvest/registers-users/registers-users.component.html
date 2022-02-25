@@ -18,7 +18,9 @@
             <div class="card overflow-hidden">
               <div class="card-content">
                 <div class="media align-items-stretch">
-                  <ng-container *ngIf="rol == 'admin'; else elseEdit">
+                  <ng-container
+                    *ngIf="rol == 'admin' || rol == 'company'; else elseEdit"
+                  >
                     <div
                       class="bg-info p-1 media-middle"
                       (click)="editRegister(item.id, item.weight)"

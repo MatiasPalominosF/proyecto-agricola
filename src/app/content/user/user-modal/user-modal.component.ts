@@ -165,16 +165,6 @@ export class UserModalComponent implements OnInit {
     else null;
   }
 
-  test() {
-    this.submitted = true;
-
-    if (this.registerForm.invalid) {
-      return;
-    }
-
-    console.log(this.fValue);
-  }
-
   onUserSubmit(): void {
     this.submitted = true;
 
@@ -216,7 +206,7 @@ export class UserModalComponent implements OnInit {
         currentUser.updateProfile({
           displayName: this.user.firstName
         }).then(user => { }, err => {
-          console.log("Error en user-modal 97", err);
+          console.log("Error en user-modal", err);
         });
 
         this.blockUIuser.stop();
@@ -225,7 +215,7 @@ export class UserModalComponent implements OnInit {
 
         if (this.users.length === 0) {
           this.userService.createUser(this.user).then(user => {
-            console.log(user);
+            
           });
         } else if (this.users.length !== 0) {
           for (let i = 0; i < this.users.length; i++) {

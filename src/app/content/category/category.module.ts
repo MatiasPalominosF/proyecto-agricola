@@ -10,6 +10,11 @@ import { BlockTemplateComponent } from 'src/app/_layout/blockui/block-template.c
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PipeModule } from 'src/app/_pipe/pipe.module';
 import { CreateCategoryComponent } from './create-category/create-category.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 
@@ -21,6 +26,11 @@ import { CreateCategoryComponent } from './create-category/create-category.compo
   imports: [
     CommonModule,
     BreadcrumbModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
     CardModule,
     NgbModule,
     NgbModalModule,

@@ -96,13 +96,15 @@ export class AuthService {
   async doLogout() {
     return new Promise((resolve, reject) => {
       if (firebase.auth().currentUser) {
+        localStorage.removeItem('remember');
         localStorage.removeItem('currentUser');
         localStorage.removeItem('dataCurrentUser');
-        localStorage.removeItem('remember');
         this.afAuth.auth.signOut();
         resolve(null);
       } else {
+        localStorage.removeItem('remember');
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('dataCurrentUser');
         //reject();
       }
     });

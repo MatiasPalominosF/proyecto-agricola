@@ -1,6 +1,9 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, OnInit, PipeTransform } from '@angular/core';
+import { AfterViewInit, Component, OnInit, PipeTransform, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
@@ -17,27 +20,23 @@ import { CreateCategoryComponent } from '../create-category/create-category.comp
   templateUrl: './categories-list.component.html',
   styleUrls: ['./categories-list.component.css']
 })
-export class CategoriesListComponent implements OnInit {
-
+export class CategoriesListComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   @BlockUI('categoriesCard') blockUICategories: NgBlockUI;
 
+
+  //Settings MatTable
+
+  public displayedColumns: string[] = [];
+  public dataSource: MatTableDataSource<Harvest> = new MatTableDataSource<Harvest>();
+  public isEmpty: boolean = false;
+
+  //End settings MatTable
+
   public breadcrumb: BreadcrumbInterface;
-  private currentUser: UserInterface;
-  public options = {
-    close: false,
-    expand: true,
-    minimize: true,
-    reload: true
-  };
-  public headElements = ['#', 'Categoría', 'Fecha inicio', 'Fecha término', 'Acciones'];
-  private harvests: Harvest[];
-  public collectionSize: any;
+  public currentUser: UserInterface;
   private rol: string;
-  public pipe: any;
-  public page = 1;
-  public pageSize = 4;
-  public harvestSearch: Observable<Harvest[]>;
-  public filter = new FormControl('');
   private closeResult = '';
 
 
@@ -65,52 +64,91 @@ export class CategoriesListComponent implements OnInit {
       ],
       'options': false
     };
+
+    this.displayedColumns = ['position', 'name', 'dateStart', 'dateEnd'];
+
     this.getUserLogged();
     this.setRol();
     this.getFullInfoHarvest();
   }
 
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = this.sortingCustomAccesor;
+
+    /* configure filter */
+    this.dataSource.filterPredicate = this.filterCustomAccessor();
+  }
+
+
+  //Functions to MatTable
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    let filteredValues = {
+      name: '',
+    };
+
+    filteredValues['name'] = filterValue;
+    this.dataSource.filter = JSON.stringify(filteredValues);
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  sortingCustomAccesor = (item: Harvest, property) => {
+    switch (property) {
+      case 'name': return item.name;
+      case 'dateStart': return item.dateStart;
+      case 'dateEnd': return item.dateEnd;
+      default: return item[property];
+    }
+  };
+
+  /**
+  * 
+  * @returns Custom accessor function
+  */
+  filterCustomAccessor() {
+    const myFilterPredicate = (data: Harvest, filter: string): boolean => {
+      let searchString = JSON.parse(filter);
+
+      // Para compara numbers usar: data.position.toString().trim().indexOf(searchString.position) !== -1
+      return data.name.toString().trim().toLowerCase().indexOf(searchString.name.toString().trim().toLowerCase()) !== -1;
+    }
+    return myFilterPredicate;
+  }
+
+  //End function MatTable
+
   getFullInfoHarvest(): void {
     this.blockUICategories.start("Cargando...");
     if (this.rol === 'company') {
-      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
-        this.harvests = data;
-        this.collectionSize = this.harvests.length;
-        this.searchData(this.pipe);
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(harvests => {
+        if (harvests.length === 0) {
+          this.isEmpty = true;
+          this.blockUICategories.stop();
+          this.isEmpty = false;
+          return;
+        }
+        this.dataSource.data = harvests;
         this.blockUICategories.stop();
       });
     } else if (this.rol === 'admin' || this.rol === 'planner') {
-      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
-        this.harvests = data;
-        this.collectionSize = this.harvests.length;
-        this.searchData(this.pipe);
+      this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(harvests => {
+        if (harvests.length === 0) {
+          this.isEmpty = true;
+          this.blockUICategories.stop();
+          this.isEmpty = false;
+          return;
+        }
+        this.dataSource.data = harvests;
         this.blockUICategories.stop();
       });
     }
 
-  }
-
-  /**
-  *
-  * '@param' pipe
-  */
-  searchData(pipe: DecimalPipe) {
-    this.harvestSearch = this.filter.valueChanges.pipe(
-      startWith(''),
-      map(text => this.search(text, pipe))
-    );
-  }
-
-  /**
-   * Search table
-   * '@param' text
-   * '@param' pipe
-   */
-  search(text: string, pipe: PipeTransform) {
-    return this.harvests.filter(response => {
-      const term = text.toLowerCase();
-      return response.name.toLowerCase().includes(term)
-    });
   }
 
   createCategory(): void {
@@ -126,7 +164,7 @@ export class CategoriesListComponent implements OnInit {
       }
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      console.log(this.closeResult);
+      
     });
   }
 
@@ -158,10 +196,6 @@ export class CategoriesListComponent implements OnInit {
 
   }
 
-  delete(id: string): void {
-    console.log("ID: " + id);
-  }
-
   getUserLogged(): void {
     if (localStorage.getItem('dataCurrentUser')) {
       this.currentUser = JSON.parse(localStorage.getItem('dataCurrentUser'));
@@ -176,14 +210,6 @@ export class CategoriesListComponent implements OnInit {
     } else {
       return `with: ${reason}`;
     }
-  }
-
-  reload(event: any): void {
-    this.blockUICategories.start('Cargando...');
-
-    setTimeout(() => {
-      this.blockUICategories.stop();
-    }, 2500);
   }
 
 }
