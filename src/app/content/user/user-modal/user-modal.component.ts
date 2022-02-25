@@ -34,6 +34,8 @@ export class UserModalComponent implements OnInit {
 
   public title: string = '';
 
+  /** [0-9]+-[0-9kK]{1}|(((\d{2})|(\d{1})).\d{3}\.\d{3}-)([0-9kK]){1} This pattern accept: 19.261.363-9 or 1-9 or 8.361.723-3  */
+
   constructor(
     public activeModal: NgbActiveModal,
     private formBuilder: FormBuilder,
@@ -49,7 +51,7 @@ export class UserModalComponent implements OnInit {
       this.registerForm = this.formBuilder.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
-        run: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]+-[0-9kK]{1}$/), this.checkVerificatorDigit]],
+        run: ['', [Validators.required, Validators.maxLength(12), Validators.pattern(/^[0-9]+-[0-9kK]{1}|(((\d{2})|(\d{1})).\d{3}\.\d{3}-)([0-9kK]){1}$/), this.checkVerificatorDigit]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         rol: [null, Validators.required]
@@ -77,7 +79,7 @@ export class UserModalComponent implements OnInit {
       this.registerForm = this.formBuilder.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
-        run: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]+-[0-9kK]{1}$/), this.checkVerificatorDigit]],
+        run: ['', [Validators.required, Validators.maxLength(12), Validators.pattern(/^[0-9]+-[0-9kK]{1}|(((\d{2})|(\d{1})).\d{3}\.\d{3}-)([0-9kK]){1}$/), this.checkVerificatorDigit]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]]
       });
@@ -104,26 +106,23 @@ export class UserModalComponent implements OnInit {
 
   checkRun() {
     let run = this.f['run'];
-    //Despejar Puntos
-    var runClean = run.value.replace('.', '');
-    // Despejar Guión
-    runClean = runClean.replace('-', '');
-
-    // Aislar Cuerpo y Dígito Verificador
-    let body = runClean.slice(0, -1);
-    let dv = runClean.slice(-1).toUpperCase();
-
-    // Formatear RUN
-    run.setValue(body + '-' + dv);
+    var runClean = run.value.replace(/[^0-9kK]+/g, '').toUpperCase();
+    if (runClean.length <= 1) {
+      return;
+    }
+    var result = runClean.slice(-4, -1) + "-" + runClean.substr(runClean.length - 1);
+    for (var i = 4; i < runClean.length; i += 3) {
+      result = runClean.slice(-3 - i, -i) + "." + result;
+    }
+    run.setValue(result);
   }
 
   checkVerificatorDigit(control: AbstractControl) {
     let run = control;
     if (run.value == "") return null;
-    //Despejar Puntos
-    var runClean = run.value.replace('.', '');
-    // Despejar Guión
-    runClean = runClean.replace('-', '');
+
+    //Limpiar run de puntos y guión
+    var runClean = run.value.replace(/[^0-9kK]+/g, '').toUpperCase();
 
     // Aislar Cuerpo y Dígito Verificador
     let body = runClean.slice(0, -1);
@@ -135,20 +134,16 @@ export class UserModalComponent implements OnInit {
 
     // Para cada dígito del Cuerpo
     for (let i = 1; i <= body.length; i++) {
-
       // Obtener su Producto con el Múltiplo Correspondiente
       let index = multiplo * runClean.charAt(body.length - i);
-
       // Sumar al Contador General
       suma = suma + index;
-
       // Consolidar Múltiplo dentro del rango [2,7]
       if (multiplo < 7) {
         multiplo = multiplo + 1;
       } else {
         multiplo = 2;
       }
-
     }
 
     // Calcular Dígito Verificador en base al Módulo 11
@@ -215,7 +210,7 @@ export class UserModalComponent implements OnInit {
 
         if (this.users.length === 0) {
           this.userService.createUser(this.user).then(user => {
-            
+
           });
         } else if (this.users.length !== 0) {
           for (let i = 0; i < this.users.length; i++) {
