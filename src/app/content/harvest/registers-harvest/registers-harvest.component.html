@@ -127,7 +127,7 @@
             Peso acumulado
           </mat-header-cell>
           <mat-cell *matCellDef="let row" data-label="Peso acumulado">
-            {{ row.acumulate }} Kg
+            {{ row.acumulate | number: "1.2-2" }} Kg
           </mat-cell>
         </ng-container>
 
