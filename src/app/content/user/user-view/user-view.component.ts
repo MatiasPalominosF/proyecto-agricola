@@ -1,12 +1,10 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NavigationExtras, Router } from '@angular/router';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { UserInterface } from 'src/app/_models/user';
 import { NotificationService } from 'src/app/_services/notification/notification.service';
 import { UserService } from 'src/app/_services/user/user.service';
@@ -39,6 +37,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
     private confirmationDialogService: ConfirmationService,
     private notifyService: NotificationService,
     private modalService: NgbModal,
+    private router: Router,
   ) { }
 
   /** Comments initials to init mat table */
@@ -237,7 +236,22 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   }
 
   showDetails(user: UserInterface): void {
-    console.log(user);
+    // Converts the route into a string that can be used 
+    // with the window.open() function
+    let navigationExtras: NavigationExtras = {
+      state: {
+        run: user.run,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        address: user.address,
+        city: user.city,
+        state: user.state,
+        rol: user.rol,
+      }
+    };
+
+    const url = this.router.serializeUrl(this.router.createUrlTree(['/contract/export-contract']));
+    window.open(url, '_blank');
   }
 
   setDisplayedColumns() {

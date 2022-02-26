@@ -11,6 +11,9 @@ import { DisabledViewComponent } from './disabled-view/disabled-view.component';
     NotFoundComponent,
     DisabledViewComponent
   ],
+  exports: [
+    RouterModule,
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild([
