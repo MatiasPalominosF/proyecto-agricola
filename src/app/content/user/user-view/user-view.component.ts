@@ -11,6 +11,27 @@ import { UserService } from 'src/app/_services/user/user.service';
 import { BreadcrumbInterface } from '../../../_models/breadcrumb';
 import { ConfirmationService } from '../../../_services/confirmation/confirmation.service';
 import { UserModalComponent } from '../user-modal/user-modal.component';
+import { CryptoService } from '../../../_services/cryptodata/crypto.service';
+
+export class DataInfoContract {
+  firstName?: string;
+  lastName?: string;
+  address?: string;
+  city?: string;
+  run?: string;
+  state?: string;
+  email?: string;
+  rol?: string;
+  firstNameOwnerCompany?: string;
+  lastNameOwnerCompany?: string;
+  runOwnerCompany?: string;
+  runCompany?: string;
+  nameCompany?: string;
+  addressCompany?: string;
+  cityCompany?: string;
+  stateCompany?: string;
+  emailCompany?: string;
+}
 
 @Component({
   selector: 'app-user-view',
@@ -21,6 +42,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @BlockUI('cicles') blockUIUser: NgBlockUI;
+  @BlockUI('contract') blockUIContract: NgBlockUI;
 
   public displayedColumns: string[] = [];
   public dataSource: MatTableDataSource<UserInterface> = new MatTableDataSource<UserInterface>();
@@ -38,6 +60,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
     private notifyService: NotificationService,
     private modalService: NgbModal,
     private router: Router,
+    private crypto: CryptoService,
   ) { }
 
   /** Comments initials to init mat table */
@@ -238,20 +261,35 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   showDetails(user: UserInterface): void {
     // Converts the route into a string that can be used 
     // with the window.open() function
-    let navigationExtras: NavigationExtras = {
-      state: {
-        run: user.run,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        address: user.address,
-        city: user.city,
-        state: user.state,
-        rol: user.rol,
-      }
-    };
+    let infoUserContract: DataInfoContract = {};
+    this.blockUIContract.start("Cargando...");
+    this.userService.getOneUser(user.cuid).subscribe(boss => {
+      infoUserContract.address = user.address;
+      infoUserContract.addressCompany = boss.addressCompany;
+      infoUserContract.city = user.city;
+      infoUserContract.cityCompany = boss.cityCompany;
+      infoUserContract.email = user.email;
+      infoUserContract.emailCompany = boss.email;
+      infoUserContract.firstName = user.firstName;
+      infoUserContract.firstNameOwnerCompany = boss.firstName;
+      infoUserContract.lastName = user.lastName;
+      infoUserContract.lastNameOwnerCompany = boss.lastName;
+      infoUserContract.nameCompany = boss.nameCompany;
+      infoUserContract.rol = user.rol;
+      infoUserContract.run = user.run;
+      infoUserContract.runCompany = boss.run;
+      infoUserContract.runOwnerCompany = boss.runCompany;
+      infoUserContract.state = user.state;
+      infoUserContract.stateCompany = boss.stateCompany;
+      this.blockUIContract.stop();
+      console.table(infoUserContract);
+    });
 
-    const url = this.router.serializeUrl(this.router.createUrlTree(['/contract/export-contract']));
-    window.open(url, '_blank');
+    // let userInfoEncrypt = this.crypto.encryptData(user);
+    // this.crypto.setInfoStorage(userInfoEncrypt);
+
+    // const url = this.router.serializeUrl(this.router.createUrlTree(['/contract/export-contract']));
+    // window.open(url, '_blank');
   }
 
   setDisplayedColumns() {

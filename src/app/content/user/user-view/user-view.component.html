@@ -107,6 +107,7 @@
                 <span class="feather ft-edit-2"></span>
               </button>
               <button
+                *blockUI="'contract'; message: 'Loading'"
                 (click)="showDetails(row)"
                 triggers="hover:click:hover"
                 [autoClose]="'outside'"
