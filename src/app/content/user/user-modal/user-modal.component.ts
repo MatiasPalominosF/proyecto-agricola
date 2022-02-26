@@ -132,11 +132,6 @@ export class UserModalComponent implements OnInit {
     this.f['address'].setValue('');
     this.f['state'].setValue('');
     this.f['run'].setValue('');
-    this.f['runCompany'].setValue('');
-    this.f['nameCompany'].setValue('');
-    this.f['addressCompany'].setValue('');
-    this.f['cityCompany'].setValue('');
-    this.f['stateCompany'].setValue('');
     this.f['email'].setValue('');
     this.f['password'].setValue('');
   }
@@ -224,6 +219,9 @@ export class UserModalComponent implements OnInit {
         firstName: this.fValue.firstName,
         lastName: this.fValue.lastName,
         run: this.fValue.run,
+        address: this.fValue.address,
+        city: this.fValue.city,
+        state: this.fValue.state,
         uid: this.fValue.run,
         isenabled: true,
         rol: this.fValue.rol,

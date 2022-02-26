@@ -18,7 +18,7 @@
   </button>
 </div>
 <div class="modal-body px-0" *blockUI="'userInfo'; message: 'Loading'">
-  <div style="overflow-y: hidden; height: calc(100vh - 15rem)">
+  <div style="overflow-y: hidden; height: calc(100vh - 20rem)">
     <div class="px-2" style="overflow-y: auto; height: 100%">
       <ng-container *ngIf="rol === 'superadmin'; else elseBlock">
         <form [formGroup]="registerForm">
@@ -458,6 +458,10 @@
               rolForm === 'planner'
             "
           >
+            <h4 class="form-section">
+              <i class="la la-eye"></i> Información usuario
+            </h4>
+            <!-- FILA CON NOMBRE Y APELLIDOS -->
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
@@ -512,15 +516,17 @@
                 </div>
               </div>
             </div>
+            <!-- FILA CON RUT Y DIRECCIÓN -->
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="run">RUT *</label>
                   <div class="position-relative">
                     <input
-                      type="text"
-                      id="run"
                       (input)="checkRun()"
+                      type="text"
+                      maxlength="12"
+                      id="run"
                       class="form-control"
                       placeholder="RUT"
                       formControlName="run"
@@ -549,6 +555,92 @@
                   </div>
                 </div>
               </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="address">Dirección *</label>
+                  <div class="position-relative">
+                    <input
+                      type="text"
+                      id="address"
+                      class="form-control"
+                      placeholder="Dirección"
+                      formControlName="address"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.address.errors
+                      }"
+                    />
+                    <small
+                      class="form-text text-muted danger"
+                      *ngIf="submitted && f.address.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="hasError('address', 'required')">
+                        La dirección es requerida
+                      </div>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FILA CON COMUNA Y CIUDAD -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="state">Comuna *</label>
+                  <div class="position-relative">
+                    <input
+                      type="text"
+                      id="state"
+                      class="form-control"
+                      placeholder="Comuna"
+                      formControlName="state"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.state.errors
+                      }"
+                    />
+                    <small
+                      class="form-text text-muted danger"
+                      *ngIf="submitted && f.state.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="hasError('state', 'required')">
+                        La comuna es requerida
+                      </div>
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="city">Ciudad *</label>
+                  <div class="position-relative">
+                    <input
+                      type="text"
+                      id="city"
+                      class="form-control"
+                      placeholder="Ciudad"
+                      formControlName="city"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.city.errors
+                      }"
+                    />
+                    <small
+                      class="form-text text-muted danger"
+                      *ngIf="submitted && f.city.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="hasError('city', 'required')">
+                        La ciudad es requerida
+                      </div>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4 class="form-section">
+              <i class="la la-eye"></i> Acceso página web
+            </h4>
+            <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="email">Email *</label>
@@ -578,9 +670,7 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label for="password">Contraseña *</label>
                   <div class="position-relative">
@@ -609,6 +699,10 @@
             </div>
           </ng-container>
           <ng-container *ngIf="rolForm === 'harvester'">
+            <h4 class="form-section">
+              <i class="la la-eye"></i> Información usuario
+            </h4>
+            <!-- FILA CON NOMBRE Y APELLIDOS -->
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
@@ -663,15 +757,17 @@
                 </div>
               </div>
             </div>
-            <div class="row d-flex justify-content-center">
-              <div class="col-md-12">
+            <!-- FILA CON RUT Y DIRECCIÓN -->
+            <div class="row">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label for="run">RUT *</label>
                   <div class="position-relative">
                     <input
-                      type="text"
-                      id="run"
                       (input)="checkRun()"
+                      type="text"
+                      maxlength="12"
+                      id="run"
                       class="form-control"
                       placeholder="RUT"
                       formControlName="run"
@@ -695,6 +791,87 @@
                       </div>
                       <div *ngIf="hasError('run', 'verificator')">
                         El digito verificador no corresponde al rut ingresado
+                      </div>
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="address">Dirección *</label>
+                  <div class="position-relative">
+                    <input
+                      type="text"
+                      id="address"
+                      class="form-control"
+                      placeholder="Dirección"
+                      formControlName="address"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.address.errors
+                      }"
+                    />
+                    <small
+                      class="form-text text-muted danger"
+                      *ngIf="submitted && f.address.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="hasError('address', 'required')">
+                        La dirección es requerida
+                      </div>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FILA CON COMUNA Y CIUDAD -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="state">Comuna *</label>
+                  <div class="position-relative">
+                    <input
+                      type="text"
+                      id="state"
+                      class="form-control"
+                      placeholder="Comuna"
+                      formControlName="state"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.state.errors
+                      }"
+                    />
+                    <small
+                      class="form-text text-muted danger"
+                      *ngIf="submitted && f.state.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="hasError('state', 'required')">
+                        La comuna es requerida
+                      </div>
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="city">Ciudad *</label>
+                  <div class="position-relative">
+                    <input
+                      type="text"
+                      id="city"
+                      class="form-control"
+                      placeholder="Ciudad"
+                      formControlName="city"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.city.errors
+                      }"
+                    />
+                    <small
+                      class="form-text text-muted danger"
+                      *ngIf="submitted && f.city.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="hasError('city', 'required')">
+                        La ciudad es requerida
                       </div>
                     </small>
                   </div>
