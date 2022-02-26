@@ -52,6 +52,9 @@ export class UserModalComponent implements OnInit {
       this.registerForm = this.formBuilder.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
+        address: ['', Validators.required],
+        city: ['', Validators.required],
+        state: ['', Validators.required],
         run: ['', [Validators.required, Validators.maxLength(12), Validators.pattern(/^[0-9]+-[0-9kK]{1}|(((\d{2})|(\d{1})).\d{3}\.\d{3}-)([0-9kK]){1}$/), this.checkVerificatorDigit]],
         email: [''],
         password: [''],
@@ -80,9 +83,17 @@ export class UserModalComponent implements OnInit {
       this.registerForm = this.formBuilder.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
+        address: ['', Validators.required],
+        city: ['', Validators.required],
+        state: ['', Validators.required],
         run: ['', [Validators.required, Validators.maxLength(12), Validators.pattern(/^[0-9]+-[0-9kK]{1}|(((\d{2})|(\d{1})).\d{3}\.\d{3}-)([0-9kK]){1}$/), this.checkVerificatorDigit]],
+        runCompany: ['', [Validators.required, Validators.maxLength(12), Validators.pattern(/^[0-9]+-[0-9kK]{1}|(((\d{2})|(\d{1})).\d{3}\.\d{3}-)([0-9kK]){1}$/), this.checkVerificatorDigit]],
+        nameCompany: ['', Validators.required],
+        addressCompany: ['', Validators.required],
+        cityCompany: ['', Validators.required],
+        stateCompany: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]]
+        password: ['', [Validators.required, Validators.minLength(6)]],
       });
     }
 
@@ -118,9 +129,29 @@ export class UserModalComponent implements OnInit {
   clearForm() {
     this.f['firstName'].setValue('');
     this.f['lastName'].setValue('');
+    this.f['address'].setValue('');
+    this.f['state'].setValue('');
     this.f['run'].setValue('');
+    this.f['runCompany'].setValue('');
+    this.f['nameCompany'].setValue('');
+    this.f['addressCompany'].setValue('');
+    this.f['cityCompany'].setValue('');
+    this.f['stateCompany'].setValue('');
     this.f['email'].setValue('');
     this.f['password'].setValue('');
+  }
+
+  checkRunCompany() {
+    let run = this.f['runCompany'];
+    var runClean = run.value.replace(/[^0-9kK]+/g, '').toUpperCase();
+    if (runClean.length <= 1) {
+      return;
+    }
+    var result = runClean.slice(-4, -1) + "-" + runClean.substr(runClean.length - 1);
+    for (var i = 4; i < runClean.length; i += 3) {
+      result = runClean.slice(-3 - i, -i) + "." + result;
+    }
+    run.setValue(result);
   }
 
   checkRun() {
@@ -182,12 +213,17 @@ export class UserModalComponent implements OnInit {
   onUserSubmit(): void {
     this.submitted = true;
 
+    console.log("Entra");
+    console.log("this.registerForm.invalid: ", this.registerForm.invalid);
+    console.log("this.registerForm: ", this.registerForm);
+    console.log("this.fValue: ", this.fValue);
     if (this.registerForm.invalid) {
       return;
     }
 
     this.blockUIuser.start("Guardando...");
 
+    console.log("aaaaaa");
     if (this.rolForm === 'harvester') {
       this.user = {
         firstName: this.fValue.firstName,
@@ -219,9 +255,16 @@ export class UserModalComponent implements OnInit {
             this.user = {
               firstName: this.fValue.firstName,
               lastName: this.fValue.lastName,
+              address: this.fValue.address,
+              city: this.fValue.city,
+              state: this.fValue.state,
+              runCompany: this.fValue.runCompany,
+              nameCompany: this.fValue.nameCompany,
+              addressCompany: this.fValue.addressCompany,
+              cityCompany: this.fValue.cityCompany,
+              stateCompany: this.fValue.stateCompany,
               run: this.fValue.run,
               email: this.fValue.email,
-              password: this.fValue.password,
               uid: res.user.uid,
               isenabled: true,
               rol: 'company'
@@ -232,25 +275,16 @@ export class UserModalComponent implements OnInit {
                 firstName: this.fValue.firstName,
                 lastName: this.fValue.lastName,
                 run: this.fValue.run,
+                address: this.fValue.address,
+                city: this.fValue.city,
+                state: this.fValue.state,
                 email: this.fValue.email,
-                password: this.fValue.password,
-                uid: res.user.uid,
-                isenabled: true,
-                rol: this.fValue.rol,
-                cuid: this.uid
-              };
-            } else if (this.rolForm === 'harvester') {
-              this.user = {
-                firstName: this.fValue.firstName,
-                lastName: this.fValue.lastName,
-                run: this.fValue.run,
                 uid: res.user.uid,
                 isenabled: true,
                 rol: this.fValue.rol,
                 cuid: this.uid
               };
             }
-
           }
           const currentUser = firebase.auth().currentUser;
           currentUser.updateProfile({
