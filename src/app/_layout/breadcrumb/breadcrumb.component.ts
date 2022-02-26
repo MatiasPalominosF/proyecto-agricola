@@ -14,7 +14,7 @@ export class BreadcrumbComponent implements OnInit {
 
   public dataForSelect: Array<Harvest> = [];
   public dataForSelect2: Array<Harvest> = [];
-  public singlebasicSelected: Harvest = {};
+  public singlebasicSelected: Harvest = {}
   public currentUser: UserInterface;
 
   @BlockUI('selectBlockUi') blockUISelect: NgBlockUI;
@@ -50,14 +50,18 @@ export class BreadcrumbComponent implements OnInit {
       this.harvestService.getFullInfoHarvestWithUid(this.currentUser.uid).subscribe(data => {
         this.dataForSelect = data;
         this.singlebasicSelected = this.dataForSelect[0];
-        this.idCategory.emit(this.singlebasicSelected);
+        if (this.singlebasicSelected) {
+          this.idCategory.emit(this.singlebasicSelected);
+        }
       });
 
     } else if (this.currentUser.rol === 'admin' || this.currentUser.rol === 'planner') {
       this.harvestService.getFullInfoHarvestWithUid(this.currentUser.cuid).subscribe(data => {
         this.dataForSelect = data;
         this.singlebasicSelected = this.dataForSelect[0];
-        this.idCategory.emit(this.singlebasicSelected);
+        if (this.singlebasicSelected) {
+          this.idCategory.emit(this.singlebasicSelected);
+        }
       });
     }
   }
