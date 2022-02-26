@@ -213,17 +213,12 @@ export class UserModalComponent implements OnInit {
   onUserSubmit(): void {
     this.submitted = true;
 
-    console.log("Entra");
-    console.log("this.registerForm.invalid: ", this.registerForm.invalid);
-    console.log("this.registerForm: ", this.registerForm);
-    console.log("this.fValue: ", this.fValue);
     if (this.registerForm.invalid) {
       return;
     }
 
     this.blockUIuser.start("Guardando...");
 
-    console.log("aaaaaa");
     if (this.rolForm === 'harvester') {
       this.user = {
         firstName: this.fValue.firstName,
