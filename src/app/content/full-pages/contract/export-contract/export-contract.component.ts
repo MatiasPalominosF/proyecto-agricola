@@ -1,9 +1,11 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ContractInfo } from 'src/app/_models/contractInfo';
 import { CryptoService } from 'src/app/_services/cryptodata/crypto.service';
+
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from "pdfmake/build/vfs_fonts";
+import htmlToPdfmake from "html-to-pdfmake";
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-export-contract',
@@ -11,6 +13,8 @@ import { CryptoService } from 'src/app/_services/cryptodata/crypto.service';
   styleUrls: ['./export-contract.component.css']
 })
 export class ExportContractComponent implements OnInit {
+  @ViewChild('pdfContent') pdfTable!: ElementRef;
+  
   public user: ContractInfo = {};
 
   public nameCompany: string;
@@ -87,7 +91,10 @@ export class ExportContractComponent implements OnInit {
     }
   }
 
-  exportToPdf(){
-    
+  exportToPdf() {
+    const pdfTable = this.pdfTable.nativeElement;
+    var html = htmlToPdfmake(pdfTable.innerHTML);
+    const documentDefinition = { content: html };
+    pdfMake.createPdf(documentDefinition).download();
   }
 }
