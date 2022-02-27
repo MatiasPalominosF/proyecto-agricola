@@ -86,4 +86,8 @@ export class ExportContractComponent implements OnInit {
       return 'cosechador';
     }
   }
+
+  exportToPdf(){
+    
+  }
 }
