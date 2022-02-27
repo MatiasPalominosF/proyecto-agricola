@@ -12,26 +12,7 @@ import { BreadcrumbInterface } from '../../../_models/breadcrumb';
 import { ConfirmationService } from '../../../_services/confirmation/confirmation.service';
 import { UserModalComponent } from '../user-modal/user-modal.component';
 import { CryptoService } from '../../../_services/cryptodata/crypto.service';
-
-export class DataInfoContract {
-  firstName?: string;
-  lastName?: string;
-  address?: string;
-  city?: string;
-  run?: string;
-  state?: string;
-  email?: string;
-  rol?: string;
-  firstNameOwnerCompany?: string;
-  lastNameOwnerCompany?: string;
-  runOwnerCompany?: string;
-  runCompany?: string;
-  nameCompany?: string;
-  addressCompany?: string;
-  cityCompany?: string;
-  stateCompany?: string;
-  emailCompany?: string;
-}
+import { ContractInfo } from 'src/app/_models/contractInfo';
 
 @Component({
   selector: 'app-user-view',
@@ -261,35 +242,37 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   showDetails(user: UserInterface): void {
     // Converts the route into a string that can be used 
     // with the window.open() function
-    let infoUserContract: DataInfoContract = {};
+    let infoUserContract: ContractInfo = {};
     this.blockUIContract.start("Cargando...");
     this.userService.getOneUser(user.cuid).subscribe(boss => {
-      infoUserContract.address = user.address;
+      infoUserContract.addressWorker = user.address;
       infoUserContract.addressCompany = boss.addressCompany;
-      infoUserContract.city = user.city;
+      infoUserContract.cityWorker = user.city;
       infoUserContract.cityCompany = boss.cityCompany;
-      infoUserContract.email = user.email;
+      infoUserContract.emailWorker = user.email;
       infoUserContract.emailCompany = boss.email;
-      infoUserContract.firstName = user.firstName;
+      infoUserContract.firstNameWorker = user.firstName;
       infoUserContract.firstNameOwnerCompany = boss.firstName;
-      infoUserContract.lastName = user.lastName;
+      infoUserContract.lastNameWorker = user.lastName;
       infoUserContract.lastNameOwnerCompany = boss.lastName;
       infoUserContract.nameCompany = boss.nameCompany;
-      infoUserContract.rol = user.rol;
-      infoUserContract.run = user.run;
-      infoUserContract.runCompany = boss.run;
-      infoUserContract.runOwnerCompany = boss.runCompany;
-      infoUserContract.state = user.state;
+      infoUserContract.rolWorker = user.rol;
+      infoUserContract.runWorker = user.run;
+      infoUserContract.runCompany = boss.runCompany;
+      infoUserContract.runOwnerCompany = boss.run;
+      infoUserContract.stateWorker = user.state;
       infoUserContract.stateCompany = boss.stateCompany;
+      infoUserContract.admissionDate = user.admissionDate;
+      infoUserContract.addressOwnerCompany = boss.address;
+      infoUserContract.cityOwnerCompany = boss.city;
+      infoUserContract.stateOwnerCompany = boss.state;
+
+      let userInfoEncrypt = this.crypto.encryptData(infoUserContract);
+      this.crypto.setInfoStorage(userInfoEncrypt);
+      const url = this.router.serializeUrl(this.router.createUrlTree(['/contract/export-contract']));
       this.blockUIContract.stop();
-      console.table(infoUserContract);
+      window.open(url, '_blank');
     });
-
-    // let userInfoEncrypt = this.crypto.encryptData(user);
-    // this.crypto.setInfoStorage(userInfoEncrypt);
-
-    // const url = this.router.serializeUrl(this.router.createUrlTree(['/contract/export-contract']));
-    // window.open(url, '_blank');
   }
 
   setDisplayedColumns() {

@@ -1,7 +1,8 @@
 export interface UserInterface {
     uid?: string;
-    cuid?: string
-    isenabled?: boolean
+    cuid?: string;
+    isenabled?: boolean;
+    admissionDate?: any;
     firstName?: string;
     lastName?: string;
     address?: string;

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
+import { ContractInfo } from 'src/app/_models/contractInfo';
 import { UserInterface } from 'src/app/_models/user';
 
 @Injectable({
@@ -19,11 +20,11 @@ export class CryptoService {
     }
   }
 
-  decryptData(data): UserInterface {
+  decryptData(data): ContractInfo {
     try {
       const bytes = CryptoJS.AES.decrypt(data, this.encryptSecretKey);
       if (bytes.toString()) {
-        return JSON.parse(bytes.toString(CryptoJS.enc.Utf8)) as UserInterface;
+        return JSON.parse(bytes.toString(CryptoJS.enc.Utf8)) as ContractInfo;
       }
       return data;
     } catch (e) {

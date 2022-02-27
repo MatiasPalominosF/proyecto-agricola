@@ -419,8 +419,8 @@
       </ng-container>
       <ng-template #elseBlock>
         <form [formGroup]="registerForm">
-          <div class="row d-flex justify-content-center">
-            <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-6">
               <div class="form-group">
                 <label for="rol">Cargo *</label>
                 <div class="position-relative">
@@ -447,6 +447,46 @@
                       El cargo es requerido
                     </div>
                   </small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="admissionDate">Fecha ingreso *</label>
+                <div class="position-relative has-icon-left">
+                  <div class="input-group">
+                    <input
+                      class="form-control"
+                      placeholder="dd/mm/yyyy"
+                      name="dp"
+                      ngbDatepicker
+                      #d3="ngbDatepicker"
+                      formControlName="admissionDate"
+                      [ngClass]="{
+                        'is-invalid': submitted && f.admissionDate.errors
+                      }"
+                    />
+                    <div class="input-group-append">
+                      <div class="input-group-text" (click)="d3.toggle()">
+                        <i class="fa fa-calendar" style="cursor: pointer"></i>
+                      </div>
+                    </div>
+                    <small
+                      class="form-text text-muted danger"
+                      *ngIf="submitted && f.admissionDate.errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f.admissionDate.errors.required">
+                        La fecha de inicio es requerida
+                      </div>
+                      <div *ngIf="f.admissionDate.errors.pattern">
+                        Formato de fecha inválida
+                      </div>
+                    </small>
+                  </div>
+                  <div class="form-control-position">
+                    <i class="feather ft-message-square"></i>
+                  </div>
                 </div>
               </div>
             </div>

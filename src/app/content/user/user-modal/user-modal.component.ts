@@ -37,6 +37,7 @@ export class UserModalComponent implements OnInit {
 
   /** [0-9]+-[0-9kK]{1}|(((\d{2})|(\d{1})).\d{3}\.\d{3}-)([0-9kK]){1} This pattern accept: 19.261.363-9 or 1-9 or 8.361.723-3  */
 
+  // \d{2}/\d{2}/\d{4} Valida fechas del tipo: 19/01/1996
   constructor(
     public activeModal: NgbActiveModal,
     private formBuilder: FormBuilder,
@@ -58,6 +59,7 @@ export class UserModalComponent implements OnInit {
         run: ['', [Validators.required, Validators.maxLength(12), Validators.pattern(/^[0-9]+-[0-9kK]{1}|(((\d{2})|(\d{1})).\d{3}\.\d{3}-)([0-9kK]){1}$/), this.checkVerificatorDigit]],
         email: [''],
         password: [''],
+        admissionDate: ['', Validators.required],
         rol: [null, Validators.required]
       });
 
@@ -134,6 +136,7 @@ export class UserModalComponent implements OnInit {
     this.f['run'].setValue('');
     this.f['email'].setValue('');
     this.f['password'].setValue('');
+    this.f['admissionDate'].setValue('');
   }
 
   checkRunCompany() {
@@ -224,6 +227,7 @@ export class UserModalComponent implements OnInit {
         state: this.fValue.state,
         uid: this.fValue.run,
         isenabled: true,
+        admissionDate: new Date(this.fValue['admissionDate'].year, (this.fValue['admissionDate'].month - 1), this.fValue['admissionDate'].day, 0, 0, 0, 0),
         rol: this.fValue.rol,
         cuid: this.uid
       };
@@ -273,6 +277,7 @@ export class UserModalComponent implements OnInit {
                 state: this.fValue.state,
                 email: this.fValue.email,
                 uid: res.user.uid,
+                admissionDate: new Date(this.fValue['admissionDate'].year, (this.fValue['admissionDate'].month - 1), this.fValue['admissionDate'].day, 0, 0, 0, 0),
                 isenabled: true,
                 rol: this.fValue.rol,
                 cuid: this.uid

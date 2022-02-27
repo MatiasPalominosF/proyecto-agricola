@@ -19,6 +19,7 @@
             "allowedCommonJsDependencies": [
               "rxjs-compat",
               "chart.js",
+              "crypto-js",
               "angularfire2",
               "angularfire2/auth",
               "angularfire2/firestore",
