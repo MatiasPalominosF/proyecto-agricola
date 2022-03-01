@@ -28,6 +28,9 @@ const appRoutes: Routes = [
       {
         path: 'error', loadChildren: () => import('../app/content/full-pages/error/error.module').then(m => m.ErrorModule)
       },
+      {
+        path: 'contract', loadChildren: () => import('../app/content/full-pages/contract/contract.module').then(m => m.ContractModule),
+      },
     ]
   },
   // Private layout

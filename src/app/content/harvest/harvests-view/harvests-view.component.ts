@@ -43,6 +43,7 @@ export class HarvestsViewComponent implements OnInit, AfterViewInit {
 
   public breadcrumb: BreadcrumbInterface;
 
+  public currentDate: Date;
   private currentUser: UserInterface;
   private harvests: Harvest[];
   public pipe: DatePipe;
@@ -73,6 +74,7 @@ export class HarvestsViewComponent implements OnInit, AfterViewInit {
       'options': false
     };
 
+    this.currentDate = new Date();
     this.displayedColumns = ['position', 'name', 'dateStart', 'dateEnd', 'actions'];
     this.filterForm = new FormGroup({
       fromDate: new FormControl(),

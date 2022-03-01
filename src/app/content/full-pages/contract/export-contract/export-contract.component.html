@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <div class="app-content content">
+    <div class="content-wrapper">
+      <div class="content-header row mb-1">
+        <div class="row">
+          <div class="content-header-left col-md-12 col-12 mb-2">
+            <button
+              type="button"
+              class="mb-0 d-inline-block btn btn-secondary btn-sm mt-2"
+              (click)="exportToPdf()"
+            >
+              <i class="la la-plus"></i> Exportar PDF
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="content-body">
+        <div class="terms-container">
+          <div class="row">
+            <div class="col-sm-8 col-sm-offset-2" id="pdfContent" #pdfContent>
+              <section class="terms-title">
+                <h1>Contrato de trabajo {{ nameCompany }}</h1>
+                <hr class="fineline" />
+              </section>
+              <div class="terms-body">
+                <p>
+                  En la ciudad de {{ cityCompany }}, a
+                  {{ currentDate | date: "longDate" }} entre la
+                  empresa {{ nameCompany }}, R.U.T {{ runCompany }},
+                  representada legalmente para estos efectos por Don(a)
+                  {{ firstNameOwnerCompany }} {{ lastNameOwnerCompany }} R.U.T
+                  {{ runOwnerCompany }} en adelante el Empleador, con domicilio
+                  en {{ addressOwnerCompany }} comuna de {{ cityOwnerCompany }},
+                  y el señor {{ firstNameWorker }} {{ lastNameWorker }}, R.U.T
+                  {{ runWorker }}, en adelante el Trabajador, de nacionalidad
+                  Chilena, con domicilio para estos efectos en
+                  {{ addressWorker }}, comuna de {{ cityWorker }}, en adelante
+                  el trabajador, quienes vienen a celebrar el presente contrato
+                  de trabajo:
+                </p>
+                <!-- Primer -->
+                <p>
+                  <strong class="mayus">Primero:</strong> el trabajador se
+                  desempeñará como {{ rolWorker }} en la ciudad de
+                  {{ cityCompany }} en la obra denominada ___________________,
+                  ubicada en {{ addressCompany }} de la comuna o localidad de
+                  {{ cityCompany }}.
+                </p>
+                <!-- Segundo -->
+                <p>
+                  <strong class="mayus">Segundo:</strong> el empleador cancelará
+                  la prestación de servicios del trabajador en la siguiente
+                  forma:
+                </p>
+                <ul class="square">
+                  <li><b>Por día trabajado:</b> $__________ pesos.</li>
+                  <li><b>A trato: </b> $__________ pesos.</li>
+                </ul>
+                <p>
+                  <strong class="mayus">Tercero:</strong> aparte de la
+                  remuneración señalada, el empleador se compromente a pagar el
+                  día trabajado lo siguiente:
+                </p>
+                <ul class="square">
+                  <li>
+                    Un bono de: __________ (asistencia, puntualidad, etc).
+                  </li>
+                  <li>
+                    Incentivos de: __________ (asistencia, puntualidad, etc).
+                  </li>
+                  <li>
+                    Gratificación de: __________ (asistencia, puntualidad, etc).
+                  </li>
+                </ul>
+                <p>
+                  <strong class="mayus">Cuarto:</strong> las partes convienen,
+                  en forma clara e iniquívoca que, respecto al valor unitario
+                  del trato, se comprende a la unidad de obra hecha y si se
+                  ejecutará el trabajo por "cuadrilla" (considera más de un
+                  trabajador) cualquiera que fuere el número, no se alterará el
+                  valor unitario y el valor total resultante de todas las
+                  "unidades" hechas, se prorrateará entre todos los componentes
+                  de la "cuadrilla", descontando la remuneración base,
+                  correspondiente al tiempo trabajado en el trato.
+                </p>
+                <p>
+                  <strong class="mayus">Quinto:</strong> la remuneración
+                  acordada será cancelada el día __________. Antes de esa fecha
+                  el trabajador recibirá un aelanto de __________ el día
+                  __________.
+                </p>
+                <p>
+                  <strong class="mayus">Sexto:</strong> la jornada de trabajo
+                  será la que se indica:
+                </p>
+                <ul class="square">
+                  <li>
+                    <b>Mañana:</b> de __________ hasta las __________ horas.
+                  </li>
+                  <li>
+                    <b>Tarde:</b> de __________ hasta las __________ horas.
+                  </li>
+                </ul>
+                <p>
+                  Esta jornada se distribuirá de lunes a __________, la que será
+                  interrumpida por un descanso de __________ horas destinado a
+                  la colación de cargo del trabajador.
+                </p>
+                <p>
+                  <strong class="mayus">Séptimo:</strong> esta jornada ordinaria
+                  de trabajo no impide que puedan las partes, de común acuerdo,
+                  trabajar horas extraordinarias, en el momento en que
+                  sobrevengan ciscunstancias que pudieren ocasionar perjuicios
+                  en la marcha normal de la obra, lo cual deberá constar por
+                  escrito y firmado por las partes al reverso del presente
+                  documento o en un anexo al mismo. Si perjuicio, dicho pacto no
+                  podrá exceder más allá de tres meses. Las horas
+                  extraordinarias se pagarán con el cincuenta por ciento de
+                  recargo (&#x25;).
+                </p>
+                <p>
+                  <strong class="mayus">Octavo:</strong> además las partes
+                  pactan los siguientes beneficios o asignaciones:
+                </p>
+                <ul class="square">
+                  <li><b>Asignación de colación:</b> ____________________.</li>
+                  <li>
+                    <b>Asignación de movilización:</b> ____________________.
+                  </li>
+                  <li>
+                    <b>Asignación de desgastes de herramientas:</b>
+                    ____________________.
+                  </li>
+                </ul>
+                <p>
+                  <strong class="mayus">Noveno:</strong> el presente contrato de
+                  trabajo estará dado durante el periodo de ___________.
+                </p>
+                <p>
+                  <strong class="mayus">Décimo:</strong> el trabajador se
+                  compromete y obliga expresamente a cumplir las instrucciones
+                  que le sean impartidas por su jefe inmediato o por la gerencia
+                  de la empresa, en relación a su trabajo, y acatar en todas sus
+                  partes las normas del reglamento interno de orden, higiene y
+                  seguridad, las que delara conocer y que forman parte
+                  integrante del presente contrato, reglamento del cual se le
+                  entrega un ejemplar.
+                </p>
+                <p>
+                  <strong class="mayus">Décimo primero:</strong> se deja
+                  constancia que el trabajador ingresó al servicio en esta obra
+                  con fecha __________.
+                </p>
+                <p>
+                  <strong class="mayus">Décimo segundo:</strong> el presente
+                  contrato de trabajo se firma en dos ejemplares quedando uno de
+                  ellos en poder de cada parte.
+                </p>
+
+                <p class="company">
+                  {{ nameCompany }}
+                  <span class="worker">
+                    {{ firstNameWorker }} {{ lastNameWorker }}
+                  </span>
+                </p>
+                <p class="line">
+                  ________________
+                  <span class="line"> ________________ </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</html>

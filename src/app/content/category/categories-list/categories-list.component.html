@@ -76,13 +76,23 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let row" data-label="Fecha término">
             <div
-              *ngIf="row.dateEnd == null; else elseBlock"
+              *ngIf="row.dateStart.toDate() > currentDate; else elseBlock"
               class="badge border-left-info border-right-info round badge-striped"
             >
-              <i class="la la-clock-o font-medium-2"></i>
-              <span>En proceso...</span>
+              <i class="feather ft-alert-circle font-medium-2"></i>
+              <span>Proximamente...</span>
             </div>
+
             <ng-template #elseBlock>
+              <div
+                *ngIf="row.dateEnd == null; else thirdElseBlock"
+                class="badge border-left-success border-right-success round badge-striped"
+              >
+                <i class="la la-clock-o font-medium-2"></i>
+                <span>En proceso...</span>
+              </div>
+            </ng-template>
+            <ng-template #thirdElseBlock>
               {{ row.dateEnd.toDate() | date: "dd/MM/yyyy HH:mm" }}
             </ng-template>
           </mat-cell>

@@ -31,10 +31,11 @@ export class CreateCategoryComponent implements OnInit {
     this.getUserLogged();
 
     this.categoryForm = this.formBuilder.group({
-      name: ['', Validators.required],
       id: [''],
-      dateEnd: [''],
+      name: ['', Validators.required],
       dateStart: ['', Validators.required],
+      dateEnd: [''],
+      price: ['', Validators.required],
     });
 
   }

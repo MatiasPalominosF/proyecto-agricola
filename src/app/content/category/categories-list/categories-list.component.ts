@@ -31,7 +31,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
   public displayedColumns: string[] = [];
   public dataSource: MatTableDataSource<Harvest> = new MatTableDataSource<Harvest>();
   public isEmpty: boolean = false;
-
+  public currentDate: Date;
   //End settings MatTable
 
   public breadcrumb: BreadcrumbInterface;
@@ -65,6 +65,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
       'options': false
     };
 
+    this.currentDate = new Date();
     this.displayedColumns = ['position', 'name', 'dateStart', 'dateEnd'];
 
     this.getUserLogged();
@@ -164,7 +165,7 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
       }
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      
+
     });
   }
 

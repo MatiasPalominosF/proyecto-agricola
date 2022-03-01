@@ -43,7 +43,7 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <label for="dateStart">Fecha</label>
+          <label for="dateStart">Fecha inicio</label>
           <div class="position-relative has-icon-left">
             <div class="input-group">
               <input
@@ -78,6 +78,37 @@
             <div class="form-control-position">
               <i class="feather ft-message-square"></i>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="price">Precio</label>
+          <div class="position-relative has-icon-left">
+            <input
+              type="number"
+              id="price"
+              class="form-control"
+              placeholder="Precio"
+              formControlName="price"
+              [ngClass]="{
+                'is-invalid': submitted && f.price.errors
+              }"
+            />
+            <div class="form-control-position">
+              <i class="la la-dollar"></i>
+            </div>
+            <small
+              class="form-text text-muted danger"
+              *ngIf="submitted && f.price.errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f.price.errors.required">
+                El precio de la categoría es requerido
+              </div>
+            </small>
           </div>
         </div>
       </div>

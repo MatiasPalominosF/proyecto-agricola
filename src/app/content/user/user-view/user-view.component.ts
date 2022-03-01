@@ -1,18 +1,18 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NavigationExtras, Router } from '@angular/router';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { UserInterface } from 'src/app/_models/user';
 import { NotificationService } from 'src/app/_services/notification/notification.service';
 import { UserService } from 'src/app/_services/user/user.service';
 import { BreadcrumbInterface } from '../../../_models/breadcrumb';
 import { ConfirmationService } from '../../../_services/confirmation/confirmation.service';
 import { UserModalComponent } from '../user-modal/user-modal.component';
+import { CryptoService } from '../../../_services/cryptodata/crypto.service';
+import { ContractInfo } from 'src/app/_models/contractInfo';
 
 @Component({
   selector: 'app-user-view',
@@ -23,6 +23,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @BlockUI('cicles') blockUIUser: NgBlockUI;
+  @BlockUI('contract') blockUIContract: NgBlockUI;
 
   public displayedColumns: string[] = [];
   public dataSource: MatTableDataSource<UserInterface> = new MatTableDataSource<UserInterface>();
@@ -39,6 +40,8 @@ export class UserViewComponent implements OnInit, AfterViewInit {
     private confirmationDialogService: ConfirmationService,
     private notifyService: NotificationService,
     private modalService: NgbModal,
+    private router: Router,
+    private crypto: CryptoService,
   ) { }
 
   /** Comments initials to init mat table */
@@ -128,25 +131,9 @@ export class UserViewComponent implements OnInit, AfterViewInit {
           this.getUsers();
         } else {
           user.isenabled = event;
-          let users: Array<UserInterface> = [];
-          this.userService.updateUser(user).then(() => {
-            this.userService.getUsersAdmin(user.uid, user.uid).pipe(take(1)).toPromise().then((data) => {
-              users = data;
-            }).finally(() => {
-              var bar = new Promise<void>((resolve, reject) => {
-                users.forEach(async (item, index, array) => {
-                  item.isenabled = event;
-                  await this.userService.updateUser(item);
-                  if (index === array.length - 1) resolve();
-                });
-              });
-
-              bar.then(() => {
-                this.isLoading = false;
-                this.notifyService.showSuccess(str.charAt(0).toUpperCase() + str.slice(1), "¡El usuario se editó correctamente!");
-              })
-            });
-
+          this.userService.updateUser(user).then().finally(() => {
+            this.isLoading = false;
+            this.notifyService.showSuccess(str.charAt(0).toUpperCase() + str.slice(1), "¡El usuario se editó correctamente!");
           });
         }
       }).catch((error) => {
@@ -185,7 +172,7 @@ export class UserViewComponent implements OnInit, AfterViewInit {
           this.blockUIUser.stop();
           this.isEmpty = false;
           return;
-        }
+        };
         this.dataSource.data = users;
         this.blockUIUser.stop();
       });
@@ -253,7 +240,39 @@ export class UserViewComponent implements OnInit, AfterViewInit {
   }
 
   showDetails(user: UserInterface): void {
-    console.log(user);
+    // Converts the route into a string that can be used 
+    // with the window.open() function
+    let infoUserContract: ContractInfo = {};
+    this.blockUIContract.start("Cargando...");
+    this.userService.getOneUser(user.cuid).subscribe(boss => {
+      infoUserContract.addressWorker = user.address;
+      infoUserContract.addressCompany = boss.addressCompany;
+      infoUserContract.cityWorker = user.city;
+      infoUserContract.cityCompany = boss.cityCompany;
+      infoUserContract.emailWorker = user.email;
+      infoUserContract.emailCompany = boss.email;
+      infoUserContract.firstNameWorker = user.firstName;
+      infoUserContract.firstNameOwnerCompany = boss.firstName;
+      infoUserContract.lastNameWorker = user.lastName;
+      infoUserContract.lastNameOwnerCompany = boss.lastName;
+      infoUserContract.nameCompany = boss.nameCompany;
+      infoUserContract.rolWorker = user.rol;
+      infoUserContract.runWorker = user.run;
+      infoUserContract.runCompany = boss.runCompany;
+      infoUserContract.runOwnerCompany = boss.run;
+      infoUserContract.stateWorker = user.state;
+      infoUserContract.stateCompany = boss.stateCompany;
+      infoUserContract.admissionDate = user.admissionDate;
+      infoUserContract.addressOwnerCompany = boss.address;
+      infoUserContract.cityOwnerCompany = boss.city;
+      infoUserContract.stateOwnerCompany = boss.state;
+
+      let userInfoEncrypt = this.crypto.encryptData(infoUserContract);
+      this.crypto.setInfoStorage(userInfoEncrypt);
+      const url = this.router.serializeUrl(this.router.createUrlTree(['/contract/export-contract']));
+      this.blockUIContract.stop();
+      window.open(url, '_blank');
+    });
   }
 
   setDisplayedColumns() {

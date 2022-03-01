@@ -65,7 +65,7 @@
             Usuario
           </mat-header-cell>
           <mat-cell *matCellDef="let row" data-label="Nombre ciclo">
-            {{ row.firstName }}
+            {{ row.firstName }} {{ row.lastName }}
           </mat-cell>
         </ng-container>
 
@@ -84,6 +84,8 @@
                 ? "Planillero"
                 : row.rol == "company"
                 ? "Empresa"
+                : row.rol == "harvester"
+                ? "Cosechador"
                 : "Error datos"
             }}
           </mat-cell>
@@ -105,6 +107,7 @@
                 <span class="feather ft-edit-2"></span>
               </button>
               <button
+                *blockUI="'contract'; message: 'Loading'"
                 (click)="showDetails(row)"
                 triggers="hover:click:hover"
                 [autoClose]="'outside'"
